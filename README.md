@@ -1,5 +1,9 @@
+[discord-invite]: https://discord.gg/u9wMgBY
+
+[ ![Discord](https://discordapp.com/api/guilds/590215639785013298/widget.png) ][discord-invite]
+
 # Discord-Lynx
-A Discord Bot built using the JDA Library and Java.
+A Discord Bot built using the [JDA Github](https://github.com/DV8FromTheWorld/JDA)JDA Library and Java.
 
 Project Lynx (aka Discord-Lynx) is an experimental multi-purpose Discord bot that can be deployed with ease via self-hosting or using the public Lucky Lynx bot!
 
