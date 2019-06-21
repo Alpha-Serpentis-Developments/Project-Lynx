@@ -9,7 +9,7 @@ Project Lynx (aka Discord-Lynx) is an experimental multi-purpose Discord bot tha
 
 Lucky Lynx has the following features:
 - Moderation
-  - Logging Messages
+  - Logging Messages and Mod Actions
   - Kicking/Banning
   - Warnings
 - Welcoming users with a lynx photo!
