@@ -14,7 +14,7 @@ public class MessageHandler implements EventListener {
 	public void onEvent(Event event) {
 	
 		/*
-		 * Checks if the event triggered is a message type and ISN'T A BOT (you can remove it from the if statement if you wish).
+		 * Checks if the event triggered is a message type
 		 */
 		if(event instanceof MessageReceivedEvent && !((MessageReceivedEvent) event).getAuthor().isBot()) {
 			
@@ -48,6 +48,7 @@ public class MessageHandler implements EventListener {
 		
 	}
 	
+
 	/**Sends a message to the specified channel 
 	 * 
 	 * @param chn is REQUIRED in order to send a message
@@ -65,6 +66,7 @@ public class MessageHandler implements EventListener {
 		
 	}
 	
+
 	/**Sends a message to the DMs (it may execute, but not go through)
 	 * 
 	 * @param chn is REQUIRED in order to send a message privately

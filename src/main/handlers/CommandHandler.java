@@ -96,6 +96,7 @@ public class CommandHandler {
 			} else {
 				return "Shuts down the bot";
 			}
+		}
 		default:
 			return new boolean[] {false, false};
 		}

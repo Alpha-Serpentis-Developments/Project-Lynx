@@ -72,6 +72,7 @@ public abstract class Command {
 	public void setType(String t) {
 		cmdType = t.toUpperCase();
 	}
+
 	public void setRequirePerms(boolean o) {
 		requirePerms = o;
 	}
