@@ -1,0 +1,21 @@
+plugins {
+  id 'java'
+  id 'application'
+  id 'com.github.johnrengelman.shadow' version '4.0.4'
+}
+
+mainClassName = 'com.github.discord-lynx.Bot'
+
+version = 'pre-release-0.01a'
+
+sourceCompatibility = 1.8
+
+repositories {
+  jcenter()
+}
+
+dependencies {
+  compile 'net.dv8tion:JDA:3.8.3_463'
+}
+
+compileJava.options.encoding = 'UTF-8'
