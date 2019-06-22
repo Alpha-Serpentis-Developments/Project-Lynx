@@ -2,6 +2,8 @@ package init;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 
 import javax.security.auth.login.LoginException;
@@ -70,9 +72,46 @@ public class Launcher {
 							case "botOwnerIDs":
 								
 								Scanner scb = new Scanner(stuff);
+								List<Long> ids = new ArrayList<Long>();
 								scb.useDelimiter(",");
-								while(scb.hasNext())
-									System.out.println(scb.next());
+								while(scb.hasNext()) {
+									ids.add(scb.nextLong());
+								}
+								
+								InitData.botOwnerIDs = new Long[ids.size()];
+								for(int i = 0; i < ids.size(); i++) {
+									InitData.botOwnerIDs[i] = ids.get(i);
+								}
+									
+								break;
+							case "modIDs":
+								
+								scb = new Scanner(stuff);
+								ids = new ArrayList<Long>();
+								scb.useDelimiter(",");
+								while(scb.hasNext()) {
+									ids.add(scb.nextLong());
+								}
+								
+								InitData.modIDs = new Long[ids.size()];
+								for(int i = 0; i < ids.size(); i++) {
+									InitData.modIDs[i] = ids.get(i);
+								}
+								
+								break;
+							case "adminIDs":
+								
+								scb = new Scanner(stuff);
+								ids = new ArrayList<Long>();
+								scb.useDelimiter(",");
+								while(scb.hasNext()) {
+									ids.add(scb.nextLong());
+								}
+								
+								InitData.adminIDs = new Long[ids.size()];
+								for(int i = 0; i < ids.size(); i++) {
+									InitData.adminIDs[i] = ids.get(i);
+								}
 								
 								break;
 							case "permLvl":
