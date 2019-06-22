@@ -18,9 +18,10 @@ public class Kick extends Command {
 		super("kick", "Moderators can use this to kick users from the discord.\n\n`" + InitData.prefix + "kick @AlphaSerpentis#3203 \"Because he bad (please don't use that as an actual reason)\"`");
 		
 		setRequirePerms(true);
+		setAllowPrivate(false);
 		
 		ArrayList<Long> ids = new ArrayList<Long>();
-		ids.add(590216647458029578L);
+		ids.add(590216647458029578L); //ID is for Project Lynx Discord by default
 		setPerms(ids);
 	}
 
@@ -51,13 +52,14 @@ public class Kick extends Command {
 					GuildController gld = ((MessageReceivedEvent) misc).getGuild().getController();
 					User author = ((MessageReceivedEvent) misc).getAuthor(), punished = chn.getJDA().getUserById(msg.substring(msg.indexOf("@") + 1, msg.indexOf(">")));
 					
+					//Checks if the moderator even decided to put a reason
 					if(msg.length() == msg.substring(0, msg.indexOf(">") + 1).length()) {
 						reason = "*No reason was provided by the moderator*";
 					} else {
 						reason = msg.substring(msg.indexOf(">") + 2);
 					}
 					
-					//Check if the author is higher than punished, otherwise command failed to execute
+					//Check if the author is higher than punished, otherwise command fails to execute
 					try {
 						if(!(ServerHandler.compareRoles(new User[] {author, punished}, gld.getGuild()) > 0)) {
 							
