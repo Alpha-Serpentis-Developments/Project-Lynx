@@ -146,8 +146,11 @@ public abstract class Command {
 		return cmdDesc;
 
 	}
-	public HashMap<String, ArrayList<Long>> getRoleIDs() {
-		return cmdPerms;
+	public ArrayList<Long> getRoleIDs() {
+		return cmdPerms.get("ROLE");
+	}
+	public ArrayList<Long> getUserIDs() {
+		return cmdPerms.get("USER");
 	}
 	public String getType() {
 		return cmdType;
