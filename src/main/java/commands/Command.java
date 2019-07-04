@@ -1,6 +1,7 @@
 package commands;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import init.InitData;
 import init.Launcher;
@@ -15,7 +16,7 @@ public abstract class Command {
 	 * allowPrivate determines if the command can be used in the DMs
 	 */
 	private String cmdName, cmdDesc, cmdType, cmdUsage;
-	private ArrayList<Long> cmdPerms = new ArrayList<Long>();
+	private HashMap<String, ArrayList<Long>> cmdPerms = new HashMap<String, ArrayList<Long>>();
 	private boolean requirePerms = false, allowPrivate = true;
 
 	//TODO: Fix these constructors...
@@ -62,26 +63,26 @@ public abstract class Command {
 	 * @param d
 	 * @param cp
 	 */
-	public Command(String n, String d, ArrayList<Long> cp) {
+	public Command(String n, String d, HashMap<String, ArrayList<Long>> cp) {
 		setName(n);
 		setDesc(d);
 		setPerms(cp);
 		setType("GENERAL");
 	}
-	public Command(String n, String d, ArrayList<Long> cp, String type) {
+	public Command(String n, String d, HashMap<String, ArrayList<Long>> cp, String type) {
 		setName(n);
 		setDesc(d);
 		setPerms(cp);
 		setType(type);
 	}
-	public Command(String n, String d, ArrayList<Long> cp, String type, boolean rqrPrm) {
+	public Command(String n, String d, HashMap<String, ArrayList<Long>> cp, String type, boolean rqrPrm) {
 		setName(n);
 		setDesc(d);
 		setPerms(cp);
 		setType(type);
 		setRequirePerms(rqrPrm);
 	}
-	public Command(String n, String d, ArrayList<Long> cp, String type, boolean rqrPrm, boolean allwPrv) {
+	public Command(String n, String d, HashMap<String, ArrayList<Long>> cp, String type, boolean rqrPrm, boolean allwPrv) {
 		setName(n);
 		setDesc(d);
 		setPerms(cp);
@@ -97,7 +98,7 @@ public abstract class Command {
 	public void setDesc(String d) {
 		cmdDesc = d;
 	}
-	public void setPerms(ArrayList<Long> p) {
+	public void setPerms(HashMap<String, ArrayList<Long>> p) {
 		cmdPerms = p;
 	}
 	public void setType(String t) {
@@ -117,21 +118,35 @@ public abstract class Command {
 	public String getName() {
 		return cmdName;
 	}
+
 	public String getDesc() {
 
 		if(cmdPerms.size() != 0) {
 
 			String returnThis = cmdDesc + "\n\n**Roles Needed**: ";
-			for(long id: cmdPerms) {
-				returnThis += Launcher.api.getRoleById(id).getName()+", ";
+			if(cmdPerms.get("ROLE") != null) {
+				for(long id: cmdPerms.get("ROLE")) {
+					returnThis += Launcher.api.getRoleById(id).getName() + ", ";
+				}
+
+				returnThis = returnThis.substring(0,  returnThis.length() - 2);
 			}
 
-			return returnThis.substring(0, returnThis.length() - 2);
+			if(cmdPerms.get("USER") != null) {
+				returnThis += "\n**Users Exempted**: ";
+				for(long id: cmdPerms.get("USER")) {
+					returnThis += Launcher.api.getUserById(id).getAsTag() + ", ";
+				}
+
+				returnThis = returnThis.substring(0,  returnThis.length() - 2);
+			}
+			return returnThis;
 		}
 
 		return cmdDesc;
+
 	}
-	public ArrayList<Long> getRoleIDs() {
+	public HashMap<String, ArrayList<Long>> getRoleIDs() {
 		return cmdPerms;
 	}
 	public String getType() {
@@ -149,11 +164,19 @@ public abstract class Command {
 
 	//Misc Methods
 
-	public void addPerm(long id) {
-		cmdPerms.add(id);
+	public void addPerm(String key, long id) throws Exception {
+		if(!key.equalsIgnoreCase("USER") || !key.equalsIgnoreCase("ROLE")) {
+			throw new Exception("Malformed command permission key!");
+		}
+
+		cmdPerms.get(key).add(id);
 	}
-	public void removePerm(long id) {
-		cmdPerms.remove(id);
+	public void removePerm(String key, long id) throws Exception {
+		if(!key.equalsIgnoreCase("USER") || !key.equalsIgnoreCase("ROLE")) {
+			throw new Exception("Malformed command permission key!");
+		}
+
+		cmdPerms.get(key).remove(id);
 	}
 	/**
 	 * Used in conjunction if requirePerms is true, otherwise this is redundant!
