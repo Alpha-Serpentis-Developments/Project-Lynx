@@ -8,6 +8,7 @@ public class InitData {
 	 * Use the following initOverrides keys:
 	 *
 	 * locKey(KEY_LOCATION) -- directory
+	 * locBackup(KEY_LOCATION) -- directory
 	 * guildID(ID) -- value (Unnecessary?)
 	 * logID(ID) -- value
 	 * botOwnerIDs(ID,ID...) -- value, use commas to separate IDs
@@ -16,6 +17,7 @@ public class InitData {
 	 * permLvl(?) -- undecided... Removed... TODO: Rewrite this?
 	 * prefix(char) -- character
 	 * accptPrv(bool) -- boolean
+	 * accptMultSrvrs(bool) -- boolean
 	 * vers(VERSION) -- String
 	 *
 	 * EXAMPLE:
@@ -25,7 +27,7 @@ public class InitData {
 	 *
 	 */
 	public static final String overrideKeys[] = {
-			"locKey", "guildID", "logID", "botOwnerIDs", "permLvl",
+			"locKey", "guildID", "logID", "botOwnerIDs", "modIDs", "adminIDs", "permLvl",
 			"prefix", "accptPrv", "vers"
 			};
 
@@ -33,16 +35,17 @@ public class InitData {
 	 * YOU MUST SET THE FILE DIRECTORY TO A "key.txt" or "key.dat" FILE.
 	 * It doesn't have to be in the depend folder.
 	 */
-	public static String locationKey = "depend/key.txt";
 
+	public static String locationKey = "resources/key.txt", locationBackup = "";
+	
 	/*
 	 * "guildID" is used for the guild's ID and "logID" is used if a log channel is available
 	 *
 	 * TODO: Make it so that it supports multiple servers for LUCKY LYNX ONLY
-	 * "guildID" can be filled in manually if needed
+	 * "guildID" is optional for one server
 	 */
-	public static String guildID = "", logID = "591391617655636100";
-
+	public static String guildID = "287725143248338944", logID = "289001467493351424";
+	
 	/*
 	 * "botOwnerIDs" contains the USER IDs
 	 * "modIDs" and "adminIDs" contains their respective ROLE IDs
@@ -58,12 +61,13 @@ public class InitData {
 	/*
 	 * Use this if you want for the bot to react to private messages (eg., reacts to commands)
 	 * This does not apply to SENDING messages in a user's DMs
+	 * "acceptMultipleServers" will determine if "guildID" will be needed
 	 */
-	public static boolean acceptPriv = true, acceptMultipleServers = true;
-
+	public static boolean acceptPriv = false, acceptMultipleServers = false;
+	
 	/*
 	 * Use this to add a version
 	 */
-	public static String version = "0.01a";
-
+	public static String version = "0.01a DoubleJGames";
+  
 }
