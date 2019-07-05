@@ -33,7 +33,7 @@ public class InitData {
 	 * YOU MUST SET THE FILE DIRECTORY TO A "key.txt" or "key.dat" FILE.
 	 * It doesn't have to be in the depend folder.
 	 */
-	public static String locationKey = "resources/key.txt";
+	public static String locationKey = "resources/key.txt", locationBackup = "";
 
 	/*
 	 * "guildID" is used for the guild's ID and "logID" is used if a log channel is available
