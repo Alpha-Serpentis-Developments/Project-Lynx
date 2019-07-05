@@ -1,6 +1,7 @@
 [discord-invite]: https://discord.gg/u9wMgBY
 
 [ ![Discord](https://discordapp.com/api/guilds/590215639785013298/widget.png) ][discord-invite]
+**THIS IS AN EXAMPLE FOR THE DOUBLEJGAMES DISCORD SERVER**
 # Discord-Lynx
 A Discord Bot built using the [JDA Library](https://github.com/DV8FromTheWorld/JDA) and Java.
 
