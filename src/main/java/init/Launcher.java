@@ -139,6 +139,9 @@ public class Launcher {
 						case "locKey":
 							InitData.locationKey = stuff;
 							break;
+						case "locBackup":
+							InitData.locationBackup = stuff;
+							break;
 						case "guildID":
 							InitData.guildID = stuff;
 							break;
