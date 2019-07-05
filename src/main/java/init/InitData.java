@@ -8,6 +8,7 @@ public class InitData {
 	 * Use the following initOverrides keys:
 	 *
 	 * locKey(KEY_LOCATION) -- directory
+	 * locBackup(KEY_LOCATION) -- directory
 	 * guildID(ID) -- value (Unnecessary?)
 	 * logID(ID) -- value
 	 * botOwnerIDs(ID,ID...) -- value, use commas to separate IDs
