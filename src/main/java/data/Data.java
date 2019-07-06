@@ -59,7 +59,7 @@ public class Data {
 
 	//TODO: Write data to the designated file
 	/**
-	 *
+	 * Writes to the designated filepath in a JSON format
 	 * @param file the file-path
 	 * @param jLine the JSON line
 	 * @return
@@ -82,11 +82,15 @@ public class Data {
 	}
 
 	//Misc Methods
-	public static void createBackup(boolean temp) {
-		if(temp)
-			writeData(InitData.locationBackup + "BACKUP-TMP-" + Instant.now().getEpochSecond() + ".json", readData(InitData.locationJSON));
-		else
-			writeData(InitData.locationBackup + "BACKUP-" + Instant.now().getEpochSecond() + ".json", readData(InitData.locationJSON));
+	public static File createBackup(boolean temp) {
+		long inst = Instant.now().getEpochSecond();
+		if(temp) {
+			writeData(InitData.locationBackup + "BACKUP-TMP-" + inst + ".json", readData(InitData.locationJSON));
+			return new File(InitData.locationBackup + "BACKUP-TMP-" + inst + ".json");
+		} else {
+			writeData(InitData.locationBackup + "BACKUP-" + inst + ".json", readData(InitData.locationJSON));
+			return new File(InitData.locationBackup + "BACKUP-" + inst + ".json");
+		}
 	}
 
 	public static void obtainBackup() {
@@ -97,7 +101,10 @@ public class Data {
 		return false;
 	}
 
-	public static boolean addGuild() {
+	public static boolean addGuild(Guild gld) {
+
+
+
 		return false;
 	}
 

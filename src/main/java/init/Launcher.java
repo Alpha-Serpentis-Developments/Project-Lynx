@@ -21,12 +21,14 @@ public class Launcher {
 
 	public static JDA api;
 	public static long botID;
+	public static File tmpFile;
 
 	public Launcher() {
 
 		//TESTING, REMOVE THIS
 
 		Data.initCache();
+		tmpFile = Data.createBackup(true);
 
 		//TESTING END
 
@@ -229,11 +231,18 @@ public class Launcher {
 		ServerHandler.cachedGuilds = new ArrayList<Guild>(api.getGuilds());
 	}
 
-	public void shutdown() throws InterruptedException {
+	public static void shutdown() throws InterruptedException {
 
 		api.getPresence().setStatus(OnlineStatus.OFFLINE);
 
 		api.shutdown();
+
+		try {
+			tmpFile.deleteOnExit();
+			Data.createBackup(false);
+		} catch(Exception e) {
+			e.printStackTrace();
+		}
 
 	}
 
