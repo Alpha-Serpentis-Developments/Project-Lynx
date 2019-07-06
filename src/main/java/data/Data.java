@@ -97,14 +97,28 @@ public class Data {
 
 	}
 
-	public static boolean deleteGuild() {
+	public static boolean deleteGuild(Guild gld) {
+
+
 		return false;
 	}
 
 	public static boolean addGuild(Guild gld) {
 
+		String jsonData = readData(InitData.locationJSON);
+		JSONObject obj = new JSONObject(jsonData);
 
+		for(String id: obj.keySet()) {
+			if(id.equals(gld.getId()))
+				return false;
+		}
 
+		obj.put(gld.getId(), obj.get("DEFAULT"));
+
+		return writeData(InitData.locationJSON, obj.toString());
+	}
+
+	public static boolean editGuild(Guild gld, Object obj) {
 		return false;
 	}
 

@@ -1,0 +1,48 @@
+{
+  "DEFAULT": {
+		"config": {
+			"warn": {
+				"active": false,
+				"requirePerms": true,
+				"logging": false,
+				"roleIDs": [],
+				"userIDs": []
+			},
+			"warnings": {
+				"active": false,
+				"requirePerms": true,
+				"logging": false,
+				"roleIDs": [],
+				"userIDs": []
+			},
+			"kick": {
+				"active": false,
+				"requirePerms": true,
+				"logging": false,
+				"roleIDs": [],
+				"userIDs": []
+			},
+			"ban": {
+				"active": false,
+				"requirePerms": true,
+				"logging": false,
+				"roleIDs": [],
+				"userIDs": []
+			},
+			"configure": {
+				"active": true,
+				"requirePerms": true,
+				"logging": false,
+				"roleIDs": [],
+				"userIDs": []
+			},
+			"welcome": {
+				"active": false,
+				"requirePerms": true,
+				"logging": false,
+				"roleIDs": [],
+				"userIDs": []
+			}
+		}
+	}
+}
