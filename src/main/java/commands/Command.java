@@ -5,91 +5,19 @@ import java.util.HashMap;
 
 import init.InitData;
 import init.Launcher;
+import net.dv8tion.jda.core.entities.PrivateChannel;
 import net.dv8tion.jda.core.entities.TextChannel;
 
 public abstract class Command {
 
 	/*
 	 * cmdName is REQUIRED
-	 * cmdType is REQUIRED, otherwise it DEFAULTS to "GENERAL"
 	 * cmdPerms can be left empty, however if requirePerms = true, you'll need to configure.
 	 * allowPrivate determines if the command can be used in the DMs
 	 */
-	private String cmdName, cmdDesc, cmdType, cmdUsage;
+	private String cmdName, cmdDesc;
 	private HashMap<String, ArrayList<Long>> cmdPerms = new HashMap<String, ArrayList<Long>>();
 	private boolean requirePerms = false, allowPrivate = true;
-
-	//TODO: Fix these constructors...
-
-	/**NOT RECOMMENDED, PLEASE DEFINE YOUR COMMANDS EARLY AT INIT OR IN THE CODE ELSEWHERE
-	 *
-	 * @param n is the name
-	 */
-	public Command(String n) {
-		setName(n);
-		setDesc("Use the `" + InitData.prefix + "setDesc [description]` command to set this command's description!");
-		setType("GENERAL");
-	}
-	public Command(String n, boolean rqrPrm) {
-		setName(n);
-		setDesc("Use the `" + InitData.prefix + "setDesc [description]` command to set this command's description!");
-		setType("GENERAL");
-		setRequirePerms(rqrPrm);
-	}
-	/**NOT RECOMMENDED, PLEASE DEFINE YOUR COMMANDS EARLY AT INIT OR IN THE CODE ELSEWHERE
-	 *
-	 * @param n is the name
-	 * @param d is the description
-	 */
-	public Command(String n, String d) {
-		setName(n);
-		setDesc(d);
-		setType("GENERAL");
-	}
-	/**NOT RECOMMENDED, PLEASE DEFINE YOUR COMMANDS EARLY AT INIT OR IN THE CODE ELSEWHERE
-	 *
-	 * @param n is the name
-	 * @param d is the description
-	 * @param t is the type
-	 */
-	public Command(String n, String d, String t) {
-		setName(n);
-		setDesc(d);
-		setType(t);
-	}
-	/**
-	 *
-	 * @param n
-	 * @param d
-	 * @param cp
-	 */
-	public Command(String n, String d, HashMap<String, ArrayList<Long>> cp) {
-		setName(n);
-		setDesc(d);
-		setPerms(cp);
-		setType("GENERAL");
-	}
-	public Command(String n, String d, HashMap<String, ArrayList<Long>> cp, String type) {
-		setName(n);
-		setDesc(d);
-		setPerms(cp);
-		setType(type);
-	}
-	public Command(String n, String d, HashMap<String, ArrayList<Long>> cp, String type, boolean rqrPrm) {
-		setName(n);
-		setDesc(d);
-		setPerms(cp);
-		setType(type);
-		setRequirePerms(rqrPrm);
-	}
-	public Command(String n, String d, HashMap<String, ArrayList<Long>> cp, String type, boolean rqrPrm, boolean allwPrv) {
-		setName(n);
-		setDesc(d);
-		setPerms(cp);
-		setType(type);
-		setRequirePerms(rqrPrm);
-		setAllowPrivate(allwPrv);
-	}
 
 	//Setter Methods
 	public void setName(String n) {
@@ -101,15 +29,11 @@ public abstract class Command {
 	public void setPerms(HashMap<String, ArrayList<Long>> p) {
 		cmdPerms = p;
 	}
-	public void setType(String t) {
-		cmdType = t.toUpperCase();
-	}
+
 	public void setRequirePerms(boolean o) {
 		requirePerms = o;
 	}
-	public void setUsage(String s) {
-		cmdUsage = s;
-	}
+
 	public void setAllowPrivate(boolean b) {
 		allowPrivate = b;
 	}
@@ -152,15 +76,11 @@ public abstract class Command {
 	public ArrayList<Long> getUserIDs() {
 		return cmdPerms.get("USER");
 	}
-	public String getType() {
-		return cmdType;
-	}
+
 	public boolean getRequirePerms() {
 		return requirePerms;
 	}
-	public String getUsage() {
-		return cmdUsage;
-	}
+
 	public boolean getAllowPrivate() {
 		return allowPrivate;
 	}
@@ -190,6 +110,15 @@ public abstract class Command {
 	}
 
 	/**
+	 * Verifies if the command can be executed by the bot and user
+	 * @return true if execution can be done, otherwise false.
+	 */
+	public boolean verifyExecution() {
+
+		return false;
+	}
+
+	/**
 	 * Define action() as you wish in classes that extend this.
 	 * @param chn is used to allow sending messages to a certain text channel
 	 * @param msg is used to carry around messages (you do not have to use msg if you don't wish)
@@ -197,6 +126,6 @@ public abstract class Command {
 	 *
 	 * @return true if successful, otherwise false
 	 */
-	public abstract boolean action(TextChannel chn, String msg, Object misc);
+	public abstract <T extends TextChannel & PrivateChannel> boolean action(T chn, String msg, Object misc);
 
 }
