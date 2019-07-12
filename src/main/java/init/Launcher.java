@@ -9,6 +9,7 @@ import java.util.Scanner;
 import javax.security.auth.login.LoginException;
 
 import data.Data;
+import handlers.CommandHandler;
 import handlers.MessageHandler;
 import handlers.ServerHandler;
 import net.dv8tion.jda.core.JDA;
@@ -18,6 +19,8 @@ import net.dv8tion.jda.core.entities.Game;
 import net.dv8tion.jda.core.entities.Guild;
 
 public class Launcher {
+
+	public static volatile boolean initialized = false;
 
 	public static JDA api;
 	public static long botID;
@@ -35,7 +38,7 @@ public class Launcher {
 		Scanner sc;
 
 		/*
-		 * Initialization will be halted IF the key's location is empty.
+		 * Initialization MIGHT be halted if the InitData.locationKey is empty, but it'll check the overrides before exiting
 		 */
 		if(InitData.locationKey.isEmpty()) {
 
@@ -57,11 +60,14 @@ public class Launcher {
 
 				sc.close();
 			} catch (LoginException | InterruptedException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			} catch (FileNotFoundException e) {
+				e.printStackTrace();
+			} catch (Exception e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
+			} finally {
+				initialized = true;
 			}
 
 		}
@@ -70,11 +76,9 @@ public class Launcher {
 
 	/**
 	 * Used in the event that during start-up and overrides cannot be applied, it loads the defaults and any successfully applied overrides.
-	 * @throws InterruptedException
-	 * @throws FileNotFoundException
-	 * @throws LoginException
+	 * @throws Exception
 	 */
-	public void ignoreOverride() throws InterruptedException, FileNotFoundException, LoginException {
+	public void ignoreOverride() throws Exception {
 
 		System.out.println("Starting up JDA initialization...");
 
@@ -89,10 +93,9 @@ public class Launcher {
 	/**
 	 * Initializes JDA
 	 * @param key The key/token for the Discord Bot
-	 * @throws LoginException
-	 * @throws InterruptedException
+	 * @throws Exception
 	 */
-	public void JDAInit(String key) throws LoginException, InterruptedException {
+	public void JDAInit(String key) throws Exception {
 
 		api = new JDABuilder(key).build();
 		api.addEventListener(new MessageHandler());
@@ -101,8 +104,12 @@ public class Launcher {
 		api.getPresence().setGame(Game.playing("Loading..."));
 
 		api.awaitReady(); // Waits for JDA to complete loading to prevent issues
+
 		botID = api.getSelfUser().getIdLong();
 		getServers();
+
+		System.out.println("Initializing commands...");
+		CommandHandler.initCommands();
 
 		System.out.println("Initializing complete!");
 		api.getPresence().setGame(Game.playing("Looking for food..."));
@@ -165,36 +172,6 @@ public class Launcher {
 							}
 
 							break;
-						case "modIDs":
-
-							scb = new Scanner(stuff);
-							ids = new ArrayList<Long>();
-							scb.useDelimiter(",");
-							while(scb.hasNext()) {
-								ids.add(scb.nextLong());
-							}
-
-							InitData.modIDs = new Long[ids.size()];
-							for(int i = 0; i < ids.size(); i++) {
-								InitData.modIDs[i] = ids.get(i);
-							}
-
-							break;
-						case "adminIDs":
-
-							scb = new Scanner(stuff);
-							ids = new ArrayList<Long>();
-							scb.useDelimiter(",");
-							while(scb.hasNext()) {
-								ids.add(scb.nextLong());
-							}
-
-							InitData.adminIDs = new Long[ids.size()];
-							for(int i = 0; i < ids.size(); i++) {
-								InitData.adminIDs[i] = ids.get(i);
-							}
-
-							break;
 						case "permLvl":
 							System.out.println("permLvl override is unused! Nothing changed");
 							break;
@@ -240,6 +217,7 @@ public class Launcher {
 		try {
 			tmpFile.deleteOnExit();
 			Data.createBackup(false);
+			System.out.println("[Launcher.java] Deleting " + tmpFile.getName());
 		} catch(Exception e) {
 			e.printStackTrace();
 		}

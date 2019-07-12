@@ -2,23 +2,17 @@ package data;
 
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.io.InputStream;
 import java.time.Instant;
-import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
-import org.json.JSONArray;
 import org.json.JSONObject;
-import org.json.JSONPointer;
-import org.json.JSONTokener;
-import org.json.JSONWriter;
-
 import commands.Command;
+import handlers.MessageHandler;
 import init.InitData;
 import net.dv8tion.jda.core.entities.Guild;
 
@@ -27,9 +21,7 @@ public class Data {
 	/**
 	 * This is initialized at startup
 	 */
-	public static HashMap<Guild, ArrayList<Command>> cache;
-
-	public static ArrayList<Command> CONFIG_DEFAULT = new ArrayList<Command>();
+	public static Map<Guild, List<Command>> cache;
 
 	//TODO: Clean this up
 	/**
@@ -50,6 +42,7 @@ public class Data {
 				line = br.readLine();
 			}
 			result = sb.toString();
+			br.close();
 		} catch(Exception e) {
 			e.printStackTrace();
 		}
@@ -57,7 +50,6 @@ public class Data {
 
 	}
 
-	//TODO: Write data to the designated file
 	/**
 	 * Writes to the designated filepath in a JSON format
 	 * @param file the file-path
@@ -68,10 +60,13 @@ public class Data {
 		try {
 			FileWriter w = new FileWriter(new File(file));
 
-			System.out.println("Writing to " + file);
+			System.out.println("[Data.java] Writing to " + file);
 
 			w.write(jLine);
 			w.close();
+
+			if(file.equals(InitData.locationJSON)) //Updates the cache
+				initCache();
 
 			return true;
 
@@ -99,6 +94,15 @@ public class Data {
 
 	public static boolean deleteGuild(Guild gld) {
 
+		String jsonData = readData(InitData.locationJSON);
+		JSONObject obj = new JSONObject(jsonData);
+
+		for(String id: obj.keySet()) {
+			if(id.equals(gld.getId())) {
+				obj.remove(id);
+				return true;
+			}
+		}
 
 		return false;
 	}
@@ -129,16 +133,43 @@ public class Data {
 
 		if(!InitData.acceptMultipleServers) return;
 
-		String jsonData = readData("resources/guildData.json");
+		String jsonData = readData(InitData.locationJSON);
 		if(jsonData.isEmpty()) return; //TODO: Rewrite to call obtainBackup() to search for backups
 		JSONObject obj = new JSONObject(jsonData);
 
-		cache = new HashMap<Guild, ArrayList<Command>>();
+		cache = new HashMap<Guild, List<Command>>();
 
 		for(String key: obj.keySet()) {
-			System.out.println("DEBUG (Data.java) :" + key);
+			System.out.println("[Data.java]: " + key);
+
 		}
 
+	}
+
+	/**
+	 *
+	 * @param gld is the key to the HashMap
+	 * @param obj
+	 * @return True if the cache was successfully modified, otherwise false.
+	 */
+	public static <T extends Command & List<Command>> boolean modifyCache(Guild gld, T obj) {
+
+		Map<Guild, List<Command>> tmpBackup = cache;
+
+		if(tmpBackup.containsKey(gld)) {
+
+		} else {
+			if(addGuild(gld)) {
+
+			} else {
+				System.out.println("[Data.java]: WARNING: modifyCache() was unable to add Guild " + gld.getId() + "to the cache and file!");
+				MessageHandler.sendMessage(gld.getOwner().getUser().openPrivateChannel().complete(), "The guild was unable to be put into the cache/data. Please do !configure to reattempt");
+
+				return false;
+			}
+		}
+
+		return false;
 	}
 
 }
