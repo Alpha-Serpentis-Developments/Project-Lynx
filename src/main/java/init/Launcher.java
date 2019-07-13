@@ -12,6 +12,7 @@ import data.Data;
 import handlers.CommandHandler;
 import handlers.MessageHandler;
 import handlers.ServerHandler;
+import misc.Playing;
 import net.dv8tion.jda.core.JDA;
 import net.dv8tion.jda.core.JDABuilder;
 import net.dv8tion.jda.core.OnlineStatus;
@@ -112,7 +113,8 @@ public class Launcher {
 		CommandHandler.initCommands();
 
 		System.out.println("Initializing complete!");
-		api.getPresence().setGame(Game.playing("Looking for food..."));
+
+		new Thread(new Playing()).start();
 
 	}
 
@@ -220,6 +222,8 @@ public class Launcher {
 			System.out.println("[Launcher.java] Deleting " + tmpFile.getName());
 		} catch(Exception e) {
 			e.printStackTrace();
+		} finally {
+			System.exit(0);
 		}
 
 	}

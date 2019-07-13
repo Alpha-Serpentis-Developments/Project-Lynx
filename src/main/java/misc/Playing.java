@@ -3,8 +3,11 @@ package misc;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Random;
 
 import init.InitData;
+import init.Launcher;
+import net.dv8tion.jda.core.entities.Game;
 
 public class Playing implements Runnable {
 
@@ -20,20 +23,31 @@ public class Playing implements Runnable {
 
 	public static boolean setPlaying(String s) {
 
+		Launcher.api.getPresence().setGame(Game.playing(s));
+		return true;
 
-
-		return false;
 	}
 
 	public static String getPlaying() {
 
+		String returnThis = "";
+		Random rand = new Random();
 
-		return "";
+		returnThis = InitData.prefix + commands[rand.nextInt(2)] + " | " + messages.get(rand.nextInt(messages.size()));
+
+		return returnThis;
 	}
 
 	@Override
 	public void run() {
-
+		try {
+			while(true) {
+				setPlaying(getPlaying());
+				Thread.sleep(120000);
+			}
+		} catch(Exception e) {
+			e.printStackTrace();
+		}
 	}
 
 }
