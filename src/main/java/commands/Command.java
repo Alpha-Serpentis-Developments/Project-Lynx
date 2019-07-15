@@ -4,16 +4,24 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import init.Launcher;
+import net.dv8tion.jda.core.entities.Guild;
 import net.dv8tion.jda.core.entities.MessageChannel;
+import net.dv8tion.jda.core.entities.User;
+
+enum CommandType {
+	GENERAL, MOD, BOT_OWNER
+}
 
 public abstract class Command {
 
 	/*
 	 * cmdName is REQUIRED
+	 * cmdType will determine how verifyExecution() is used and for info
 	 * cmdPerms can be left empty, however if requirePerms = true, you'll need to configure.
 	 * allowPrivate determines if the command can be used in the DMs
 	 */
 	private String cmdName, cmdDesc;
+	private CommandType cmdType;
 	private HashMap<String, ArrayList<Long>> cmdPerms = new HashMap<String, ArrayList<Long>>();
 	private boolean requirePerms = false, allowPrivate = true;
 
@@ -24,10 +32,12 @@ public abstract class Command {
 	public void setDesc(String d) {
 		cmdDesc = d;
 	}
+	public void setCmdType(CommandType ct) {
+		cmdType = ct;
+	}
 	public void setPerms(HashMap<String, ArrayList<Long>> p) {
 		cmdPerms = p;
 	}
-
 	public void setRequirePerms(boolean o) {
 		requirePerms = o;
 	}
@@ -67,6 +77,9 @@ public abstract class Command {
 
 		return cmdDesc;
 
+	}
+	public CommandType getCmdType() {
+		return cmdType;
 	}
 	public ArrayList<Long> getRoleIDs() {
 		return cmdPerms.get("ROLE");
@@ -111,7 +124,10 @@ public abstract class Command {
 	 * Verifies if the command can be executed by the bot and user
 	 * @return true if execution can be done, otherwise false.
 	 */
-	public boolean verifyExecution() {
+	public boolean verifyExecution(User usr, Guild gld) {
+
+		if(gld.getOwner().getUser().equals(usr)) //
+			return true;
 
 		return false;
 	}
