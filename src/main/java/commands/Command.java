@@ -3,10 +3,8 @@ package commands;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import init.InitData;
 import init.Launcher;
-import net.dv8tion.jda.core.entities.PrivateChannel;
-import net.dv8tion.jda.core.entities.TextChannel;
+import net.dv8tion.jda.core.entities.MessageChannel;
 
 public abstract class Command {
 
@@ -126,6 +124,6 @@ public abstract class Command {
 	 *
 	 * @return true if successful, otherwise false
 	 */
-	public abstract <T extends TextChannel & PrivateChannel> boolean action(T chn, String msg, Object misc);
+	public abstract boolean action(MessageChannel chn, String msg, Object misc);
 
 }
