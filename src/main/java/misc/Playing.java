@@ -41,6 +41,8 @@ public class Playing implements Runnable {
 	@Override
 	public void run() {
 		try {
+			Thread.currentThread().setName("Playing Thread");
+			System.out.println("[Playing.java] " + Thread.currentThread().getName() + " started!");
 			while(true) {
 				setPlaying(getPlaying());
 				Thread.sleep(120000);

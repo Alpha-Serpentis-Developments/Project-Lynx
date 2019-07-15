@@ -23,7 +23,7 @@ public class Launcher {
 
 	public static volatile boolean initialized = false;
 
-	public static JDA api;
+	public static volatile JDA api;
 	public static long botID;
 	public static File tmpFile;
 
@@ -43,7 +43,7 @@ public class Launcher {
 		 */
 		if(InitData.locationKey.isEmpty()) {
 
-			System.out.println("Key's location is empty! Checking if there is an override for key's location?");
+			System.out.println("[Launcher.java] Key's location is empty! Checking if there is an override for key's location?");
 			//OVERRIDE INITIALIZATION
 			overrideInit();
 
@@ -52,8 +52,6 @@ public class Launcher {
 			overrideInit();
 
 			//JDA INITIALIZATION
-			System.out.println("Starting up JDA initialization...");
-
 			try {
 				sc = new Scanner(new File(InitData.locationKey));
 
@@ -65,7 +63,6 @@ public class Launcher {
 			} catch (FileNotFoundException e) {
 				e.printStackTrace();
 			} catch (Exception e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			} finally {
 				initialized = true;
@@ -98,6 +95,8 @@ public class Launcher {
 	 */
 	public void JDAInit(String key) throws Exception {
 
+		System.out.println("[Launcher.java] Starting up JDA initialization...");
+
 		api = new JDABuilder(key).build();
 		api.addEventListener(new MessageHandler());
 		api.addEventListener(new ServerHandler());
@@ -110,9 +109,13 @@ public class Launcher {
 		getServers();
 
 		System.out.println("Initializing commands...");
-		CommandHandler.initCommands();
 
-		System.out.println("Initializing complete!");
+		if(CommandHandler.initCommands())
+			System.out.println("Initializing complete!");
+		else {
+			System.out.println("[Launcher.java] Commands cannot be initialized! Shutting down!");
+			System.exit(-1);
+		}
 
 		new Thread(new Playing()).start();
 
