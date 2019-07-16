@@ -39,8 +39,6 @@ public class InitData {
 	 */
 	public static String locationKey = "resources/key.txt", locationBackup = "resources/backup/", locationJSON = "resources/guildData.json";
 
-	public static String locationKey = "resources/key.txt", locationBackup = "";
-	
 	/*
 	 * "guildID" is used for the guild's ID and "logID" is used if a log channel is available
 	 *
@@ -71,6 +69,6 @@ public class InitData {
 	/*
 	 * Use this to add a version
 	 */
-	public static String version = "0.01a DoubleJGames";
-  
+	public static String version = "0.01a";
+
 }
