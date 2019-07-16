@@ -128,8 +128,8 @@ public abstract class Command {
 				for(long id: cmdPerms.get("ROLE")) {
 					returnThis += Launcher.api.getRoleById(id).getName() + ", ";
 				}
-				returnThis = returnThis.substring(0,  returnThis.length() - 2);
 
+				returnThis = returnThis.substring(0,  returnThis.length() - 2);
 			}
 
 			if(cmdPerms.get("USER") != null) {
@@ -137,8 +137,8 @@ public abstract class Command {
 				for(long id: cmdPerms.get("USER")) {
 					returnThis += Launcher.api.getUserById(id).getAsTag() + ", ";
 				}
+
 				returnThis = returnThis.substring(0,  returnThis.length() - 2);
-        
 			}
 			return returnThis;
 		}
@@ -146,8 +146,11 @@ public abstract class Command {
 		return cmdDesc;
 
 	}
-	public HashMap<String, ArrayList<Long>> getRoleIDs() {
-		return cmdPerms;
+	public ArrayList<Long> getRoleIDs() {
+		return cmdPerms.get("ROLE");
+	}
+	public ArrayList<Long> getUserIDs() {
+		return cmdPerms.get("USER");
 	}
 	public String getType() {
 		return cmdType;

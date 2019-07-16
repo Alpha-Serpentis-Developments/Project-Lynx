@@ -1,20 +1,12 @@
 package handlers;
 
-import java.io.File;
 import java.util.ArrayList;
 import init.Launcher;
 import net.dv8tion.jda.core.entities.Guild;
-import net.dv8tion.jda.core.entities.Message;
 import net.dv8tion.jda.core.entities.Role;
-import net.dv8tion.jda.core.entities.TextChannel;
 import net.dv8tion.jda.core.entities.User;
-import net.dv8tion.jda.core.entities.impl.AbstractMessage;
-import net.dv8tion.jda.core.entities.impl.DataMessage;
 import net.dv8tion.jda.core.events.Event;
 import net.dv8tion.jda.core.events.guild.GuildJoinEvent;
-import net.dv8tion.jda.core.events.guild.member.GuildMemberJoinEvent;
-import net.dv8tion.jda.core.events.guild.member.GuildMemberRoleAddEvent;
-import net.dv8tion.jda.core.events.role.RoleCreateEvent;
 import net.dv8tion.jda.core.hooks.EventListener;
 
 public class ServerHandler implements EventListener {
@@ -88,7 +80,7 @@ public class ServerHandler implements EventListener {
 
 	}
 
-	public static Role getHighestRole(ArrayList<Role> r, Guild g) {
+	public static Role getHighestRole(User u, Guild g, ArrayList<Role> r) {
 
 
 
@@ -97,7 +89,7 @@ public class ServerHandler implements EventListener {
 	}
 
 	/**
-	 *
+	 * Obtains the User of the server's owner
 	 * @param id MUST be the server address, otherwise an error will be thrown!
 	 * @return The guild's owner
 	 */
@@ -119,6 +111,8 @@ public class ServerHandler implements EventListener {
 
 				if(gld.getIdLong() == ((GuildJoinEvent) event).getGuild().getIdLong()) {
 
+					System.out.println("DEBUG (CACHED GUILDS): " + gld.getName());
+
 					cached = true;
 					return;
 
@@ -138,7 +132,7 @@ public class ServerHandler implements EventListener {
 
 			}
 
-		} else if(event instanceof GuildMemberJoinEvent) {
+		} /*else if(event instanceof GuildMemberJoinEvent) { //WELCOMES USERS WITH A PICTURE
 
 			Guild gld = ((GuildMemberJoinEvent) event).getGuild();
 			TextChannel chn = gld.getSystemChannel();
@@ -154,7 +148,45 @@ public class ServerHandler implements EventListener {
 				});
 			}
 
+		}*/
+
+	}
+
+	/**Determines if the user can execute an action in the guild. This method does NOT check Bot Owners.
+	 *
+	 * @param gld is the guild the user is in
+	 * @param usr is the user that is being determined
+	 * @param r is an ArrayList of type T (must be a Role or Long)
+	 * @return true if the user is able to execute an action, otherwise false
+	 */
+	public static <T> boolean allowedToDoAction(Guild gld, User usr, ArrayList<T> r) {
+
+		//Checks if the user is the server owner
+		if(usr.equals(gld.getOwner().getUser()))
+			return true;
+		else if(r == null) { // To prevent a NullPointerException error after server owner check
+			return false;
+		} else if(!r.isEmpty() && (r.get(0) instanceof Role || r.get(0) instanceof Long)) { //Checks that type T is either a Role or Long
+
+			boolean isRole = r.get(0) instanceof Role;
+
+			for(T item: r) { //Goes through the given ArrayList
+
+				if(isRole) {
+					if(gld.getMember(usr).getRoles().contains(item)) //For type Role
+						return true;
+				} else {
+					for(Role role: gld.getMember(usr).getRoles()) { //For type Long
+						if(role.getIdLong() == (Long) item) {
+							return true;
+						}
+					}
+				}
+			}
+
 		}
+
+		return false;
 
 	}
 
