@@ -1,127 +1,155 @@
 package handlers;
 
-import commands.general.About;
-import commands.general.Help;
-import commands.moderation.Ban;
-import commands.moderation.Kick;
-import commands.moderation.Warn;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.Scanner;
+import org.json.JSONArray;
+import org.json.JSONObject;
+
+import net.dv8tion.jda.core.entities.Guild;
+
+import commands.Command;
+import commands.CommandType;
+import commands.general.*;
+import commands.moderation.*;
+import commands.utilities.*;
+import data.Data;
 import init.InitData;
-import init.Launcher;
-import net.dv8tion.jda.core.entities.TextChannel;
-import net.dv8tion.jda.core.entities.User;
-import net.dv8tion.jda.core.events.Event;
-import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
+
 
 public class CommandHandler {
-	
-	/**Searches for commands
-	 * 
-	 * @param search
-	 * @param event
-	 * @return {true, true} if everything is cleared, {true, false} if command is valid, but unable to execute, {false, false} if the command is not found
-	 */
-	public static boolean[] useCommand(String search, Event event) {
-		
-		//Use these?
-		//User usr = ((MessageReceivedEvent) event).getMember().getUser();
-	    //TextChannel chn = ((MessageReceivedEvent) event).getTextChannel();
-		//boolean priv = (chn.getType() == ChannelType.PRIVATE);
 
-		Object result = getCommand(true, search, event);
-		
-		if(result instanceof boolean[]) {
-			return (boolean[]) result;
-		} else {
-			return new boolean[] {false, false};
-		}
-		
-	}
-	
-	public static Object getCommand(boolean use, String search, Event evt) {
-		
-		boolean[] returnThis = new boolean[2];
-		
-		switch(search.toLowerCase()) {
-		
-		//General
-		case "help":
-			if(use) {
-				returnThis[0] = true;
-				returnThis[1] = new Help().action(((MessageReceivedEvent) evt).getTextChannel(), ((MessageReceivedEvent) evt).getMessage().getContentDisplay(), null);
-				return returnThis;
-			} else {
-				return new Help().getDesc();
-			}
-		case "about":
-			if(use) {
-				returnThis[0] = true;
-				returnThis[1] = new About().action(((MessageReceivedEvent) evt).getTextChannel(), null, null);
-				return returnThis;
-			} else {
-				return new About().getDesc();
-			}
-			
-		//Moderator
-		case "kick":
-			if(use) {
-				returnThis[0] = true;
-				returnThis[1] = new Kick().action(((MessageReceivedEvent) evt).getTextChannel(), ((MessageReceivedEvent) evt).getMessage().getContentRaw(), evt);
-				return returnThis;
-			} else {
-				return new Kick().getDesc();
-			}
-		case "ban":
-			if(use) {
-				returnThis[0] = true;
-				returnThis[1] = new Ban().action(((MessageReceivedEvent) evt).getTextChannel(), ((MessageReceivedEvent) evt).getMessage().getContentRaw(), evt);
-				return returnThis;
-			} else {
-				return new Ban().getDesc();
-			}
-		case "warn":
-			if(use) {
-				returnThis[0] = true;
-				returnThis[1] = new Warn().action(((MessageReceivedEvent) evt).getTextChannel(), ((MessageReceivedEvent) evt).getMessage().getContentRaw(), evt);
-				return returnThis;
-			} else {
-				return new Warn().getDesc();
-			}
-			
-		//Bot Owner Commands
-		case "shutdown":
-			if(use) {
-				returnThis[0] = true;
-				returnThis[1] = shutdown(((MessageReceivedEvent) evt).getTextChannel(), ((MessageReceivedEvent) evt).getAuthor());
-				return returnThis;
-			} else {
-				return "Shuts down the bot";
-			}
-		default:
-			return new boolean[] {false, false};
-		}
-	}
-	
-	//Bot Owner Command
-	
+	@SuppressWarnings("serial")
+	public static volatile List<Command> ALL_COMMANDS = new ArrayList<Command>() {
+		{
+				add(new About());
+				add(new Help());
+				add(new Ban());
+				add(new Kick());
+				add(new Warn());
+				add(new Warnings());
+				add(new Configure());
+				add(new Shutdown());
+				add(new Welcome());
+		}};
+
 	/**
-	 * TODO: Shutdown needs to have its own class
-	 * 
-	 * @param chn the channel where the shutdown was requested
-	 * @param usr is the user requesting the shutdown
-	 * @return TRUE if the shutdown request was done by a Bot Owner, otherwise false
+	 *
+	 * @param gld
+	 * @param itm
+	 * @return true if commands were configured
 	 */
-	public static boolean shutdown(TextChannel chn, User usr) {
-		
-		for(Long id: InitData.botOwnerIDs) {
-			if(id.equals(usr.getIdLong())) {
-				MessageHandler.sendMessage(chn, "Shutting down!");
-				
-				Launcher.api.shutdown();
-				return true;
+	public static <J> boolean configCommands(List<Guild> gld, J itm) {
+
+		Map<Guild, List<Command>> tmp = Data.cache;
+
+		if(itm instanceof JSONObject) {
+
+		} else if(itm instanceof JSONArray) {
+			for(Object obj: ((JSONArray) itm)) {
+
 			}
 		}
-		
+
 		return false;
+	}
+
+	/**
+	 * Initializes the ALL_COMMANDS variable.
+	 * <br><b>CALLING THIS MORE THAN ONCE IS UNNECESSARY!</b></br>
+	 */
+	public static boolean initCommands() {
+
+		boolean result = false;
+
+		try {
+
+			Scanner sc = new Scanner(new FileReader(InitData.locationCommands));
+			String str;
+
+			while((str = sc.nextLine()) != null) {
+				String raw = str, name = raw.substring(0, raw.indexOf(':')), desc = raw.substring(name.length() + 1);
+				desc = desc.replace("[[vers]]", InitData.version).replaceAll("\\\\n", "\n").replace("[[prefix]]", String.valueOf(InitData.prefix));
+
+				System.out.println("[CommandHandler.java]: " + name + " \"desc\" contains: " + desc);
+
+				Command cmd = getCommand(name);
+				if(desc.contains(">>REQ_PERM")) {
+					desc = desc.replace(">>REQ_PERM", "");
+					cmd.setRequirePerms(true);
+				}
+
+				//Checks what type of command it is
+				if(desc.contains(">>")) {
+
+					switch(desc.substring(desc.indexOf(">>") + 2).toLowerCase()) {
+
+					case "mod": cmd.setCmdType(CommandType.MOD); break;
+					case "guild_owner": cmd.setCmdType(CommandType.GUILD_OWNER); break;
+					case "bot_owner": cmd.setCmdType(CommandType.BOT_OWNER); break;
+					default: cmd.setCmdType(CommandType.GENERAL); break;
+
+					}
+
+					desc = desc.substring(0, desc.indexOf(">>"));
+
+				}
+
+				//System.out.println("DEBUG [CommandHandler.java]: (getCmdType()) " + cmd.getCmdType());
+
+				cmd.setName(name);
+				cmd.setDesc(desc);
+
+				if(!sc.hasNextLine()) //To prevent an Exception from being thrown
+					break;
+
+			}
+
+
+			sc.close();
+			result = true;
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+
+			System.out.println("[CommandHandler.java]: File cannot be accessed/found!");
+		}
+
+		return result;
+	}
+
+	public static Command getCommand(String srch) {
+
+		switch(srch.toLowerCase()) {
+
+		//General
+		case "about":
+			return ALL_COMMANDS.get(0);
+		case "help":
+			return ALL_COMMANDS.get(1);
+
+		//Moderation
+		case "ban":
+			return ALL_COMMANDS.get(2);
+		case "kick":
+			return ALL_COMMANDS.get(3);
+		case "warn":
+			return ALL_COMMANDS.get(4);
+		case "warnings":
+			return ALL_COMMANDS.get(5);
+
+		//Utilities
+		case "configure":
+			return ALL_COMMANDS.get(6);
+		case "shutdown": //Bot Owners Only
+			return ALL_COMMANDS.get(7);
+		case "welcome":
+			return ALL_COMMANDS.get(8);
+		}
+
+		return null;
 	}
 
 }
