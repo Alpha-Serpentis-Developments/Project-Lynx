@@ -62,16 +62,17 @@ public class Kick extends Command {
 
 					return false;
 
+
 				}
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
-
 			//Checks if the moderator even decided to put a reason
 			if(msg.length() == msg.substring(0, msg.indexOf(">") + 1).length()) {
 				reason = "*No reason was provided by the moderator*";
 			} else {
 				reason = msg.substring(msg.indexOf(">") + 2);
+
 			}
 
 			gld.kick(punished.getId(), "MOD: " + author.getAsTag() + " || " + reason).queue();
