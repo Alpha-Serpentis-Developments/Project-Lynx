@@ -2,17 +2,12 @@ package commands.moderation;
 
 import commands.Command;
 import handlers.MessageHandler;
-import handlers.ServerHandler;
-import init.InitData;
-import init.Launcher;
 import net.dv8tion.jda.core.entities.Guild;
 import net.dv8tion.jda.core.entities.MessageChannel;
 import net.dv8tion.jda.core.entities.User;
 import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
-import net.dv8tion.jda.core.exceptions.HierarchyException;
-import net.dv8tion.jda.core.managers.GuildController;
 
-public class Kick extends Command {
+public class Warnings extends Command {
 
 	@Override
 	public boolean action(MessageChannel chn, String msg, Object misc) {

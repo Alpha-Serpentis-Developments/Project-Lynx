@@ -1,104 +1,103 @@
 package handlers;
 
 import java.io.File;
+import java.util.function.Consumer;
 
+import commands.Command;
+import data.Data;
 import init.InitData;
+import init.Launcher;
+import net.dv8tion.jda.core.entities.ChannelType;
+import net.dv8tion.jda.core.entities.Guild;
 import net.dv8tion.jda.core.entities.Message;
-import net.dv8tion.jda.core.entities.PrivateChannel;
-import net.dv8tion.jda.core.entities.TextChannel;
+import net.dv8tion.jda.core.entities.MessageChannel;
 import net.dv8tion.jda.core.events.Event;
 import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.core.events.message.priv.PrivateMessageReceivedEvent;
+import net.dv8tion.jda.core.exceptions.InsufficientPermissionException;
 import net.dv8tion.jda.core.hooks.EventListener;
 
 public class MessageHandler implements EventListener {
 
 	@Override
 	public void onEvent(Event event) {
-
-		System.out.println(event);
-
+	
+		//System.out.println("DEBUG [MessageHandler.java]: " + event);
+		
 		/*
 		 * Checks if the event triggered is a message type and ISN'T A BOT (you can remove it from the if statement if you wish).
 		 */
-		if((event instanceof MessageReceivedEvent || (InitData.acceptPriv && event instanceof PrivateMessageReceivedEvent)) && !((MessageReceivedEvent) event).getAuthor().isBot()) {
-
+		if((event instanceof MessageReceivedEvent || (InitData.acceptPriv && event instanceof PrivateMessageReceivedEvent)) && !((MessageReceivedEvent) event).getAuthor().isBot() && Launcher.initialized) {
+			
+			Guild g = ((MessageReceivedEvent) event).getGuild();
+			char prefix; //Server's prefix... if it's even a server.
+			
+			if(Data.srvr_cache.get(g) == null && g != null) {
+				Data.addGuild(g);
+				prefix = InitData.prefix;
+			} else if(g != null) {
+				prefix = ((String) Data.srvr_cache.get(g).get("prefix")).charAt(0);
+			} else {
+				prefix = InitData.prefix;
+			}
 			/*
 			 * Checks the message uses the defined prefix found in InitData.java (you can change the prefix if you need to)
 			 */
-			if(((MessageReceivedEvent) event).getMessage().getContentDisplay().indexOf(InitData.prefix) == 0) {
-
-				String fullMsg = ((MessageReceivedEvent) event).getMessage().getContentDisplay(), msg;
-
-				if(fullMsg.indexOf(" ") == -1) //If there's no space
-					msg = fullMsg.substring(1);
-				else
-					msg = fullMsg.substring(1, fullMsg.indexOf(" "));
-
-				//Checks the result of the command request
-				boolean[] result = CommandHandler.useCommand(msg, event);
-
-				if(!result[0]) {
-					System.out.println("Command not found!");
+			if(((MessageReceivedEvent) event).getMessage().getContentRaw().indexOf(prefix) == 0) {
+				
+				String fullMsg = ((MessageReceivedEvent) event).getMessage().getContentRaw().substring(1);
+				ChannelType c = event instanceof PrivateMessageReceivedEvent ? ChannelType.PRIVATE : ChannelType.TEXT;
+				
+				Command cmd;
+				if(!fullMsg.contains(" ")) {
+					cmd = CommandHandler.getCommand(fullMsg);
 				} else {
-					if(!result[1]) {
-						System.out.println("Command could not execute! (Are you allowed to use the command?)");
-						//sendMessage(((MessageReceivedEvent) event).getTextChannel(), "Command failed to execute"); //Uncomment if you wish.
-					}
+					cmd = CommandHandler.getCommand(fullMsg.substring(0, fullMsg.indexOf(" ")));
 				}
-
+				
+				if(cmd == null || (g == null && cmd.getRequirePerms() == true)) return;
+				
+				System.out.println("DEBUG [MessageHandler.java]: " + cmd.getName());
+				System.out.println("DEBUG [MessageHandler.java]: (ChannelType) " + c);
+				
+				if(c.equals(ChannelType.PRIVATE))
+					cmd.action(((MessageReceivedEvent) event).getAuthor().openPrivateChannel().complete(), fullMsg, event); //Just pass the entire thing to prevent NullPointers, each command will handle them appropriately
+				else if(c.equals(ChannelType.TEXT))
+					cmd.action(((MessageReceivedEvent) event).getChannel(), fullMsg, event);
 			}
-
+			
 		}
-
+		
 	}
-
-	/**Sends a message to the specified channel
-	 *
-	 * @param chn is REQUIRED in order to send a message
-	 * @param s is the message
-	 */
-	public static void sendMessage(TextChannel chn, String s) {
-
-		if(chn.canTalk())
-			chn.sendMessage(s).queue();
-		else
-			System.out.println("Unable to send message, check permissions?");
-
+	
+	public static void sendMessage(MessageChannel chn, String s) {
+		
+		Consumer<Message> callback = (response) -> System.out.printf("[MessageHandler.java] Sent \"%s\"", response);
+		try {
+			chn.sendMessage(s).queue(callback);
+		} catch(InsufficientPermissionException e) {
+			System.out.println("[MessageHandler.java]: Message was not sent due to insufficient permissions!");
+		}
+		
 	}
-
-	public static void sendMessage(TextChannel chn, Message m) {
-
-		if(chn.canTalk())
-			chn.sendMessage(m).queue();
-		else
-			sendMessage(m.getAuthor().openPrivateChannel().complete(), m.getContentDisplay());
-
-	}
-
-	public static void sendMessage(TextChannel chn, String s, File f) {
-
-		if(f != null)
-			chn.sendMessage(s).addFile(f).queue();
-		else
+	
+	public static void sendMessage(MessageChannel chn, String s, File f) {
+		
+		if(f != null) {
+			Consumer<Message> callback = (response) -> System.out.printf("[MessageHandler.java] Sent ", response);
+			try {
+				chn.sendMessage(s).addFile(f).queue(callback);
+			} catch(InsufficientPermissionException e) {
+				System.out.println("[MessageHandler.java]: Message was not sent due to insufficient permissions!");
+			}
+		} else
 			System.out.println("Unable to send a message, file doesn't exist?");
-
+		
 	}
-
-	/**Sends a message to the DMs (it may execute, but not go through)
-	 *
-	 * @param chn is REQUIRED in order to send a message privately
-	 * @param s is the message
-	 */
-	public static void sendMessage(PrivateChannel chn, String s) {
-
-		chn.sendMessage(s).queue();
-
-	}
-
+	
 	//TODO: Do this...
 	public void embedMessage() {
-
+		
 	}
-
+	
 }

@@ -1,28 +1,35 @@
-package commands.moderation;
+package commands.utilities;
 
 import commands.Command;
+import data.Data;
 import handlers.MessageHandler;
+import handlers.ServerHandler;
+import net.dv8tion.jda.core.entities.Channel;
 import net.dv8tion.jda.core.entities.Guild;
 import net.dv8tion.jda.core.entities.MessageChannel;
 import net.dv8tion.jda.core.entities.User;
 import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
 
-public class Warn extends Command {
+public class Configure extends Command {
 
 	@Override
 	public boolean action(MessageChannel chn, String msg, Object misc) {
 		
 		Guild gld = ((MessageReceivedEvent) misc).getGuild();
-		User mod = ((MessageReceivedEvent) misc).getAuthor(), punished = (msg.length() == getName().length()) ? null : gld.getMemberById(msg.substring(msg.indexOf("@") + 1, msg.indexOf(">"))).getUser();
+		User usr = ((MessageReceivedEvent) misc).getAuthor();
 		
-		if(punished == null) {
-			MessageHandler.sendMessage(chn, getDesc());
-			return true;
+		boolean result = ServerHandler.getServerOwner(gld.getIdLong()).equals(usr);
+		String type;
+		
+		if(msg.substring(0, msg.indexOf(" ")).equalsIgnoreCase("config")) {
+			
+		} else {
+			
 		}
 		
-		boolean result = verifyExecution(mod, punished, gld, chn);
-		
 		if(result) {
+			
+			
 			
 		}
 		

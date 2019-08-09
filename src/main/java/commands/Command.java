@@ -3,16 +3,15 @@ package commands;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import handlers.MessageHandler;
 import init.Launcher;
 import net.dv8tion.jda.core.entities.Guild;
 import net.dv8tion.jda.core.entities.MessageChannel;
+import net.dv8tion.jda.core.entities.Role;
 import net.dv8tion.jda.core.entities.User;
 
-enum CommandType {
-	GENERAL, MOD, BOT_OWNER
-}
 
-public abstract class Command {
+public abstract class Command implements Cloneable {
 
 	/*
 	 * cmdName is REQUIRED
@@ -23,7 +22,7 @@ public abstract class Command {
 	private String cmdName, cmdDesc;
 	private CommandType cmdType;
 	private HashMap<String, ArrayList<Long>> cmdPerms = new HashMap<String, ArrayList<Long>>();
-	private boolean requirePerms = false, allowPrivate = true;
+	private boolean requirePerms = false, allowPrivate = true, active = false, logging = false;
 
 	//Setter Methods
 	public void setName(String n) {
@@ -44,6 +43,12 @@ public abstract class Command {
 
 	public void setAllowPrivate(boolean b) {
 		allowPrivate = b;
+	}
+	public void setActive(boolean b) {
+		active = b;
+	}
+	public void setLogging(boolean b) {
+		logging = b;
 	}
 
 	//Getter Methods
@@ -81,13 +86,21 @@ public abstract class Command {
 	public CommandType getCmdType() {
 		return cmdType;
 	}
+	public HashMap<String, ArrayList<Long>> getPerms() {
+		return cmdPerms;
+	}
 	public ArrayList<Long> getRoleIDs() {
 		return cmdPerms.get("ROLE");
 	}
 	public ArrayList<Long> getUserIDs() {
 		return cmdPerms.get("USER");
 	}
-
+	public ArrayList<Long> getAllIDs() {
+		ArrayList<Long> returnThis = new ArrayList<Long>(getRoleIDs());
+		returnThis.addAll(getUserIDs());
+		
+		return returnThis;
+	}
 	public boolean getRequirePerms() {
 		return requirePerms;
 	}
@@ -95,22 +108,48 @@ public abstract class Command {
 	public boolean getAllowPrivate() {
 		return allowPrivate;
 	}
+	public boolean getActive() {
+		return active;
+	}
+	public boolean getLogging() {
+		return logging;
+	}
 
 	//Misc Methods
 
 	public void addPerm(String key, long id) throws Exception {
 		if(!key.equalsIgnoreCase("USER") || !key.equalsIgnoreCase("ROLE")) {
+			if(hasPerm(key)) {
+				cmdPerms.get(key).add(id);
+			} else {
+				cmdPerms.put(key, new ArrayList<Long>());
+				cmdPerms.get(key).add(id);
+			}
+		} else {
 			throw new Exception("Malformed command permission key!");
 		}
-
-		cmdPerms.get(key).add(id);
+		
 	}
 	public void removePerm(String key, long id) throws Exception {
 		if(!key.equalsIgnoreCase("USER") || !key.equalsIgnoreCase("ROLE")) {
+			if(hasPerm(key)) {
+				cmdPerms.get(key).remove(id);
+			} else {
+				cmdPerms.put(key, new ArrayList<Long>());
+				cmdPerms.get(key).remove(id);
+			}
+		} else {
 			throw new Exception("Malformed command permission key!");
 		}
-
-		cmdPerms.get(key).remove(id);
+	}
+	public boolean hasPerm(String key) {
+		
+		if(isRoleIDsDefined()) {
+			return cmdPerms.containsKey(key);
+		}
+		
+		System.out.println("[Command.java] Server has not defined the permissions!");
+		return false;
 	}
 	/**
 	 * Used in conjunction if requirePerms is true, otherwise this is redundant!
@@ -122,21 +161,55 @@ public abstract class Command {
 
 	/**
 	 * Verifies if the command can be executed by the bot and user
+	 * <br></br>
+	 * Checks for the permissions, role hierarchy, etc.
 	 * @return true if execution can be done, otherwise false.
 	 */
-	public boolean verifyExecution(User usr, Guild gld) {
+	public boolean verifyExecution(User executor, User interacted, Guild g, MessageChannel chn) {
 
-		if(gld.getOwner().getUser().equals(usr)) //
-			return true;
-
+		boolean isMod = false, isOwner = false, canBot = false;
+		
+		//The server owner CAN execute moderator commands WITHOUT having to define the roles (but it would be in the best interest to define them)
+		if(g.getOwner().getUser().equals(executor)) {
+			isOwner = true;
+			System.out.println("Is server owner!");
+		} else if(!isRoleIDsDefined() && requirePerms) {
+			MessageHandler.sendMessage(chn, "This command **requires to be configured** by the server owner! Use `!configure [command]` to use this and other commands.");
+			return false;
+		} else if(isRoleIDsDefined() && requirePerms) {
+			
+			for(Role ex_rs: g.getMember(executor).getRoles()) {
+				if(cmdPerms.get("ROLE").contains(ex_rs.getIdLong())) {
+					
+				}
+			}
+			
+		}
+		
+		if(isMod || isOwner) {
+			canBot = g.getMember(Launcher.api.getSelfUser()).canInteract(g.getMember(interacted));
+			
+			return canBot;
+		}
+		
 		return false;
+		
+	}
+	
+	public String toString() {
+		return getName() + ": " + cmdPerms;
+	}
+	
+	@Override
+	public Object clone() throws CloneNotSupportedException {
+		return super.clone();
 	}
 
 	/**
 	 * Define action() as you wish in classes that extend this.
 	 * @param chn is used to allow sending messages to a certain text channel
-	 * @param msg is used to carry around messages (you do not have to use msg if you don't wish)
-	 * @param misc is optional to use, otherwise you can pass a null value
+	 * @param msg is used to carry around messages
+	 * @param gld is the gld and IS required
 	 *
 	 * @return true if successful, otherwise false
 	 */

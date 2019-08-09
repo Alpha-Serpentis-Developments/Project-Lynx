@@ -6,22 +6,27 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.time.Instant;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.json.JSONArray;
 import org.json.JSONObject;
 import commands.Command;
+import handlers.CommandHandler;
 import handlers.MessageHandler;
 import init.InitData;
+import init.Launcher;
 import net.dv8tion.jda.core.entities.Guild;
 
 public class Data {
-
+	
 	/**
 	 * This is initialized at startup
 	 */
-	public static Map<Guild, List<Command>> cache;
+	public static volatile Map<Guild, List<Command>> command_cache;
+	public static volatile Map<Guild, JSONObject> srvr_cache;
 
 	//TODO: Clean this up
 	/**
@@ -30,7 +35,7 @@ public class Data {
 	 * @return the result, otherwise empty ("")
 	 */
 	public static String readData(String file) {
-
+		
 		String result = "";
 		try {
 			BufferedReader br = new BufferedReader(new FileReader(file));
@@ -47,9 +52,9 @@ public class Data {
 			e.printStackTrace();
 		}
 		return result;
-
+		
 	}
-
+	
 	/**
 	 * Writes to the designated filepath in a JSON format
 	 * @param file the file-path
@@ -59,23 +64,23 @@ public class Data {
 	public static boolean writeData(String file, String jLine) {
 		try {
 			FileWriter w = new FileWriter(new File(file));
-
+			
 			System.out.println("[Data.java] Writing to " + file);
-
+			
 			w.write(jLine);
 			w.close();
-
+			
 			if(file.equals(InitData.locationJSON)) //Updates the cache
 				initCache();
-
+			
 			return true;
-
-		} catch (IOException e) {
+			
+		} catch (IOException | InstantiationException | IllegalAccessException e) {
 			e.printStackTrace();
 			return false;
 		}
 	}
-
+	
 	//Misc Methods
 	public static File createBackup(boolean temp) {
 		long inst = Instant.now().getEpochSecond();
@@ -87,89 +92,187 @@ public class Data {
 			return new File(InitData.locationBackup + "BACKUP-" + inst + ".json");
 		}
 	}
-
+	
 	public static void obtainBackup() {
-
+		
 	}
-
+	
 	public static boolean deleteGuild(Guild gld) {
-
+		
 		String jsonData = readData(InitData.locationJSON);
 		JSONObject obj = new JSONObject(jsonData);
-
+		
 		for(String id: obj.keySet()) {
 			if(id.equals(gld.getId())) {
 				obj.remove(id);
-				return true;
-			}
+				
+				return writeData(InitData.locationJSON, obj.toString());
+			}	
 		}
-
+		
 		return false;
 	}
-
 	public static boolean addGuild(Guild gld) {
-
+		
 		String jsonData = readData(InitData.locationJSON);
 		JSONObject obj = new JSONObject(jsonData);
-
+		
 		for(String id: obj.keySet()) {
 			if(id.equals(gld.getId()))
 				return false;
 		}
-
+		
 		obj.put(gld.getId(), obj.get("DEFAULT"));
-
+	
 		return writeData(InitData.locationJSON, obj.toString());
+		
 	}
-
+	public static boolean hasGuild(Guild gld) {
+		return srvr_cache.containsKey(gld) && command_cache.containsKey(gld);
+	}
+	
 	public static boolean editGuild(Guild gld, Object obj) {
 		return false;
 	}
-
+	
 	/**
 	 * Initializes the cache of saved servers from the resources/guildData.json file.
+	 * @throws IllegalAccessException 
+	 * @throws InstantiationException 
 	 */
-	public static void initCache() {
-
+	public static void initCache() throws InstantiationException, IllegalAccessException {
+		
 		if(!InitData.acceptMultipleServers) return;
-
+		
 		String jsonData = readData(InitData.locationJSON);
-		if(jsonData.isEmpty()) return; //TODO: Rewrite to call obtainBackup() to search for backups
+		
+		if(jsonData.isEmpty()) {
+			System.out.println("Shutting down! Cache cannot be initialized... Make sure guildData.json isn't empty, at least having the \"DEFAULT\" object");
+			System.exit(-1);
+		} //TODO: Rewrite to call obtainBackup() to search for backups
+		
 		JSONObject obj = new JSONObject(jsonData);
-
-		cache = new HashMap<Guild, List<Command>>();
-
+		
+		command_cache = new HashMap<Guild, List<Command>>();
+		srvr_cache = new HashMap<Guild, JSONObject>();
+		
 		for(String key: obj.keySet()) {
-			System.out.println("[Data.java]: " + key);
-
-		}
-
-	}
-
-	/**
-	 *
-	 * @param gld is the key to the HashMap
-	 * @param obj
-	 * @return True if the cache was successfully modified, otherwise false.
-	 */
-	public static <T extends Command & List<Command>> boolean modifyCache(Guild gld, T obj) {
-
-		Map<Guild, List<Command>> tmpBackup = cache;
-
-		if(tmpBackup.containsKey(gld)) {
-
-		} else {
-			if(addGuild(gld)) {
-
-			} else {
-				System.out.println("[Data.java]: WARNING: modifyCache() was unable to add Guild " + gld.getId() + "to the cache and file!");
-				MessageHandler.sendMessage(gld.getOwner().getUser().openPrivateChannel().complete(), "The guild was unable to be put into the cache/data. Please do !configure to reattempt");
-
-				return false;
+			
+			if(key.equals("DEFAULT")) continue;
+			
+			System.out.println("[Data.java]: (initCache()) " + key);
+			System.out.println("[Data.java]: (initCache()) " + obj.get(key));
+			
+			ArrayList<Command> cmds = new ArrayList<Command>();
+			
+			JSONObject cmds_config = obj.getJSONObject(key).getJSONObject("cmds_config"), srvr_config = obj.getJSONObject(key).getJSONObject("srvr_config");
+			
+			//COMMANDS CONFIG
+			for(String con_key: cmds_config.keySet()) {
+				System.out.println("COMMANDS CONFIG: Setting up " + cmds_config.getJSONObject(con_key));
+				
+				JSONObject in_config = cmds_config.getJSONObject(con_key);
+				Command cmd = null;
+				
+				for(Command c: CommandHandler.ALL_COMMANDS) {
+					if(c.getName().equals(con_key)) {
+						try {
+							cmd = (Command) c.clone(); //Done to prevent directly modifying the list
+							cmds.add(cmd);
+						} catch (Exception e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+						System.out.println("Set " + cmd.getName());
+						break;
+					}	
+				}
+				
+				for(String in_key: in_config.keySet()) {
+					
+					System.out.println("[Data.java] in_key: " + in_key);
+					
+					//START SWITCH STATEMENT
+					switch(in_key) {
+					
+					case "roleIDs": 	
+						
+						if(cmd.getRequirePerms()) {
+							
+							if(cmd.getPerms().isEmpty()) {
+								cmd.setPerms(new HashMap<String, ArrayList<Long>>());
+								System.out.println("Command \"" + cmd.getName() + "\" is empty!");
+							}
+							
+							if(in_config.get("roleIDs") != null) {
+								try {
+									for(Object id: in_config.getJSONArray("roleIDs")) {
+										cmd.addPerm("ROLE", (long) id);
+									}
+								} catch (Exception e) {
+									e.printStackTrace();
+								}
+							}
+						}
+						
+						break;
+						
+					case "userIDs": 
+					
+						if(cmd.getRequirePerms()) {
+							
+							if(cmd.getPerms().isEmpty()) {
+								cmd.setPerms(new HashMap<String, ArrayList<Long>>());
+								System.out.println("Command \"" + cmd.getName() + "\" is empty!");
+							}
+							
+							if(in_config.get("userIDs") != null) {
+								try {
+									for(Object id: in_config.getJSONArray("userIDs")) {
+										cmd.addPerm("USER", (long) id);
+									}
+								} catch (Exception e) {
+									e.printStackTrace();
+								}
+							}
+						}
+						
+						break;
+					case "active": 
+						
+						cmd.setActive(in_config.getBoolean("active"));
+						
+						break;
+					case "logging": 
+						
+						cmd.setLogging(in_config.getBoolean("logging"));
+						
+						break;
+					}
+					//END SWITCH STATEMENT
+					
+				}
+				
 			}
+			//SERVER CONFIG
+			System.out.println("[Data.java] PUTTING " + Launcher.api.getGuildById(key).getName() + " INTO THE CACHE!");
+			srvr_cache.put(Launcher.api.getGuildById(key), srvr_config);
+			
+			command_cache.put(Launcher.api.getGuildById(key), cmds);
+			System.out.println(command_cache + "\n\n\n");
 		}
-
-		return false;
+		
 	}
-
+	
+	public static Command initCmdConfig() {
+		
+		
+		
+		return null;
+	}
+	
+	public static void initSrvrConfig() {
+		
+	}
+	
 }

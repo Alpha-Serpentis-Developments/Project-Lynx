@@ -1,19 +1,34 @@
 package commands.utilities;
 
 import commands.Command;
-import net.dv8tion.jda.core.entities.TextChannel;
+import handlers.MessageHandler;
+import init.InitData;
+import init.Launcher;
+import net.dv8tion.jda.core.entities.MessageChannel;
+import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
 
 public class Shutdown extends Command {
 
-	public Shutdown() {
-		super("shutdown");
-		setRequirePerms(true);
-	}
-
 	@Override
-	public boolean action(TextChannel chn, String msg, Object misc) {
-		// TODO Auto-generated method stub
+	public boolean action(MessageChannel chn, String msg, Object misc) {
+		
+		//verifyExecution() method is NOT necessary due to this being a bot owner-only command.
+		
+		for(long id: InitData.botOwnerIDs)
+			if(((MessageReceivedEvent) misc).getAuthor().getIdLong() == id) {
+				MessageHandler.sendMessage(chn, "Shutting down " + Launcher.api.getSelfUser().getName() + "!");
+				
+				try {
+					Launcher.shutdown();
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
+				
+				return true;
+			}
+				
 		return false;
+		
 	}
 
 }
