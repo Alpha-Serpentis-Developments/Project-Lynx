@@ -128,7 +128,7 @@ public class CommandHandler {
 			case "welcome":
 				return ALL_COMMANDS.get(8);
 			}
-		} else {
+		} else { //Grabs the command from the server's cache to ensure server's configurations
 			for(Command c: Data.command_cache.get(g)) {
 				if(c.getName().equalsIgnoreCase((srch))) {
 					return c;
