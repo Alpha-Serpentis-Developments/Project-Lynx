@@ -267,15 +267,4 @@ public class Data {
 
 	}
 
-	public static Command initCmdConfig() {
-
-
-
-		return null;
-	}
-
-	public static void initSrvrConfig() {
-
-	}
-
 }
