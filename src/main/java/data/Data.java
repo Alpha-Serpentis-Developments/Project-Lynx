@@ -81,6 +81,14 @@ public class Data {
 		}
 	}
 
+	public static String convertToJSON(String line) {
+		String jLine = line;
+
+
+
+		return jLine;
+	}
+
 	//Misc Methods
 	public static File createBackup(boolean temp) {
 		long inst = Instant.now().getEpochSecond();
@@ -136,6 +144,33 @@ public class Data {
 	}
 
 	/**
+	 *
+	 * @param obj
+	 * @return
+	 */
+	public static boolean checkDefaults(JSONObject obj, String srvr) {
+
+		JSONObject dflt = new JSONObject(readData(InitData.locationJSON)).getJSONObject("DEFAULT");
+		ArrayList<String> s_keys = new ArrayList<String>(((JSONObject) obj.get(srvr)).keySet()), d_keys = new ArrayList<String>(dflt.keySet()); //s for server and d for defaults
+
+		for(String key: d_keys) {
+			if(!s_keys.contains(key)) {
+				System.out.println("[Data.java] MISSING " + key + "! Adding it to the server's data!");
+
+				JSONObject newObj = new JSONObject(obj.toString());
+				((JSONObject) newObj.get(srvr)).put(key, dflt.get(key));
+
+				if(writeData(InitData.locationJSON, newObj.toString())) {
+					System.out.println("[Data.java] checkDefaults() successfully modified data!");
+				} else {
+					System.out.println("[Data.java] CRITICAL ERROR!");
+				}
+			}
+		}
+		return false;
+	}
+
+	/**
 	 * Initializes the cache of saved servers from the resources/guildData.json file.
 	 * @throws IllegalAccessException
 	 * @throws InstantiationException
@@ -162,6 +197,9 @@ public class Data {
 
 			System.out.println("[Data.java]: (initCache()) " + key);
 			System.out.println("[Data.java]: (initCache()) " + obj.get(key));
+
+			System.out.println("[Data.java]: Checking if server contains all the needed keys...");
+			checkDefaults(obj, key);
 
 			ArrayList<Command> cmds = new ArrayList<Command>();
 
