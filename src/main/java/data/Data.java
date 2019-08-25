@@ -81,14 +81,6 @@ public class Data {
 		}
 	}
 
-	public static String convertToJSON(String line) {
-		String jLine = line;
-
-
-
-		return jLine;
-	}
-
 	//Misc Methods
 	public static File createBackup(boolean temp) {
 		long inst = Instant.now().getEpochSecond();
