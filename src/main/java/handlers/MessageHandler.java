@@ -55,6 +55,10 @@ public class MessageHandler implements EventListener {
 					cmd = CommandHandler.getCommand(fullMsg.substring(0, fullMsg.indexOf(" ")), g);
 				}
 
+				System.out.println("For server... " + g.getName() + " ... " + Data.command_cache.get(g));
+				System.out.println("Grabbed... " + cmd.getName());
+
+
 				if(cmd == null || (g == null && cmd.getRequirePerms() == true)) return;
 
 				System.out.println("DEBUG [MessageHandler.java]: " + cmd.getName());
@@ -77,6 +81,8 @@ public class MessageHandler implements EventListener {
 			chn.sendMessage(s).queue(callback);
 		} catch(InsufficientPermissionException e) {
 			System.out.println("[MessageHandler.java]: Message was not sent due to insufficient permissions!");
+		} catch(IllegalArgumentException e) {
+			System.out.println("[MessageHandler.java]: Message was not sent due to an empty text field!");
 		}
 
 	}
