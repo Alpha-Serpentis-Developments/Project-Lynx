@@ -36,15 +36,25 @@ public class Configure extends Command {
 			config = msg.substring(msg.indexOf(" ") + 1).substring(0, msg.indexOf(" ")); //Supposed to find the key?
 
 			for(String k: configKeys) {
+
+				switch(k.toLowerCase()) {
+
+					default:
+						return true;
+
+				}
+
+				/*
 				if(k.equalsIgnoreCase(config)) { //Actually, replace this with a switch statement.
 
 					//Write code...
 
 					return true;
 				}
-			}
+				*/
+			} //for loop
 
-		}
+		} //if statement
 
 		return false;
 
