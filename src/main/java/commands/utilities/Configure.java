@@ -64,7 +64,7 @@ public class Configure extends Command {
 		User usr = ((MessageReceivedEvent) misc).getAuthor();
 		
 		boolean result = ServerHandler.getServerOwner(gld.getIdLong()).equals(usr);
-		String type;
+		Commands cmd;
 		
 		if(msg.substring(0, msg.indexOf(" ")).equalsIgnoreCase("config")) {
 			
