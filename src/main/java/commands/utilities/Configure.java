@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import commands.Command;
-import commands.Commands;
+
 import data.Data;
 import handlers.MessageHandler;
 import handlers.ServerHandler;
@@ -19,22 +19,39 @@ enum Commands {
 	// This will suffice for now lol
 	
 	ABOUT("name", 0),
-	HELP("help", 1);
-	
-	private static List<Commands> commands = new ArrayList<Commands>();
+	HELP("help", 1),
+	BAN("ban", 2),
+	KICK("kick", 3),
+	WARN("warn", 4),
+	WARNINGS("warnings", 5),
+	CONFIGURE("configure", 6),
+	SHUTDOWN("shutdown", 7),
+	WELCOME("welcome", 8);
 	
 	private String assignmentName = "DEFAULT";
 	private int assignmentNum = -1;
 	
 	Commands(String n, int i) {
 		
+		setAssignmentName(n);
+		setAssignmentNum(i);
+		
 	}
-	
-	public int getCommandAssignmentNum(String n) {
 
-		
-		
-		return -1;
+	public String getAssignmentName() {
+		return assignmentName;
+	}
+
+	public void setAssignmentName(String assignmentName) {
+		this.assignmentName = assignmentName;
+	}
+
+	public int getAssignmentNum() {
+		return assignmentNum;
+	}
+
+	public void setAssignmentNum(int assignmentNum) {
+		this.assignmentNum = assignmentNum;
 	}
 }
 
