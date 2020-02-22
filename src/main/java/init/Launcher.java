@@ -13,10 +13,9 @@ import handlers.CommandHandler;
 import handlers.MessageHandler;
 import handlers.ServerHandler;
 import misc.Playing;
-import net.dv8tion.jda.core.JDA;
-import net.dv8tion.jda.core.JDABuilder;
-import net.dv8tion.jda.core.OnlineStatus;
-import net.dv8tion.jda.core.entities.Game;
+import net.dv8tion.jda.api.JDA;
+import net.dv8tion.jda.api.JDABuilder;
+import net.dv8tion.jda.api.entities.Activity;
 
 public class Launcher {
 
@@ -96,7 +95,7 @@ public class Launcher {
 		api.addEventListener(new MessageHandler());
 		api.addEventListener(new ServerHandler());
 
-		api.getPresence().setGame(Game.playing("Loading..."));
+		api.getPresence().setActivity(Activity.playing("LUCKY LYNX IS BACK"));
 
 		api.awaitReady(); // Waits for JDA to complete loading to prevent issues
 
@@ -208,7 +207,7 @@ public class Launcher {
 
 	public static void shutdown() throws InterruptedException {
 
-		api.getPresence().setStatus(OnlineStatus.OFFLINE);
+		api.getPresence().setStatus(null);
 
 		api.shutdown();
 
