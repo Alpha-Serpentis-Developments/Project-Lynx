@@ -66,7 +66,7 @@ public class InitData {
 	public static boolean acceptPriv = false, acceptMultipleServers = true;
 	
 	/*
-	 * Use this to add a version
+	 * Use this to define the version
 	 */
 	public static String version = "0.01a";
 	
