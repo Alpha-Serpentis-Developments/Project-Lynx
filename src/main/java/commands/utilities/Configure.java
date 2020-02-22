@@ -35,15 +35,13 @@ enum Commands {
 	public String getAssignmentName() {
 		return assignmentName;
 	}
-
-	public void setAssignmentName(String assignmentName) {
-		this.assignmentName = assignmentName;
-	}
-
 	public int getAssignmentNum() {
 		return assignmentNum;
 	}
 
+	public void setAssignmentName(String assignmentName) {
+		this.assignmentName = assignmentName;
+	}
 	public void setAssignmentNum(int assignmentNum) {
 		this.assignmentNum = assignmentNum;
 	}
