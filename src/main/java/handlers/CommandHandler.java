@@ -4,13 +4,7 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.Scanner;
-import org.json.JSONArray;
-import org.json.JSONObject;
-
-import net.dv8tion.jda.core.entities.Guild;
-
 import commands.Command;
 import commands.CommandType;
 import commands.general.*;
@@ -18,6 +12,7 @@ import commands.moderation.*;
 import commands.utilities.*;
 import data.Data;
 import init.InitData;
+import net.dv8tion.jda.api.entities.Guild;
 
 
 public class CommandHandler {

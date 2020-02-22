@@ -1,19 +1,14 @@
 package handlers;
 
-import java.util.List;
-import java.util.Map;
-
-import org.json.JSONObject;
-
 import data.Data;
 import init.Launcher;
-import net.dv8tion.jda.core.entities.Guild;
-import net.dv8tion.jda.core.entities.Role;
-import net.dv8tion.jda.core.entities.User;
-import net.dv8tion.jda.core.events.Event;
-import net.dv8tion.jda.core.events.guild.GuildJoinEvent;
-import net.dv8tion.jda.core.events.guild.GuildLeaveEvent;
-import net.dv8tion.jda.core.hooks.EventListener;
+import net.dv8tion.jda.api.entities.Guild;
+import net.dv8tion.jda.api.entities.Role;
+import net.dv8tion.jda.api.entities.User;
+import net.dv8tion.jda.api.events.GenericEvent;
+import net.dv8tion.jda.api.events.guild.GuildJoinEvent;
+import net.dv8tion.jda.api.events.guild.GuildLeaveEvent;
+import net.dv8tion.jda.api.hooks.EventListener;
 
 public class ServerHandler implements EventListener {
 
@@ -94,7 +89,7 @@ public class ServerHandler implements EventListener {
 	}
 
 	@Override
-	public void onEvent(Event event) {
+	public void onEvent(GenericEvent event) {
 
 		//System.out.println(event);
 

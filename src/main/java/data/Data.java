@@ -11,14 +11,13 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.json.JSONArray;
 import org.json.JSONObject;
+
 import commands.Command;
 import handlers.CommandHandler;
-import handlers.MessageHandler;
 import init.InitData;
 import init.Launcher;
-import net.dv8tion.jda.core.entities.Guild;
+import net.dv8tion.jda.api.entities.Guild;
 
 public class Data {
 

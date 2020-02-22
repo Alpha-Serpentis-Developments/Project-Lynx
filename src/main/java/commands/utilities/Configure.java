@@ -1,18 +1,12 @@
 package commands.utilities;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import commands.Command;
 
-import data.Data;
-import handlers.MessageHandler;
 import handlers.ServerHandler;
-import net.dv8tion.jda.core.entities.Channel;
-import net.dv8tion.jda.core.entities.Guild;
-import net.dv8tion.jda.core.entities.MessageChannel;
-import net.dv8tion.jda.core.entities.User;
-import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
+import net.dv8tion.jda.api.entities.Guild;
+import net.dv8tion.jda.api.entities.MessageChannel;
+import net.dv8tion.jda.api.entities.User;
+import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 
 enum Commands {
 	

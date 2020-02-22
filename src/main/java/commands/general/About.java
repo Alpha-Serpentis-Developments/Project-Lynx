@@ -2,7 +2,7 @@ package commands.general;
 
 import commands.Command;
 import handlers.MessageHandler;
-import net.dv8tion.jda.core.entities.MessageChannel;
+import net.dv8tion.jda.api.entities.MessageChannel;
 
 public class About extends Command {
 

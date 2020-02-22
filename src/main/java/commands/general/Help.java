@@ -1,10 +1,8 @@
 package commands.general;
 
 import commands.Command;
-import handlers.CommandHandler;
 import handlers.MessageHandler;
-import init.InitData;
-import net.dv8tion.jda.core.entities.MessageChannel;
+import net.dv8tion.jda.api.entities.MessageChannel;
 
 public class Help extends Command {
 

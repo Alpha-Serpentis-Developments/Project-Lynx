@@ -7,7 +7,7 @@ import java.util.Random;
 
 import init.InitData;
 import init.Launcher;
-import net.dv8tion.jda.core.entities.Game;
+import net.dv8tion.jda.api.entities.Activity;
 
 public class Playing implements Runnable {
 
@@ -23,7 +23,7 @@ public class Playing implements Runnable {
 	
 	public static boolean setPlaying(String s) {
 		
-		Launcher.api.getPresence().setGame(Game.playing(s));
+		Launcher.api.getPresence().setActivity(Activity.playing(s));
 		return true;
 		
 	}
