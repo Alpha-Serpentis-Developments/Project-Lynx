@@ -19,13 +19,12 @@ public class Playing implements Runnable {
 		add("Purring at you...");
 		add("*stares at you*");
 		add("*purring noises*");
+		add("*sleeping*");
 	}});
 	
 	public static boolean setPlaying(String s) {
-		
 		Launcher.api.getPresence().setActivity(Activity.playing(s));
 		return true;
-		
 	}
 	
 	public static String getPlaying() {

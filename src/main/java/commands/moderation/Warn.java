@@ -18,7 +18,7 @@ public class Warn extends Command {
 	public boolean action(MessageChannel chn, String msg, Object misc) {
 
 		Guild gld = ((MessageReceivedEvent) misc).getGuild();
-		User mod = ((MessageReceivedEvent) misc).getAuthor(), punished = (msg.length() == getName().length()) ? null : gld.getMemberById(msg.substring(msg.indexOf("@") + 1, msg.indexOf(">"))).getUser();
+		User mod = ((MessageReceivedEvent) misc).getAuthor(), punished = (msg.length() == getName().length()) ? null : gld.getMemberById(msg.substring(msg.indexOf("@") + 2, msg.indexOf(">"))).getUser();
 
 		String reason = "";
 

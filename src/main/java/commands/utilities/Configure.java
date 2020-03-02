@@ -1,8 +1,9 @@
 package commands.utilities;
 
 import commands.Command;
-
+import handlers.MessageHandler;
 import handlers.ServerHandler;
+import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.MessageChannel;
 import net.dv8tion.jda.api.entities.User;
@@ -55,21 +56,24 @@ public class Configure extends Command {
 		Guild gld = ((MessageReceivedEvent) misc).getGuild();
 		User usr = ((MessageReceivedEvent) misc).getAuthor();
 		
-		boolean result = ServerHandler.getServerOwner(gld.getIdLong()).equals(usr);
+		boolean hasAdmin = ServerHandler.getServerOwner(gld.getIdLong()).equals(usr) || gld.getMember(usr).hasPermission(Permission.ADMINISTRATOR);
 		Commands cmd;
 		
-		if(msg.substring(0, msg.indexOf(" ")).equalsIgnoreCase("config")) {
-			
+		if(msg.equalsIgnoreCase(getName())) {
+			MessageHandler.sendMessage(chn, getDesc());
+			return true;
 		} else {
-			
+			if(hasAdmin) {
+				// Iterate through the values
+				for(Commands c: Commands.values()) {
+					if(c.getAssignmentName().contains(msg.substring(msg.indexOf(getName()) + getName().length() + 1))) {
+						System.out.println("Is it this: " + c.getAssignmentName());
+					}
+				}
+			}
 		}
 		
-		if(result) {
-			
-			
-			
-		}
-		
+		MessageHandler.sendMessage(chn, "Insufficient permissions! (Must be an Administrator or Server Owner)");
 		return false;
 		
 	}

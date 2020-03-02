@@ -40,7 +40,6 @@ public abstract class Command implements Cloneable {
 	public void setRequirePerms(boolean o) {
 		requirePerms = o;
 	}
-
 	public void setAllowPrivate(boolean b) {
 		allowPrivate = b;
 	}

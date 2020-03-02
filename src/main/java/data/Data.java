@@ -92,8 +92,8 @@ public class Data {
 		}
 	}
 
-	public static void obtainBackup() {
-
+	public static File obtainBackup(boolean isTemp, long time) {
+		return null; //TODO: Finish this...
 	}
 
 	public static boolean deleteGuild(Guild gld) {
@@ -173,7 +173,7 @@ public class Data {
 		String jsonData = readData(InitData.locationJSON);
 
 		if(jsonData.isEmpty()) {
-			System.out.println("Shutting down! Cache cannot be initialized... Make sure guildData.json isn't empty, at least having the \"DEFAULT\" object");
+			System.out.println("[Data.java] Shutting down! Cache cannot be initialized... Make sure resources/guildData.json isn't empty, at least having the \"DEFAULT\" object");
 			System.exit(-1);
 		} //TODO: Rewrite to call obtainBackup() to search for backups
 

@@ -54,10 +54,14 @@ public class MessageHandler implements EventListener {
 				} else {
 					cmd = CommandHandler.getCommand(fullMsg.substring(0, fullMsg.indexOf(" ")), g);
 				}
+				
+				if(cmd == null) {
+					System.out.println("Command is null?????");
+					return;
+				}
 
 				System.out.println("For server... " + g.getName() + " ... " + Data.command_cache.get(g));
 				System.out.println("Grabbed... " + cmd.getName());
-
 
 				if(cmd == null || (g == null && cmd.getRequirePerms() == true)) return;
 
@@ -90,14 +94,14 @@ public class MessageHandler implements EventListener {
 	public static void sendMessage(MessageChannel chn, String s, File f) {
 
 		if(f != null) {
-			Consumer<Message> callback = (response) -> System.out.printf("[MessageHandler.java] Sent ", response);
+			Consumer<Message> callback = (response) -> System.out.printf("[MessageHandler.java] Sent \"%s\"", response);
 			try {
 				chn.sendMessage(s).addFile(f).queue(callback);
 			} catch(InsufficientPermissionException e) {
 				System.out.println("[MessageHandler.java]: Message was not sent due to insufficient permissions!");
 			}
 		} else
-			System.out.println("Unable to send a message, file doesn't exist?");
+			System.out.println("[MessageHandler.java] Unable to send a message, file doesn't exist?");
 
 	}
 

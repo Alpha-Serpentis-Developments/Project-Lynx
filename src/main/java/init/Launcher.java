@@ -95,8 +95,6 @@ public class Launcher {
 		api.addEventListener(new MessageHandler());
 		api.addEventListener(new ServerHandler());
 
-		api.getPresence().setActivity(Activity.playing("LUCKY LYNX IS BACK"));
-
 		api.awaitReady(); // Waits for JDA to complete loading to prevent issues
 
 		botID = api.getSelfUser().getIdLong();
