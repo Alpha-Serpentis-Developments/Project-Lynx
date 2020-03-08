@@ -58,7 +58,7 @@ public class Data {
 	 * Writes to the designated filepath in a JSON format
 	 * @param file the file-path
 	 * @param jLine the JSON line
-	 * @return
+	 * @return true if writeData(...) is able to write the data, otherwise false
 	 */
 	public static boolean writeData(String file, String jLine) {
 		try {
@@ -126,18 +126,29 @@ public class Data {
 		return writeData(InitData.locationJSON, obj.toString());
 
 	}
+	/**
+	 * Determines if the guild is in BOTH caches (server and command)
+	 * @param gld is the Guild object that is used as a "key" to the Maps.
+	 * @return true if the key exists for the guilds on both the server and command caches.
+	 */
 	public static boolean hasGuild(Guild gld) {
 		return srvr_cache.containsKey(gld) && command_cache.containsKey(gld);
 	}
-
+	//TODO: Replace this with overloaded functions or use a template
+	/**
+	 * Edits the guild with new parameters as provided
+	 * @param gld represents the guild to be modified
+	 * @param obj may represent what will be changed with the guild.
+	 * @return true if the Guild has successfully been modified.
+	 */
 	public static boolean editGuild(Guild gld, Object obj) {
 		return false;
 	}
 
-	/**
+	/** Checks the JSONObject against the "DEFAULT" key to see if it needs to create/modify the server's JSON values to the "DEFAULT" settings.
 	 *
-	 * @param obj
-	 * @return
+	 * @param obj represents the JSONObject in which it will compare against the "DEFAULT" JSON key
+	 * @return true if the method was able to add/modify the Guild's JSON values against the "DEFAULT" value
 	 */
 	public static boolean checkDefaults(JSONObject obj, String srvr) {
 
@@ -153,8 +164,10 @@ public class Data {
 
 				if(writeData(InitData.locationJSON, newObj.toString())) {
 					System.out.println("[Data.java] checkDefaults() successfully modified data!");
+					return true;
 				} else {
 					System.out.println("[Data.java] CRITICAL ERROR!");
+					return false;
 				}
 			}
 		}

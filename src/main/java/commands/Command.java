@@ -19,8 +19,22 @@ public abstract class Command implements Cloneable {
 	 * cmdPerms can be left empty, however if requirePerms = true, you'll need to configure.
 	 * allowPrivate determines if the command can be used in the DMs
 	 */
-	private String cmdName, cmdDesc;
+	
+	/**
+	 * The Command's name.
+	 */
+	private String cmdName;
+	/**
+	 * The Command's description.
+	 */
+	private String cmdDesc;
+	/**
+	 * The Command's type as defined from enum CommandType.
+	 */
 	private CommandType cmdType;
+	/**
+	 * The Command's permissions with the String representing as a "USER" or "ROLE" and the ArrayList<Long> represents the ID(s) to the corresponding key
+	 */
 	private HashMap<String, ArrayList<Long>> cmdPerms = new HashMap<String, ArrayList<Long>>();
 	private boolean requirePerms = false, allowPrivate = true, active = false, logging = false;
 

@@ -118,6 +118,8 @@ public class CommandHandler {
 			//Utilities
 			case "configure":
 				return ALL_COMMANDS.get(6);
+			case "config":
+				return ALL_COMMANDS.get(6);
 			case "shutdown": //Bot Owners Only
 				return ALL_COMMANDS.get(7);
 			case "welcome":

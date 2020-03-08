@@ -22,7 +22,7 @@ public class ServerHandler implements EventListener {
 
 		if(o.length > 2) {
 			throw new Exception("Cannot compare more than two users!");
-		} else if(o.length == 0) {
+		} else if(o.length == 0 || o.length == 1) {
 			throw new Exception("There is nothing to compare!");
 		} else {
 
@@ -86,6 +86,14 @@ public class ServerHandler implements EventListener {
 	 */
 	public static User getServerOwner(long id) {
 		return Launcher.api.getGuildById(id).getOwner().getUser();
+	}
+	/**
+	 * Obtains the User of the server's owner
+	 * @param gld represents the Guild
+	 * @return The guild's owner
+	 */
+	public static User getServerOwner(Guild gld) {
+		return gld.getOwner().getUser();
 	}
 
 	@Override
