@@ -138,10 +138,10 @@ public class Data {
 	/**
 	 * Edits the guild with new parameters as provided
 	 * @param gld represents the guild to be modified
-	 * @param obj may represent what will be changed with the guild.
+	 * @param obj represents the JSONObject that will replace the current JSONObject
 	 * @return true if the Guild has successfully been modified.
 	 */
-	public static boolean editGuild(Guild gld, Object obj) {
+	public static boolean replaceGuild(Guild gld, JSONObject obj) {
 		return false;
 	}
 
