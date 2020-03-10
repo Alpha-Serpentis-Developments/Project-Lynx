@@ -65,8 +65,8 @@ public class MessageHandler implements EventListener {
 
 				if(cmd == null || (g == null && cmd.getRequirePerms() == true)) return;
 
-				System.out.println("DEBUG [MessageHandler.java]: " + cmd.getName());
-				System.out.println("DEBUG [MessageHandler.java]: (ChannelType) " + c);
+				//System.out.println("DEBUG [MessageHandler.java]: " + cmd.getName());
+				//System.out.println("DEBUG [MessageHandler.java]: (ChannelType) " + c);
 
 				if(c.equals(ChannelType.PRIVATE))
 					cmd.action(((MessageReceivedEvent) event).getAuthor().openPrivateChannel().complete(), fullMsg, event); //Just pass the entire thing to prevent NullPointers, each command will handle them appropriately
