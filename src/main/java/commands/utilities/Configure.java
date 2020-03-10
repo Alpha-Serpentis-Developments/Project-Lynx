@@ -56,8 +56,10 @@ public class Configure extends Command {
 		Guild gld = ((MessageReceivedEvent) misc).getGuild();
 		User usr = ((MessageReceivedEvent) misc).getAuthor();
 		
+		//MessageHandler.sendMessage(chn, "[DEBUG] " + usr.getAsMention() + " is attempting to configure in Guild " + gld.getName() + " and has " + gld.getMember(usr).getPermissions());
+		
 		boolean hasAdmin = ServerHandler.getServerOwner(gld.getIdLong()).equals(usr) || gld.getMember(usr).hasPermission(Permission.ADMINISTRATOR);
-		Commands cmd;
+		Commands cmd; // The command in which it will be configuring
 		
 		if(msg.equalsIgnoreCase(getName())) {
 			MessageHandler.sendMessage(chn, getDesc());
@@ -67,14 +69,17 @@ public class Configure extends Command {
 				// Iterate through the values
 				for(Commands c: Commands.values()) {
 					if(c.getAssignmentName().contains(msg.substring(msg.indexOf(getName()) + getName().length() + 1))) {
-						System.out.println("Is it this: " + c.getAssignmentName());
+						cmd = c;
+						MessageHandler.sendMessage(chn, "You are going to modify command " + cmd.getAssignmentName());
 					}
 				}
+				
+				return true;
+			} else {
+				MessageHandler.sendMessage(chn, "Insufficient permissions! (Must be an Administrator or Server Owner)");
+				return false;
 			}
 		}
-		
-		MessageHandler.sendMessage(chn, "Insufficient permissions! (Must be an Administrator or Server Owner)");
-		return false;
 		
 	}
 	

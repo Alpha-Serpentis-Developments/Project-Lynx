@@ -56,7 +56,7 @@ public class MessageHandler implements EventListener {
 				}
 				
 				if(cmd == null) {
-					System.out.println("Command is null?????");
+					System.out.println("WARNING: Command is null?????");
 					return;
 				}
 
@@ -78,30 +78,36 @@ public class MessageHandler implements EventListener {
 
 	}
 
-	public static void sendMessage(MessageChannel chn, String s) {
+	public static Consumer<Message> sendMessage(MessageChannel chn, String s) {
 
 		Consumer<Message> callback = (response) -> System.out.printf("[MessageHandler.java] Sent \"%s\"", response);
 		try {
 			chn.sendMessage(s).queue(callback);
+			return callback;
 		} catch(InsufficientPermissionException e) {
 			System.out.println("[MessageHandler.java]: Message was not sent due to insufficient permissions!");
 		} catch(IllegalArgumentException e) {
 			System.out.println("[MessageHandler.java]: Message was not sent due to an empty text field!");
 		}
+		
+		return null;
 
 	}
 
-	public static void sendMessage(MessageChannel chn, String s, File f) {
+	public static Consumer<Message> sendMessage(MessageChannel chn, String s, File f) {
 
 		if(f != null) {
 			Consumer<Message> callback = (response) -> System.out.printf("[MessageHandler.java] Sent \"%s\"", response);
 			try {
 				chn.sendMessage(s).addFile(f).queue(callback);
+				return callback;
 			} catch(InsufficientPermissionException e) {
 				System.out.println("[MessageHandler.java]: Message was not sent due to insufficient permissions!");
 			}
 		} else
 			System.out.println("[MessageHandler.java] Unable to send a message, file doesn't exist?");
+		
+		return null;
 
 	}
 
