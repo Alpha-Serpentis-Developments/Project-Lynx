@@ -7,7 +7,9 @@ import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.MessageChannel;
 import net.dv8tion.jda.api.entities.User;
+import net.dv8tion.jda.api.events.GenericEvent;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
+import net.dv8tion.jda.api.hooks.EventListener;
 
 enum Commands {
 	
@@ -48,7 +50,12 @@ enum Commands {
 	}
 }
 
-public class Configure extends Command {
+public class Configure<T extends Guild & User> extends Command implements EventListener {
+	
+	private T monitor = null;
+	private boolean readyToMonitor = false;
+	
+	Commands modifyCommand = null;
 	
 	@Override
 	public boolean action(MessageChannel chn, String msg, Object misc) {
@@ -59,7 +66,6 @@ public class Configure extends Command {
 		//MessageHandler.sendMessage(chn, "[DEBUG] " + usr.getAsMention() + " is attempting to configure in Guild " + gld.getName() + " and has " + gld.getMember(usr).getPermissions());
 		
 		boolean hasAdmin = ServerHandler.getServerOwner(gld.getIdLong()).equals(usr) || gld.getMember(usr).hasPermission(Permission.ADMINISTRATOR);
-		Commands cmd; // The command in which it will be configuring
 		
 		if(msg.equalsIgnoreCase(getName())) {
 			MessageHandler.sendMessage(chn, getDesc());
@@ -69,8 +75,7 @@ public class Configure extends Command {
 				// Iterate through the values
 				for(Commands c: Commands.values()) {
 					if(c.getAssignmentName().contains(msg.substring(msg.indexOf(getName()) + getName().length() + 1))) {
-						cmd = c;
-						MessageHandler.sendMessage(chn, "You are going to modify command " + cmd.getAssignmentName());
+						modifyCommand = c;
 					}
 				}
 				
@@ -82,5 +87,26 @@ public class Configure extends Command {
 		}
 		
 	}
+
+	@Override
+	public void onEvent(GenericEvent event) {
+		
+	}
+	
+	// -- Simple Setter & Getter Methods
+	public void setMonitor(T obj) {
+		monitor = obj;
+	}
+	public void setReadyToMonitor(boolean v) {
+		readyToMonitor = v;
+	}
+	
+	public T getMonitor() {
+		return monitor;
+	}
+	public boolean getReadyToMonitor() {
+		return readyToMonitor;
+	}
+	// -- End Simple Setter & Getter Methods
 	
 }

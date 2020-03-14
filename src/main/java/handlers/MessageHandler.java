@@ -29,9 +29,15 @@ public class MessageHandler implements EventListener {
 		 */
 		if((event instanceof MessageReceivedEvent || (InitData.acceptPriv && event instanceof PrivateMessageReceivedEvent)) && !((MessageReceivedEvent) event).getAuthor().isBot() && Launcher.initialized) {
 
-			Guild g = ((MessageReceivedEvent) event).getGuild();
+			Guild g = null;
 			char prefix; //Server's prefix... if it's even a server.
-
+			
+			try {
+				g = ((MessageReceivedEvent) event).getGuild();
+			} catch(IllegalStateException e) {
+				return; //TODO: Support PrivateMessages??? (This is here to prevent NullPointers)
+ 			}
+			
 			if(Data.srvr_cache.get(g) == null && g != null) {
 				Data.addGuild(g);
 				prefix = InitData.prefix;
