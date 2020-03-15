@@ -150,12 +150,29 @@ public class Data {
 	 * @param obj represents the JSONObject in which it will compare against the "DEFAULT" JSON key
 	 * @return true if the method was able to add/modify the Guild's JSON values against the "DEFAULT" value
 	 */
+	@SuppressWarnings("serial")
 	public static boolean checkDefaults(JSONObject obj, String srvr) {
 
 		JSONObject dflt = new JSONObject(readData(InitData.locationJSON)).getJSONObject("DEFAULT");
 		ArrayList<String> s_keys = new ArrayList<String>(((JSONObject) obj.get(srvr)).keySet()), d_keys = new ArrayList<String>(dflt.keySet()); //s for server and d for defaults
-
+		ArrayList<String> s_inner_keys = new ArrayList<String>() {
+				{
+					addAll(((JSONObject) obj.get(srvr)).getJSONObject("srvr_config").keySet());
+					addAll(((JSONObject) obj.get(srvr)).getJSONObject("cmds_config").keySet());
+				}
+			},
+				
+				d_inner_keys = new ArrayList<String>() {
+				{
+					addAll(dflt.getJSONObject("srvr_config").keySet());
+					addAll(dflt.getJSONObject("cmds_config").keySet());
+				}
+			};
+		
+		
 		for(String key: d_keys) {
+			System.out.println("DEBUG [Data.java] Searching for " + key);
+			// This checks if the server configuration is even written onto the guildData.json file
 			if(!s_keys.contains(key)) {
 				System.out.println("[Data.java] MISSING " + key + "! Adding it to the server's data!");
 
@@ -166,11 +183,22 @@ public class Data {
 					System.out.println("[Data.java] checkDefaults() successfully modified data!");
 					return true;
 				} else {
-					System.out.println("[Data.java] CRITICAL ERROR!");
-					return false;
+					System.out.println("[Data.java] CRITICAL ERROR! UNABLE TO WRITE DEFAULT DATA!");
+					try {
+						Launcher.shutdown();
+					} catch (InterruptedException e) {
+						// Nothing.
+					} finally {
+						System.exit(-1);
+					}
 				}
 			}
+			
 		}
+		
+		// This checks if the server configuration has a missing key that may have occurred with updates or incorrect writing of data
+		
+		
 		return false;
 	}
 
