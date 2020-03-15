@@ -2,7 +2,11 @@ package commands.utilities;
 
 import java.util.function.Consumer;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
+
 import commands.Command;
+import data.Data;
 import handlers.MessageHandler;
 import handlers.ServerHandler;
 import net.dv8tion.jda.api.Permission;
@@ -61,7 +65,6 @@ public class Configure extends Command implements EventListener {
 	
 	Commands modifyCommand = null;
 	
-	@SuppressWarnings("unchecked")
 	@Override
 	public boolean action(MessageChannel chn, String msg, Object misc) {
 		
@@ -81,12 +84,14 @@ public class Configure extends Command implements EventListener {
 				for(Commands c: Commands.values()) {
 					if(c.getAssignmentName().contains(msg.substring(msg.indexOf(getName()) + getName().length() + 1))) {
 						Consumer<Message> callback;
+						boolean isConfigured = false;
 						
 						modifyCommand = c;
 						setMonitorUser(usr);
 						setMonitorGuild(gld);
 						
 						// Check the current Guild's configuration
+						isConfigured = isGuildConfigured();
 						// If the Guild isn't configured, then proceed with the default configuration, otherwise proceed with 
 						
 						callback = MessageHandler.sendMessage(chn, "You are configuring command " + c.getAssignmentName() + "\n\n");
@@ -142,7 +147,14 @@ public class Configure extends Command implements EventListener {
 	
 	public boolean isGuildConfigured() {
 		
+		JSONObject GUILD_DATA_JSON = new JSONObject(Data.readData("resources/guildData.json"));
+		JSONObject DEFAULT_JSONOBJECT = GUILD_DATA_JSON.getJSONObject("DEFAULT");
 		
+		for(String key: GUILD_DATA_JSON.keySet()) {
+			if(!key.equalsIgnoreCase("DEFAULT")) {
+				
+			}
+		}
 		
 		return false;
 	}
