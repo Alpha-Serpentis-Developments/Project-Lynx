@@ -150,8 +150,10 @@ public class Configure extends Command implements EventListener {
 		JSONObject GUILD_DATA_JSON = new JSONObject(Data.readData("resources/guildData.json"));
 		JSONObject DEFAULT_JSONOBJECT = GUILD_DATA_JSON.getJSONObject("DEFAULT");
 		
+		boolean isTheSame = true; // By default, it is assumed to be true
+		
 		for(String key: GUILD_DATA_JSON.keySet()) {
-			if(!key.equalsIgnoreCase("DEFAULT")) {
+			if(!key.equalsIgnoreCase("DEFAULT")) { // Check each server individually
 				
 			}
 		}
