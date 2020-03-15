@@ -1,10 +1,13 @@
 package commands.utilities;
 
+import java.util.function.Consumer;
+
 import commands.Command;
 import handlers.MessageHandler;
 import handlers.ServerHandler;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.Guild;
+import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.MessageChannel;
 import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.events.GenericEvent;
@@ -50,13 +53,15 @@ enum Commands {
 	}
 }
 
-public class Configure<T extends Guild & User> extends Command implements EventListener {
+public class Configure extends Command implements EventListener {
 	
-	private T monitor = null;
+	private User monitorUser = null;
+	private Guild monitorGuild = null;
 	private boolean readyToMonitor = false;
 	
 	Commands modifyCommand = null;
 	
+	@SuppressWarnings("unchecked")
 	@Override
 	public boolean action(MessageChannel chn, String msg, Object misc) {
 		
@@ -75,7 +80,21 @@ public class Configure<T extends Guild & User> extends Command implements EventL
 				// Iterate through the values
 				for(Commands c: Commands.values()) {
 					if(c.getAssignmentName().contains(msg.substring(msg.indexOf(getName()) + getName().length() + 1))) {
+						Consumer<Message> callback;
+						
 						modifyCommand = c;
+						setMonitorUser(usr);
+						setMonitorGuild(gld);
+						
+						// Check the current Guild's configuration
+						// If the Guild isn't configured, then proceed with the default configuration, otherwise proceed with 
+						
+						callback = MessageHandler.sendMessage(chn, "You are configuring command " + c.getAssignmentName() + "\n\n");
+						
+						callback = (v) -> { // TODO: Maybe fix this up if I can remember what the heck I thought of...
+							setReadyToMonitor(true);
+						};
+						break;
 					}
 				}
 				
@@ -91,22 +110,41 @@ public class Configure<T extends Guild & User> extends Command implements EventL
 	@Override
 	public void onEvent(GenericEvent event) {
 		
+		if(event instanceof MessageReceivedEvent && getReadyToMonitor() && (monitorUser != null && monitorGuild != null) && ((MessageReceivedEvent) event).getGuild().equals(getMonitorGuild()) && ((MessageReceivedEvent) event).getAuthor().equals(getMonitorUser())) {
+			MessageReceivedEvent evt = (MessageReceivedEvent) event;
+			String message = evt.getMessage().getContentDisplay();
+			
+		}
+		
 	}
 	
 	// -- Simple Setter & Getter Methods
-	public void setMonitor(T obj) {
-		monitor = obj;
+	public void setMonitorUser(User u) {
+		monitorUser = u;
+	}
+	public void setMonitorGuild(Guild g) {
+		monitorGuild = g;
 	}
 	public void setReadyToMonitor(boolean v) {
 		readyToMonitor = v;
 	}
 	
-	public T getMonitor() {
-		return monitor;
+	public User getMonitorUser() {
+		return monitorUser;
+	}
+	public Guild getMonitorGuild() {
+		return monitorGuild;
 	}
 	public boolean getReadyToMonitor() {
 		return readyToMonitor;
 	}
 	// -- End Simple Setter & Getter Methods
+	
+	public boolean isGuildConfigured() {
+		
+		
+		
+		return false;
+	}
 	
 }
