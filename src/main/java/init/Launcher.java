@@ -71,7 +71,7 @@ public class Launcher {
 	 */
 	public void ignoreOverride() throws Exception {
 
-		System.out.println("Starting up JDA initialization...");
+		System.out.println("[Luancher.java] Starting up JDA initialization...");
 
 		Scanner sc = new Scanner(new File(InitData.locationKey));
 
@@ -89,27 +89,33 @@ public class Launcher {
 	public void JDAInit(String key) throws Exception {
 
 		System.out.println("[Launcher.java] Starting up JDA initialization...");
+		
+		try {
+			api = new JDABuilder(key).build();
+			api.addEventListener(new MessageHandler());
+			api.addEventListener(new ServerHandler());
 
-		api = new JDABuilder(key).build();
-		api.addEventListener(new MessageHandler());
-		api.addEventListener(new ServerHandler());
+			api.awaitReady(); // Waits for JDA to complete loading to prevent issues
 
-		api.awaitReady(); // Waits for JDA to complete loading to prevent issues
-
-		botID = api.getSelfUser().getIdLong();
-
-		System.out.println("Initializing commands...");
+			botID = api.getSelfUser().getIdLong();
+		} catch (LoginException e) {
+			System.out.println("[Launcher.java] LoginException was thrown! Ensure the key is correct! Refer to the following for more information: ");
+			e.printStackTrace();
+			
+			System.exit(-1);
+		}
 
 		if(CommandHandler.initCommands())
-			System.out.println("Initializing commands complete! [1/2]");
+			System.out.println("[Launcher.java] Initializing commands complete! [1/2]");
 		else {
 			System.out.println("[Launcher.java] Commands cannot be initialized! Shutting down!");
 			System.exit(-1);
 		}
 
-		System.out.println("Initializing cache...");
+		System.out.println("[Launcher.java] Initializing cache...");
 		Data.initCache();
 
+		System.out.println("[Launcher.java] Initializing cache complete! [2/2]");
 		new Thread(new Playing()).start();
 
 	}
@@ -117,7 +123,7 @@ public class Launcher {
 	public void overrideInit() {
 
 		try {
-			System.out.println("Initializing...");
+			System.out.println("[Launcher.java] Initializing...");
 
 			//OVERRIDE SCANNER
 			Scanner sc;
@@ -125,9 +131,9 @@ public class Launcher {
 			sc = new Scanner(new File("resources/initOverrides.txt")); // Checks for overrides to be applied
 
 			if(sc.hasNext())
-				System.out.println("Override(s) detected, scanning...");
+				System.out.println("[Launcher.java] Override(s) detected, scanning...");
 			else
-				System.out.println("No overrides found, using default settings.");
+				System.out.println("[Launcher.java] No overrides found, using default settings.");
 
 			while(sc.hasNext()) {
 
@@ -139,7 +145,7 @@ public class Launcher {
 
 					if(oKey.equals(ident)) {
 
-						System.out.println("Applying " + oKey + " override");
+						System.out.println("[Launcher.java] Applying " + oKey + " override");
 
 						switch(ident) {
 
@@ -171,11 +177,11 @@ public class Launcher {
 
 							break;
 						case "permLvl":
-							System.out.println("permLvl override is unused! Nothing changed");
+							System.out.println("[Launcher.java] permLvl override is unused! Nothing changed");
 							break;
 						case "prefix":
 							if(stuff.isEmpty() || stuff.length() > 1) {
-								System.out.println("prefix override is malformed! Nothing changed");
+								System.out.println("[Launcher.java] prefix override is malformed! Nothing changed");
 							} else {
 								InitData.prefix = stuff.charAt(0);
 							}
