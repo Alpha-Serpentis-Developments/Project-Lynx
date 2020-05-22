@@ -13,7 +13,7 @@ public class ModerationHandler {
 	 * @param isRole is a boolean value that determines if the IDs provided are type Role, OTHERWISE it MUST be type User
 	 * @return a HashMap of the key and IDs as designated
 	 */
-	public static HashMap<String, ArrayList<Long>> obtainHashmap(Long[][] ids, boolean isRole) {
+	public static HashMap<String, ArrayList<Long>> createPermissions(Long[][] ids, boolean isRole) {
 		
 		HashMap<String, ArrayList<Long>> returnThis = new HashMap<String, ArrayList<Long>>();
 		
