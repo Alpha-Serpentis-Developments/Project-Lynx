@@ -68,6 +68,6 @@ public class InitData {
 	/*
 	 * Use this to define the version
 	 */
-	public static String version = "0.01a";
+	public static String version = "0.2.0a - incomplete";
 	
 }
