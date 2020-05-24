@@ -22,7 +22,7 @@ enum Commands {
 	
 	// This will suffice for now lol
 	
-	ABOUT("name", 0),
+	ABOUT("about", 0),
 	HELP("help", 1),
 	BAN("ban", 2),
 	KICK("kick", 3),
@@ -57,11 +57,7 @@ enum Commands {
 	}
 }
 
-public class Configure extends Command implements EventListener {
-	
-	private User monitorUser = null;
-	private Guild monitorGuild = null;
-	private boolean readyToMonitor = false;
+public class Configure extends Command {
 	
 	Commands modifyCommand = null;
 	
@@ -83,22 +79,11 @@ public class Configure extends Command implements EventListener {
 				// Iterate through the values
 				for(Commands c: Commands.values()) {
 					if(c.getAssignmentName().contains(msg.substring(msg.indexOf(getName()) + getName().length() + 1))) {
-						Consumer<Message> callback;
-						boolean isConfigured = false;
 						
 						modifyCommand = c;
-						setMonitorUser(usr);
-						setMonitorGuild(gld);
 						
-						// Check the current Guild's configuration
-						isConfigured = isGuildConfigured();
-						// If the Guild isn't configured, then proceed with the default configuration, otherwise proceed with 
+						MessageHandler.sendMessage(chn, "You've configured " + c.getAssignmentName());
 						
-						callback = MessageHandler.sendMessage(chn, "You are configuring command " + c.getAssignmentName() + "\n\n");
-						
-						callback = (v) -> { // TODO: Maybe fix this up if I can remember what the heck I thought of...
-							setReadyToMonitor(true);
-						};
 						break;
 					}
 				}
@@ -110,55 +95,6 @@ public class Configure extends Command implements EventListener {
 			}
 		}
 		
-	}
-
-	@Override
-	public void onEvent(GenericEvent event) {
-		
-		if(event instanceof MessageReceivedEvent && getReadyToMonitor() && (monitorUser != null && monitorGuild != null) && ((MessageReceivedEvent) event).getGuild().equals(getMonitorGuild()) && ((MessageReceivedEvent) event).getAuthor().equals(getMonitorUser())) {
-			MessageReceivedEvent evt = (MessageReceivedEvent) event;
-			String message = evt.getMessage().getContentDisplay();
-			
-		}
-		
-	}
-	
-	// -- Simple Setter & Getter Methods
-	public void setMonitorUser(User u) {
-		monitorUser = u;
-	}
-	public void setMonitorGuild(Guild g) {
-		monitorGuild = g;
-	}
-	public void setReadyToMonitor(boolean v) {
-		readyToMonitor = v;
-	}
-	
-	public User getMonitorUser() {
-		return monitorUser;
-	}
-	public Guild getMonitorGuild() {
-		return monitorGuild;
-	}
-	public boolean getReadyToMonitor() {
-		return readyToMonitor;
-	}
-	// -- End Simple Setter & Getter Methods
-	
-	public boolean isGuildConfigured() {
-		
-		JSONObject GUILD_DATA_JSON = new JSONObject(Data.readData("resources/guildData.json"));
-		JSONObject DEFAULT_JSONOBJECT = GUILD_DATA_JSON.getJSONObject("DEFAULT");
-		
-		boolean isTheSame = true; // By default, it is assumed to be true
-		
-		for(String key: GUILD_DATA_JSON.keySet()) {
-			if(!key.equalsIgnoreCase("DEFAULT")) { // Check each server individually
-				
-			}
-		}
-		
-		return false;
 	}
 	
 }

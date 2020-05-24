@@ -4,6 +4,6 @@ ban:Bans the user that is tagged by a moderator.\n\n**Example**: `[[prefix]]ban 
 kick:Kicks the user that is tagged by a moderator.>>REQ_PERM>>MOD
 warn:Warns the user that is tagged by a moderator.>>REQ_PERM>>MOD
 warnings:Displays the user's warnings.>>REQ_PERM>>MOD
-configure:Configures the server's commands to your liking.>>REQ_PERM>>GUILD_OWNER
+configure:Configures the server's commands to your liking which are divided into three "levels": \n\n> Level 0: NO ONE can use the command unless reconfigured\n> Level 1: **ANYONE** can use the command! \n> Level 2: **Certain Roles** can use the command, but you must attach what roles are allowed!\n\n`!configure kick 2 [ROLE1, ROLE2, ROLE3, ...]`\n`!configure about 0`>>REQ_PERM>>GUILD_OWNER
 shutdown:Shuts down the bot!>>BOT_OWNER
 welcome:Toggles to welcome users and can be used to change the message sent and how.>>GUILD_OWNER
