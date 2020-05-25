@@ -1,22 +1,13 @@
 package commands.utilities;
 
-import java.util.function.Consumer;
-
-import org.json.JSONArray;
-import org.json.JSONObject;
-
 import commands.Command;
-import data.Data;
 import handlers.MessageHandler;
 import handlers.ServerHandler;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.Guild;
-import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.MessageChannel;
 import net.dv8tion.jda.api.entities.User;
-import net.dv8tion.jda.api.events.GenericEvent;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
-import net.dv8tion.jda.api.hooks.EventListener;
 
 enum Commands {
 	
