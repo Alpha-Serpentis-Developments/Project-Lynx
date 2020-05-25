@@ -48,11 +48,12 @@ public class GuildLogger implements EventListener {
 	public void addLoggerEventType(LoggerEventTypes type) {
 		for(LoggerEventTypes val: log_types) {
 			if(val.equals(type)) {
+				
+				log_types.add(type);
+				
 				return;
 			}
 		}
-		
-		log_types.add(type);
 		
 	}
 
