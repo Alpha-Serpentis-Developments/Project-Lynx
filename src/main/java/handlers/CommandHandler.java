@@ -32,7 +32,7 @@ public class CommandHandler {
 		}};
 
 	/**
-	 * Initializes the ALL_COMMANDS instance variable.
+	 * Initializes the ALL_COMMANDS static list.
 	 * <br><b>CALLING THIS MORE THAN ONCE IS UNNECESSARY!</b></br>
 	 */
 	public static boolean initCommands() {
