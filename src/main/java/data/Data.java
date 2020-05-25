@@ -81,6 +81,12 @@ public class Data {
 	}
 
 	//Misc Methods
+	/**
+	 * A function designed to create a backup with a timestmap at the instant it was created at
+	 * 
+	 * @param temp short for "temporary," defines whether or not the backup file is temporary. If it is temporary, it will be deleted at shutdown by another function
+	 * @return a {@link java.io.File#member File} where the backup is located.
+	 */
 	public static File createBackup(boolean temp) {
 		long inst = Instant.now().getEpochSecond();
 		if(temp) {
