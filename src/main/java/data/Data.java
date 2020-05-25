@@ -150,24 +150,24 @@ public class Data {
 	 * @param obj represents the JSONObject in which it will compare against the "DEFAULT" JSON key
 	 * @return true if the method was able to add/modify the Guild's JSON values against the "DEFAULT" value
 	 */
-	@SuppressWarnings("serial")
 	public static boolean checkDefaults(JSONObject obj, String srvr) {
 
 		JSONObject dflt = new JSONObject(readData(InitData.locationJSON)).getJSONObject("DEFAULT");
 		ArrayList<String> s_keys = new ArrayList<String>(((JSONObject) obj.get(srvr)).keySet()), d_keys = new ArrayList<String>(dflt.keySet()); //s for server and d for defaults
+		/*
 		ArrayList<String> s_inner_keys = new ArrayList<String>() {
 				{
 					addAll(((JSONObject) obj.get(srvr)).getJSONObject("srvr_config").keySet());
 					addAll(((JSONObject) obj.get(srvr)).getJSONObject("cmds_config").keySet());
 				}
 			},
-				
 				d_inner_keys = new ArrayList<String>() {
 				{
 					addAll(dflt.getJSONObject("srvr_config").keySet());
 					addAll(dflt.getJSONObject("cmds_config").keySet());
 				}
 			};
+		*/
 		
 		
 		for(String key: d_keys) {
