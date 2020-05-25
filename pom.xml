@@ -3,7 +3,7 @@
   <groupId>Project-Lynx</groupId>
   <artifactId>Project-Lynx</artifactId>
   <version>0.1a</version>
-  <name>Lucky Lynx</name>
+  <name>Project Lynx</name>
   <description>JDA-based moderation bot</description>
   <properties>
 	  <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
