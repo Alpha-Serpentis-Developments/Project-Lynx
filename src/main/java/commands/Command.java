@@ -129,7 +129,12 @@ public abstract class Command implements Cloneable {
 	}
 
 	//Misc Methods
-
+	/**
+	 * Used to add new permission rules for the command
+	 * @param key must either be "USER" or "ROLE"
+	 * @param id is the long ID associated with the key
+	 * @throws Exception
+	 */
 	public void addPerm(String key, long id) throws Exception {
 		if(!key.equalsIgnoreCase("USER") || !key.equalsIgnoreCase("ROLE")) {
 			if(hasPerm(key)) {
