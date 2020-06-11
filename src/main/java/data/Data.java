@@ -26,6 +26,7 @@ public class Data {
 	 */
 	public static volatile Map<Guild, List<Command>> command_cache;
 	public static volatile Map<Guild, JSONObject> srvr_cache;
+	public static volatile JSONObject rawJSON;
 
 	//TODO: Clean this up
 	/**
@@ -158,15 +159,14 @@ public class Data {
 		for(String id: file.keySet()) {
 			if(id.equals(gld.getId())) {
 				
-				// Check which keys need to be updated
-				for(String obj_keys: obj.keySet()) {
-					System.out.println("DEBUG - OBJ_KEYS [Data.java] " + obj_keys);
-				}
+				file.getJSONObject(gld.getId()).put("cmds_config", obj);
 				
 				endResult = writeData(InitData.locationJSON, file.toString());
 				
 				if(!endResult)
 					writeData(InitData.locationJSON, temp_backup.toString());
+				
+				break;
 			}
 		}
 		
@@ -240,6 +240,7 @@ public class Data {
 		if(!InitData.acceptMultipleServers) return;
 
 		String jsonData = readData(InitData.locationJSON);
+		rawJSON = new JSONObject(jsonData);
 
 		if(jsonData.isEmpty()) {
 			System.out.println("[Data.java] Shutting down! Cache cannot be initialized... Make sure resources/guildData.json isn't empty, at least having the \"DEFAULT\" object");
@@ -359,8 +360,8 @@ public class Data {
 			srvr_cache.put(Launcher.api.getGuildById(key), srvr_config);
 
 			command_cache.put(Launcher.api.getGuildById(key), cmds);
-			System.out.println(srvr_cache);
-			System.out.println(command_cache + "\n\n\n");
+			System.out.println("DEBUG srvr_cache - [Data.java] " + srvr_cache);
+			System.out.println("DEBUG command_cache - [Data.java] " + command_cache + "\n\n\n");
 		}
 
 	}
