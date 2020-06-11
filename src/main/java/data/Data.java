@@ -26,6 +26,7 @@ public class Data {
 	 */
 	public static volatile Map<Guild, List<Command>> command_cache;
 	public static volatile Map<Guild, JSONObject> srvr_cache;
+	public static volatile JSONObject rawJSON;
 
 	//TODO: Clean this up
 	/**
@@ -158,15 +159,14 @@ public class Data {
 		for(String id: file.keySet()) {
 			if(id.equals(gld.getId())) {
 				
-				// Check which keys need to be updated
-				for(String obj_keys: obj.keySet()) {
-					System.out.println("DEBUG - OBJ_KEYS [Data.java] " + obj_keys);
-				}
+				file.getJSONObject(gld.getId()).put("cmds_config", obj);
 				
 				endResult = writeData(InitData.locationJSON, file.toString());
 				
 				if(!endResult)
 					writeData(InitData.locationJSON, temp_backup.toString());
+				
+				break;
 			}
 		}
 		
@@ -181,7 +181,7 @@ public class Data {
 	public static boolean checkDefaults(JSONObject obj, String srvr) {
 
 		JSONObject dflt = new JSONObject(readData(InitData.locationJSON)).getJSONObject("DEFAULT");
-		ArrayList<String> s_keys = new ArrayList<String>(((JSONObject) obj.get(srvr)).keySet()), d_keys = new ArrayList<String>(dflt.keySet()); //s for server and d for defaults
+		//ArrayList<String> s_keys = new ArrayList<String>(((JSONObject) obj.get(srvr)).keySet()), d_keys = new ArrayList<String>(dflt.keySet()); //s for server and d for defaults
 		/*
 		ArrayList<String> s_inner_keys = new ArrayList<String>() {
 				{
@@ -198,10 +198,11 @@ public class Data {
 		*/
 		
 		
-		for(String key: d_keys) {
+		for(String key: dflt.keySet()) {
+			
 			System.out.println("DEBUG [Data.java] Searching for " + key);
 			// This checks if the server configuration is even written onto the guildData.json file
-			if(!s_keys.contains(key)) {
+			if(!((JSONObject) obj.get(srvr)).keySet().contains(key)) {
 				System.out.println("[Data.java] MISSING " + key + "! Adding it to the server's data!");
 
 				JSONObject newObj = new JSONObject(obj.toString());
@@ -209,25 +210,32 @@ public class Data {
 
 				if(writeData(InitData.locationJSON, newObj.toString())) {
 					System.out.println("[Data.java] checkDefaults() successfully modified data!");
-					return true;
 				} else {
-					System.out.println("[Data.java] CRITICAL ERROR! UNABLE TO WRITE DEFAULT DATA!");
-					try {
-						Launcher.shutdown();
-					} catch (InterruptedException e) {
-						// Nothing.
-					} finally {
-						System.exit(-1);
-					}
+					return false;
 				}
 			}
 			
+			for(String key_inner: dflt.getJSONObject(key).keySet()) {
+				System.out.println("DEBUG [Data.java] Searching for inner key " + key_inner);
+				
+				if(!((JSONObject) obj.get(srvr)).keySet().contains(key_inner)) {
+					System.out.println("[Data.java] MISSING " + key + "! Adding it to the server's data!");
+
+					JSONObject newObj = new JSONObject(obj.toString());
+					((JSONObject) newObj.get(srvr)).put(key_inner, dflt.getJSONObject(key).get(key_inner));
+
+					if(writeData(InitData.locationJSON, newObj.toString())) {
+						System.out.println("[Data.java] checkDefaults() successfully modified data!");
+					} else {
+						return false;
+					}
+				}
+				
+			}
 		}
 		
-		// This checks if the server configuration has a missing key that may have occurred with updates or incorrect writing of data
-		
-		
-		return false;
+		// If it got this far, assume it actually wrote the data correctly?
+		return true;
 	}
 
 	/**
@@ -240,6 +248,7 @@ public class Data {
 		if(!InitData.acceptMultipleServers) return;
 
 		String jsonData = readData(InitData.locationJSON);
+		rawJSON = new JSONObject(jsonData);
 
 		if(jsonData.isEmpty()) {
 			System.out.println("[Data.java] Shutting down! Cache cannot be initialized... Make sure resources/guildData.json isn't empty, at least having the \"DEFAULT\" object");
@@ -251,7 +260,7 @@ public class Data {
 		command_cache = new HashMap<Guild, List<Command>>();
 		srvr_cache = new HashMap<Guild, JSONObject>();
 
-		for(String key: obj.keySet()) {
+		for(String key: obj.keySet()) { // "key" represents the list of keys, particularly guild IDs
 
 			if(key.equals("DEFAULT")) continue;
 
@@ -259,7 +268,15 @@ public class Data {
 			System.out.println("[Data.java]: (initCache()) " + obj.get(key));
 
 			System.out.println("[Data.java]: Checking if server contains all the needed keys...");
-			checkDefaults(obj, key);
+			if(!checkDefaults(obj, "cmds_config")) {
+				System.out.println("ERROR on cmds_config [Data.java] checkDefaults(...) returned false when it needs to be true!");
+				System.exit(-1);
+			}
+			
+			if(!checkDefaults(obj, "srvr_config")) {
+				System.out.println("ERROR on cmds_config [Data.java] checkDefaults(...) returned false when it needs to be true!");
+				System.exit(-1);
+			}
 
 			ArrayList<Command> cmds = new ArrayList<Command>();
 
@@ -290,7 +307,7 @@ public class Data {
 
 				for(String in_key: in_config.keySet()) {
 
-					System.out.println("[Data.java] in_key: " + in_key);
+					System.out.println("DEBUG [Data.java] in_key: " + in_key);
 
 					//START SWITCH STATEMENT
 					switch(in_key) {
@@ -301,7 +318,7 @@ public class Data {
 
 							if(cmd.getPerms().isEmpty()) {
 								cmd.setPerms(new HashMap<String, ArrayList<Long>>());
-								System.out.println("Command \"" + cmd.getName() + "\" is empty!");
+								System.out.println("[Data.java] Command \"" + cmd.getName() + "\" is empty!");
 							}
 
 							if(in_config.get("roleIDs") != null) {
@@ -348,6 +365,17 @@ public class Data {
 						cmd.setLogging(in_config.getBoolean("logging"));
 
 						break;
+					case "tier_level":
+						
+						if(in_config.getInt("tier_level") == 0) {
+							
+						} else if(in_config.getInt("tier_level") == 1) {
+							
+						} else if(in_config.getInt("tier_level") == 2) {
+							
+						}
+						
+						break;
 					}
 					//END SWITCH STATEMENT
 
@@ -356,11 +384,11 @@ public class Data {
 			}
 			//SERVER CONFIG
 			System.out.println("[Data.java] PUTTING " + Launcher.api.getGuildById(key).getName() + " INTO THE CACHE!");
+			
 			srvr_cache.put(Launcher.api.getGuildById(key), srvr_config);
-
 			command_cache.put(Launcher.api.getGuildById(key), cmds);
-			System.out.println(srvr_cache);
-			System.out.println(command_cache + "\n\n\n");
+			System.out.println("DEBUG srvr_cache - [Data.java] " + srvr_cache);
+			System.out.println("DEBUG command_cache - [Data.java] " + command_cache + "\n\n\n");
 		}
 
 	}
