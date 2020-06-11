@@ -22,7 +22,7 @@ import net.dv8tion.jda.api.entities.Guild;
 public class Data {
 
 	/**
-	 * This is initialized at startup
+	 * This is initialized at startup, but can be reinitialized
 	 */
 	public static volatile Map<Guild, List<Command>> command_cache;
 	public static volatile Map<Guild, JSONObject> srvr_cache;
@@ -148,7 +148,29 @@ public class Data {
 	 * @return true if the Guild has successfully been modified.
 	 */
 	public static boolean replaceGuild(Guild gld, JSONObject obj) {
-		return false;
+		
+		JSONObject temp_backup = new JSONObject(srvr_cache.get(gld)); // Ensures that this backup can be obtained if needed.
+		JSONObject file = new JSONObject(readData(InitData.locationJSON));
+		
+		boolean endResult = false;
+		
+		// Update the file
+		for(String id: file.keySet()) {
+			if(id.equals(gld.getId())) {
+				
+				// Check which keys need to be updated
+				for(String obj_keys: obj.keySet()) {
+					System.out.println("DEBUG - OBJ_KEYS [Data.java] " + obj_keys);
+				}
+				
+				endResult = writeData(InitData.locationJSON, file.toString());
+				
+				if(!endResult)
+					writeData(InitData.locationJSON, temp_backup.toString());
+			}
+		}
+		
+		return endResult;
 	}
 
 	/** Checks the JSONObject against the "DEFAULT" key to see if it needs to create/modify the server's JSON values to the "DEFAULT" settings.
