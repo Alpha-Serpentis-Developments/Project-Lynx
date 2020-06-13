@@ -1,47 +1,53 @@
 {
-  "DEFAULT": {
+	"DEFAULT": {
 		"cmds_config": {
 			"warn": {
+				"roleIDs": [],
+				"userIDs": [],
 				"active": false,
 				"logging": false,
-				"roleIDs": [],
-				"userIDs": []
-			},
-			"warnings": {
-				"active": false,
-				"logging": false,
-				"roleIDs": [],
-				"userIDs": []
+				"tier_level": 0
 			},
 			"kick": {
+				"roleIDs": [],
+				"userIDs": [],
 				"active": false,
 				"logging": false,
-				"roleIDs": [],
-				"userIDs": []
+				"tier_level": 0
 			},
-			"ban": {
+			"warnings": {
+				"roleIDs": [],
+				"userIDs": [],
 				"active": false,
 				"logging": false,
-				"roleIDs": [],
-				"userIDs": []
+				"tier_level": 0
 			},
 			"configure": {
+				"roleIDs": [],
+				"userIDs": [],
 				"active": true,
 				"logging": false,
-				"roleIDs": [],
-				"userIDs": []
+				"tier_level": 0
 			},
 			"welcome": {
+				"roleIDs": [],
+				"userIDs": [],
 				"active": false,
 				"logging": false,
+				"tier_level": 0
+			},
+			"ban": {
 				"roleIDs": [],
-				"userIDs": []
+				"userIDs": [],
+				"active": false,
+				"logging": false,
+				"tier_level": 0
 			}
 		},
 		"srvr_config": {
 			"prefix": "!",
-			"logging_channel": null,
-			"welcome": false
+			"welcome": false,
+			"logging_channel": null
 		}
 	}
 }
