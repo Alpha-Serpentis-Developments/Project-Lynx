@@ -224,59 +224,6 @@ public class Configure extends Command {
 							break;
 						}
 
-						// Put the role IDs into the command cache
-						System.out.println("DEBUG - CAPTURE ROLES [Configure.java] " + roles);
-
-						/*
-						for(Role r: roles) {
-							try {
-								modifyCommand.addPerm("ROLE", r.getIdLong());
-							} catch (Exception e) {
-								e.printStackTrace();
-							}
-						}
-						*/
-
-						for(String gld_obj_key: gld_obj.keySet()) { // Searches through the guild's keys
-							System.out.println("DEBUG - GLD_OBJ_KEY [Configure.java] " + gld_obj_key);
-							if(gld_obj_key.equalsIgnoreCase("cmds_config")) {
-								for(String cmds_keys: gld_obj.getJSONObject("cmds_config").keySet()) { // Searches inside the guild's "cmds_config" key
-									System.out.println("DEBUG - CMDS_KEYS [Configure.java] " + cmds_keys);
-
-									if(cmds_keys.equalsIgnoreCase(modifyCommand.getName())) {
-
-										JSONObject cmds_inner_obj = gld_obj.getJSONObject("cmds_config").getJSONObject(modifyCommand.getName());
-
-										for(String cmds_in_keys: cmds_inner_obj.keySet()) {
-
-											System.out.println("DEBUG - CMDS_IN_KEYS [Configure.java] " + cmds_in_keys);
-
-											switch(cmds_in_keys) {
-
-											case "roleIDs":
-												cmds_inner_obj.put("roleIDs", roles);
-												break;
-											case "active":
-												cmds_inner_obj.put("active", true);
-												break;
-											case "logging":
-												cmds_inner_obj.put("logging", true);
-												break;
-											}
-
-										}
-
-										gld_obj.getJSONObject("cmds_config").put(modifyCommand.getName(), cmds_inner_obj);
-
-										break;
-									}
-
-								}
-
-								break;
-							}
-						}
-
 
 						if(Data.replaceGuild(gld, gld_obj)) {
 							MessageHandler.sendMessage(chn, "You've configured " + c.getAssignmentName());
