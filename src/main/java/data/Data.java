@@ -11,6 +11,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import commands.Command;
@@ -26,6 +27,7 @@ public class Data {
 	 */
 	public static volatile Map<Guild, List<Command>> command_cache;
 	public static volatile Map<Guild, JSONObject> srvr_cache;
+	public static volatile ArrayList<Command> cmds;
 	public static volatile JSONObject rawJSON;
 
 	//TODO: Clean this up
@@ -72,6 +74,8 @@ public class Data {
 
 			if(file.equals(InitData.locationJSON)) //Updates the cache
 				initCache();
+			
+			rawJSON = new JSONObject(jLine);
 
 			return true;
 
@@ -175,12 +179,14 @@ public class Data {
 
 	/** Checks the JSONObject against the "DEFAULT" key to see if it needs to create/modify the server's JSON values to the "DEFAULT" settings.
 	 *
-	 * @param obj represents the JSONObject in which it will compare against the "DEFAULT" JSON key
+	 * @param obj represents JSONObject for the guild in which it will compare against the "DEFAULT" JSON key
+	 * @param cfg represents the key to determine if it is a command configuration or server configuration
+	 * @param id represents the guild id
 	 * @return true if the method was able to add/modify the Guild's JSON values against the "DEFAULT" value
 	 */
-	public static boolean checkDefaults(JSONObject obj, String srvr) {
+	public static boolean checkDefaults(JSONObject obj, String cfg, String id) {
 
-		JSONObject dflt = new JSONObject(readData(InitData.locationJSON)).getJSONObject("DEFAULT");
+		JSONObject dflt = rawJSON.getJSONObject("DEFAULT");
 		//ArrayList<String> s_keys = new ArrayList<String>(((JSONObject) obj.get(srvr)).keySet()), d_keys = new ArrayList<String>(dflt.keySet()); //s for server and d for defaults
 		/*
 		ArrayList<String> s_inner_keys = new ArrayList<String>() {
@@ -198,15 +204,41 @@ public class Data {
 		*/
 		
 		
-		for(String key: dflt.keySet()) {
+		//This for loop will iterate through the "DEFAULT" JSON key with either "cmds_config" or "srvr_config" as the "cfg" (configure) parameter 
+		for(String val: dflt.getJSONObject(cfg).keySet()) {
 			
-			System.out.println("DEBUG [Data.java] Searching for " + key);
+			System.out.println("DEBUG [Data.java] Comparing value " + val);
+			
+			// Check if the value is in the JSON
+			if(!obj.getJSONObject(cfg).keySet().contains(val)) {
+				System.out.println("[Data.java] MISSING value " + val + ". Writing to server data.");
+				
+				System.out.println("DEBUG [Data.java] " + rawJSON.keySet());
+				
+				JSONObject addMissingVal = rawJSON;
+				addMissingVal.getJSONObject(id).getJSONObject(cfg).put(val, dflt.getJSONObject(cfg).get(val));
+				
+				// Attempt to write the updated line to the JSON
+				if(writeData(InitData.locationJSON, addMissingVal.toString())) {
+					System.out.println("[Data.java] checkDefaults() missing value successfully written.");
+				} else {
+					return false;
+				}
+				
+			}
+			
+		}
+		
+		/*
+		for(String key: dflt.getJSONObject(cfg).keySet()) {
+			
+			System.out.println("DEBUG [Data.java] Searching for " + key + " within " + dflt.getJSONObject(cfg));
 			// This checks if the server configuration is even written onto the guildData.json file
-			if(!((JSONObject) obj.get(srvr)).keySet().contains(key)) {
+			if(!((JSONObject) obj.get(cfg)).keySet().contains(key)) {
 				System.out.println("[Data.java] MISSING " + key + "! Adding it to the server's data!");
 
 				JSONObject newObj = new JSONObject(obj.toString());
-				((JSONObject) newObj.get(srvr)).put(key, dflt.get(key));
+				((JSONObject) newObj.get(cfg)).put(key, dflt.get(key));
 
 				if(writeData(InitData.locationJSON, newObj.toString())) {
 					System.out.println("[Data.java] checkDefaults() successfully modified data!");
@@ -215,14 +247,14 @@ public class Data {
 				}
 			}
 			
-			for(String key_inner: dflt.getJSONObject(key).keySet()) {
+			for(String key_inner: dflt.getJSONObject(cfg).keySet()) {
 				System.out.println("DEBUG [Data.java] Searching for inner key " + key_inner);
 				
-				if(!((JSONObject) obj.get(srvr)).keySet().contains(key_inner)) {
+				if(!((JSONObject) obj.get(cfg)).keySet().contains(key_inner)) {
 					System.out.println("[Data.java] MISSING " + key + "! Adding it to the server's data!");
 
 					JSONObject newObj = new JSONObject(obj.toString());
-					((JSONObject) newObj.get(srvr)).put(key_inner, dflt.getJSONObject(key).get(key_inner));
+					((JSONObject) newObj.get(cfg)).put(key_inner, dflt.getJSONObject(key).get(key_inner));
 
 					if(writeData(InitData.locationJSON, newObj.toString())) {
 						System.out.println("[Data.java] checkDefaults() successfully modified data!");
@@ -233,9 +265,39 @@ public class Data {
 				
 			}
 		}
+		*/
 		
 		// If it got this far, assume it actually wrote the data correctly?
 		return true;
+	}
+	
+	/**
+	 * Initializes a specific guild rather than checking through the entire resources/guildData.json file.
+	 * @param id is a String containing the guild ID.
+	 * @throws InstantiationException
+	 * @throws IllegalAccessException
+	 */
+	public static void softInitCache(String id) throws InstantiationException, IllegalAccessException {
+		
+		System.out.println("[Data.java] NOTICE: softInitCache(...) was called!");
+		
+		if(rawJSON == null) {
+			rawJSON = new JSONObject(readData(InitData.locationJSON));
+			
+			if(rawJSON.isEmpty()) {
+				System.out.println("[Data.java] Shutting down! Cache cannot be initialized... Make sure resources/guildData.json isn't empty, at least having the \"DEFAULT\" object");
+				System.exit(-1);
+			}
+			
+		}
+		
+		// If guild isn't on the 
+		if(!rawJSON.keySet().contains(id)) {
+			rawJSON.put(id, rawJSON.getJSONObject("DEFAULT"));
+		}
+		
+		loadCache(id, rawJSON);
+		
 	}
 
 	/**
@@ -244,41 +306,14 @@ public class Data {
 	 * @throws InstantiationException
 	 */
 	public static void initCache() throws InstantiationException, IllegalAccessException {
+		
+		System.out.println("[Data.java] NOTICE: initCache() was called!");
 
 		if(!InitData.acceptMultipleServers) return;
-
-		String jsonData = readData(InitData.locationJSON);
-		rawJSON = new JSONObject(jsonData);
-
-		if(jsonData.isEmpty()) {
-			System.out.println("[Data.java] Shutting down! Cache cannot be initialized... Make sure resources/guildData.json isn't empty, at least having the \"DEFAULT\" object");
-			System.exit(-1);
-		} //TODO: Rewrite to call obtainBackup() to search for backups
-
-		JSONObject obj = new JSONObject(jsonData);
-
-		command_cache = new HashMap<Guild, List<Command>>();
-		srvr_cache = new HashMap<Guild, JSONObject>();
-
-		for(String key: obj.keySet()) { // "key" represents the list of keys, particularly guild IDs
-
-			if(key.equals("DEFAULT")) continue;
-
-			System.out.println("[Data.java]: (initCache()) " + key);
-			System.out.println("[Data.java]: (initCache()) " + obj.get(key));
-
-			System.out.println("[Data.java]: Checking if server contains all the needed keys...");
-			if(!checkDefaults(obj, "cmds_config")) {
-				System.out.println("ERROR on cmds_config [Data.java] checkDefaults(...) returned false when it needs to be true!");
-				System.exit(-1);
-			}
-			
-			if(!checkDefaults(obj, "srvr_config")) {
-				System.out.println("ERROR on cmds_config [Data.java] checkDefaults(...) returned false when it needs to be true!");
-				System.exit(-1);
-			}
-
-			ArrayList<Command> cmds = new ArrayList<Command>();
+		
+		// First-time initialization, highly doubt it would need to be reinitialized
+		if(cmds == null) {
+			cmds = new ArrayList<Command>();
 
 			for(Command c: CommandHandler.ALL_COMMANDS) {
 				try {
@@ -287,110 +322,156 @@ public class Data {
 					e.printStackTrace();
 				}
 			}
-
-			JSONObject cmds_config = obj.getJSONObject(key).getJSONObject("cmds_config"), srvr_config = obj.getJSONObject(key).getJSONObject("srvr_config");
-
-			//COMMANDS CONFIG
-			for(String con_key: cmds_config.keySet()) {
-				System.out.println("COMMANDS CONFIG: Setting up " + cmds_config.getJSONObject(con_key));
-
-				JSONObject in_config = cmds_config.getJSONObject(con_key);
-				Command cmd = null;
-
-				for(Command c: cmds) {
-					if(c.getName().equalsIgnoreCase(con_key)) {
-						cmd = c;
-					}
-				}
-
-				if(cmd == null) continue;
-
-				for(String in_key: in_config.keySet()) {
-
-					System.out.println("DEBUG [Data.java] in_key: " + in_key);
-
-					//START SWITCH STATEMENT
-					switch(in_key) {
-
-					case "roleIDs":
-
-						if(cmd.getRequirePerms()) {
-
-							if(cmd.getPerms().isEmpty()) {
-								cmd.setPerms(new HashMap<String, ArrayList<Long>>());
-								System.out.println("[Data.java] Command \"" + cmd.getName() + "\" is empty!");
-							}
-
-							if(in_config.get("roleIDs") != null) {
-								try {
-									for(Object id: in_config.getJSONArray("roleIDs")) {
-										cmd.addPerm("ROLE", (long) id);
-									}
-								} catch (Exception e) {
-									e.printStackTrace();
-								}
-							}
-						}
-
-						break;
-
-					case "userIDs":
-
-						if(cmd.getRequirePerms()) {
-
-							if(cmd.getPerms().isEmpty()) {
-								cmd.setPerms(new HashMap<String, ArrayList<Long>>());
-								System.out.println("Command \"" + cmd.getName() + "\" is empty!");
-							}
-
-							if(in_config.get("userIDs") != null) {
-								try {
-									for(Object id: in_config.getJSONArray("userIDs")) {
-										cmd.addPerm("USER", (long) id);
-									}
-								} catch (Exception e) {
-									e.printStackTrace();
-								}
-							}
-						}
-
-						break;
-					case "active":
-
-						cmd.setActive(in_config.getBoolean("active"));
-
-						break;
-					case "logging":
-
-						cmd.setLogging(in_config.getBoolean("logging"));
-
-						break;
-					case "tier_level":
-						
-						if(in_config.getInt("tier_level") == 0) {
-							
-						} else if(in_config.getInt("tier_level") == 1) {
-							
-						} else if(in_config.getInt("tier_level") == 2) {
-							
-						}
-						
-						break;
-					}
-					//END SWITCH STATEMENT
-
-				}
-
-			}
-			//SERVER CONFIG
-			System.out.println("[Data.java] PUTTING " + Launcher.api.getGuildById(key).getName() + " INTO THE CACHE!");
-			
-			srvr_cache.put(Launcher.api.getGuildById(key), srvr_config);
-			command_cache.put(Launcher.api.getGuildById(key), cmds);
-			System.out.println("DEBUG srvr_cache - [Data.java] " + srvr_cache);
-			System.out.println("DEBUG command_cache - [Data.java] " + command_cache + "\n\n\n");
 		}
 
+		// Checks if the rawJSON variable is null.
+		if(rawJSON == null) {
+			rawJSON = new JSONObject(readData(InitData.locationJSON)); // Loads the rawJSON variable.
+			
+			if(rawJSON.isEmpty()) { // Ensure it isn't completely empty.
+				System.out.println("[Data.java] Shutting down! Cache cannot be initialized... Make sure resources/guildData.json isn't empty, at least having the \"DEFAULT\" object");
+				System.exit(-1);
+			}
+			
+		} //TODO: Rewrite to call obtainBackup() to search for backups
+		command_cache = new HashMap<Guild, List<Command>>();
+		srvr_cache = new HashMap<Guild, JSONObject>();
+
+		for(String key: rawJSON.keySet()) { // "key" represents the list of keys, particularly guild IDs
+
+			if(key.equals("DEFAULT")) continue;
+
+			System.out.println("[Data.java]: (initCache()) " + key);
+			System.out.println("[Data.java]: (initCache()) " + rawJSON.get(key));
+
+			System.out.println("[Data.java]: Checking if server contains all the needed keys...");
+			try {
+				checkDefaults(rawJSON.getJSONObject(key), "cmds_config", key);
+				checkDefaults(rawJSON.getJSONObject(key), "srvr_config", key);
+			} catch(JSONException e) {
+				System.out.println("[Data.java] ERROR on checkDefaults(...), refer to the stack trace for more information.");
+				e.printStackTrace();
+				System.exit(-1);
+			}
+			
+			loadCache(key, rawJSON);
+
+		}
+
+	}
+	
+	/**
+	 * Reads the guild's data and transcribes it into HashMaps
+	 * @param id
+	 */
+	public static void loadCache(String key, JSONObject obj) {
+		
+		JSONObject cmds_config = obj.getJSONObject(key).getJSONObject("cmds_config"), srvr_config = obj.getJSONObject(key).getJSONObject("srvr_config");
+
+		//COMMANDS CONFIG
+		for(String con_key: cmds_config.keySet()) {
+			System.out.println("COMMANDS CONFIG: Setting up " + cmds_config.getJSONObject(con_key));
+
+			JSONObject in_config = cmds_config.getJSONObject(con_key);
+			Command cmd = null;
+
+			for(Command c: cmds) {
+				if(c.getName().equalsIgnoreCase(con_key)) {
+					cmd = c;
+				}
+			}
+
+			if(cmd == null) continue;
+
+			for(String in_key: in_config.keySet()) {
+
+				System.out.println("DEBUG [Data.java] in_key: " + in_key);
+
+				//START SWITCH STATEMENT
+				switch(in_key) {
+
+				case "roleIDs":
+
+					if(cmd.getRequirePerms()) {
+
+						if(cmd.getPerms().isEmpty()) {
+							cmd.setPerms(new HashMap<String, ArrayList<Long>>());
+							System.out.println("[Data.java] Command \"" + cmd.getName() + "\" is empty!");
+						}
+
+						if(in_config.get("roleIDs") != null) {
+							try {
+								for(Object id: in_config.getJSONArray("roleIDs")) {
+									cmd.addPerm("ROLE", (long) id);
+								}
+							} catch (Exception e) {
+								e.printStackTrace();
+							}
+						}
+					}
+
+					break;
+
+				case "userIDs":
+
+					if(cmd.getRequirePerms()) {
+
+						if(cmd.getPerms().isEmpty()) {
+							cmd.setPerms(new HashMap<String, ArrayList<Long>>());
+							System.out.println("Command \"" + cmd.getName() + "\" is empty!");
+						}
+
+						if(in_config.get("userIDs") != null) {
+							try {
+								for(Object id: in_config.getJSONArray("userIDs")) {
+									cmd.addPerm("USER", (long) id);
+								}
+							} catch (Exception e) {
+								e.printStackTrace();
+							}
+						}
+					}
+
+					break;
+				case "active":
+
+					cmd.setActive(in_config.getBoolean("active"));
+
+					break;
+				case "logging":
+
+					cmd.setLogging(in_config.getBoolean("logging"));
+
+					break;
+				case "tier_level":
+					
+					cmd.setCmdTier(in_config.getInt("tier_level"));
+					
+					if(in_config.getInt("tier_level") == 0) {
+						
+					} else if(in_config.getInt("tier_level") == 1) {
+						
+					} else if(in_config.getInt("tier_level") == 2) {
+						
+					}
+					
+					break;
+				}
+				//END SWITCH STATEMENT
+				
+				//SERVER CONFIG
+				//System.out.println("[Data.java] PUTTING " + Launcher.api.getGuildById(key).getName() + " INTO THE CACHE!");
+				
+				srvr_cache.put(Launcher.api.getGuildById(key), srvr_config);
+				command_cache.put(Launcher.api.getGuildById(key), cmds);
+
+			}
+			
+		}
+		
+		System.out.println("DEBUG srvr_cache - [Data.java] " + srvr_cache);
+		System.out.println("DEBUG command_cache - [Data.java] " + command_cache + "\n\n\n");
+		
 	}
 
 }

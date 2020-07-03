@@ -128,6 +128,18 @@ public class CommandHandler {
 			//Additional
 			}
 		} else {
+			
+			// Checks if the server is in the cache.
+			if(Data.srvr_cache.get(g) == null) {
+				try {
+					Data.softInitCache(g.getId());
+				} catch (InstantiationException e) {
+					e.printStackTrace();
+				} catch (IllegalAccessException e) {
+					e.printStackTrace();
+				}
+			}
+			
 			for(Command c: Data.command_cache.get(g)) {
 				if(c.getName().equalsIgnoreCase((srch))) {
 					return c;
