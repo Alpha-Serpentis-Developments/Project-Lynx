@@ -1,0 +1,53 @@
+{
+  "DEFAULT": {
+		"cmds_config": {
+			"ban": {
+				"active": false,
+				"logging": false,
+				"roleIDs": [],
+				"tier_level": 0,
+				"userIDs": []
+			},
+			"configure": {
+				"active": true,
+				"logging": false,
+				"roleIDs": [],
+				"tier_level": 0,
+				"userIDs": []
+			},
+			"kick": {
+				"active": false,
+				"logging": false,
+				"roleIDs": [],
+				"tier_level": 0,
+				"userIDs": []
+			},
+			"warn": {
+				"active": false,
+				"logging": false,
+				"roleIDs": [],
+				"tier_level": 0,
+				"userIDs": []
+			},
+			"warnings": {
+				"active": false,
+				"logging": false,
+				"roleIDs": [],
+				"tier_level": 0,
+				"userIDs": []
+			},
+			"welcome": {
+				"active": false,
+				"logging": false,
+				"roleIDs": [],
+				"tier_level": 0,
+				"userIDs": []
+			}
+		},
+		"srvr_config": {
+			"logging_channel": null,
+			"prefix": "!",
+			"welcome": false
+		}
+	}
+}
