@@ -33,6 +33,10 @@ public abstract class Command implements Cloneable {
 	 */
 	private CommandType cmdType;
 	/**
+	 * The Command's "tier level" (0-2)
+	 */
+	private int cmdTier;
+	/**
 	 * The Command's permissions with the String representing as a "USER" or "ROLE" and the ArrayList<Long> represents the ID(s) to the corresponding key
 	 */
 	private HashMap<String, ArrayList<Long>> cmdPerms = new HashMap<String, ArrayList<Long>>();
@@ -47,6 +51,9 @@ public abstract class Command implements Cloneable {
 	}
 	public void setCmdType(CommandType ct) {
 		cmdType = ct;
+	}
+	public void setCmdTier(int t) {
+		cmdTier = t;
 	}
 	public void setPerms(HashMap<String, ArrayList<Long>> p) {
 		cmdPerms = p;
@@ -98,6 +105,9 @@ public abstract class Command implements Cloneable {
 	}
 	public CommandType getCmdType() {
 		return cmdType;
+	}
+	public int getCmdTier() {
+		return cmdTier;
 	}
 	public HashMap<String, ArrayList<Long>> getPerms() {
 		return cmdPerms;

@@ -26,7 +26,7 @@ enum Commands {
 	KICK("kick", 3),
 	WARN("warn", 4),
 	WARNINGS("warnings", 5),
-	//CONFIGURE("configure", 6), // You cannot configure the configure command TODO: Make it so you can actually configure the configure command.
+	//CONFIGURE("configure", 6), // TODO: Make it so you can actually configure the configure command.
 	SHUTDOWN("shutdown", 7),
 	WELCOME("welcome", 8);
 
@@ -118,7 +118,9 @@ public class Configure extends Command {
 						}
 
 						// Determine the action to be done
-						if(tier_level == 0) {
+						// Tier levels are defined here: https://github.com/Alpha-Serpentis-Developments/Project-Lynx/issues/1
+						// 0 = Disabled; 1 = ANYONE (exclude bots); 2 = Specific Roles
+						if(tier_level == 0) { 
 
 						} else if(tier_level == 1) {
 

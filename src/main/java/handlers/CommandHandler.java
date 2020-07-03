@@ -124,6 +124,8 @@ public class CommandHandler {
 				return ALL_COMMANDS.get(7);
 			case "welcome":
 				return ALL_COMMANDS.get(8);
+			
+			//Additional
 			}
 		} else {
 			for(Command c: Data.command_cache.get(g)) {
