@@ -11,6 +11,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -213,7 +214,7 @@ public class Data {
 			if(!obj.getJSONObject(cfg).keySet().contains(val)) {
 				System.out.println("[Data.java] MISSING value " + val + ". Writing to server data.");
 				
-				System.out.println("DEBUG [Data.java] " + rawJSON.keySet());
+				//System.out.println("DEBUG [Data.java] " + rawJSON.keySet());
 				
 				JSONObject addMissingVal = rawJSON;
 				addMissingVal.getJSONObject(id).getJSONObject(cfg).put(val, dflt.getJSONObject(cfg).get(val));
@@ -225,6 +226,36 @@ public class Data {
 					return false;
 				}
 				
+			}
+			
+			// Check if the value inside of the value is in the JSON
+			
+			//TODO: Figure a way to optimize this section???
+			if(dflt.getJSONObject(cfg).get(val) instanceof JSONObject) { // Checks it is a JSONObject to ensure it can use keySet(), otherwise an Exception is thrown
+				if(dflt.getJSONObject(cfg).getJSONObject(val).keySet().size() > 1) {
+					
+					// Iterates through the keys of the JSONObjects with keys. It'll only iterate if said value contains more than 1 key.
+					for(String inner_val: dflt.getJSONObject(cfg).getJSONObject(val).keySet()) {
+						
+						if(!obj.getJSONObject(cfg).getJSONObject(val).keySet().contains(inner_val)) {
+							System.out.println("[Data.java] MISSING (inner) value " + inner_val + ". Writing to server data.");
+							
+							//System.out.println("DEBUG [Data.java] " + rawJSON.keySet());
+							
+							JSONObject addMissingVal = rawJSON;
+							addMissingVal.getJSONObject(id).getJSONObject(cfg).getJSONObject(val).put(inner_val, dflt.getJSONObject(cfg).getJSONObject(val).get(inner_val));
+							
+							// Attempt to write the updated line to the JSON
+							if(writeData(InitData.locationJSON, addMissingVal.toString())) {
+								System.out.println("[Data.java] checkDefaults() missing value successfully written.");
+							} else {
+								return false;
+							}
+						}
+						
+					}
+					
+				}
 			}
 			
 		}
