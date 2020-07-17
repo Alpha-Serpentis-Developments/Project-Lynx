@@ -3,8 +3,13 @@ package init;
 public class InitData {
 
 	/*
+	 * = = = = = = = = = = =
+	 * NOTICE:
+	 * 
+	 * Modifying data here from the source code is not recommended unless you're certain changing anything in here.
+	 * = = = = = = = = = = =
 	 * YOU CAN OVERRIDE ALL OF THE BELOW BY MODIFYING initOverrides.txt
-	 * Leave initOverrides EMPTY if you do not wish to override anything!
+	 * Leave initOverrides.txt EMPTY if you do not wish to override anything!
 	 * Use the following initOverrides keys:
 	 * 
 	 * locKey(KEY_LOCATION) -- directory
@@ -34,25 +39,30 @@ public class InitData {
 	
 	/**
 	 * YOU MUST SET THE FILE DIRECTORY TO A "key.txt" or "key.dat" FILE.
-	 * It doesn't have to be in the depend folder.
+	 * It doesn't have to be in the "resources" folder.
 	 */
 	public static String locationKey = "resources/key.txt", locationBackup = "resources/backup/", locationJSON = "resources/guildData.json", locationCommands = "resources/commands.txt";
 	
 	/*
+	 * This is an ignored variable. Useful for hard-coding stuff if you deem necessary.
+	 * 
 	 * "guildID" is used for the guild's ID and "logID" is used if a log channel is available
 	 * 
-	 * TODO: Make it so that it supports multiple servers for LUCKY LYNX ONLY
 	 * "guildID" is optional for one server
 	 */
 	public static String guildID = "590215639785013298", logID = "591391617655636100";
 	
 	/*
+	 * This is an ignored variable. Useful for hard-coding stuff if you deem necessary.
+	 * 
 	 * "botOwnerIDs" contains the USER IDs
 	 * "modIDs" and "adminIDs" contains their respective ROLE IDs (single-server use)
 	 */
 	public static Long[] botOwnerIDs = {216037365829992448L, 226843345643634688L};
 	
 	/*
+	 * You can override the default prefix at the server-level
+	 * 
 	 * Use this to modify the prefix, '!' is the default and can be overridden/changed if needed
 	 * Prefix only supports one character and CANNOT be empty.
 	 */
@@ -68,6 +78,6 @@ public class InitData {
 	/*
 	 * Use this to define the version
 	 */
-	public static String version = "0.2.0a - incomplete";
+	public static String version = "0.2.0a (unfinished) - The Rewrite Update";
 	
 }
