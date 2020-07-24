@@ -64,7 +64,7 @@ public class Data {
 	 * @param jLine the JSON line
 	 * @return true if writeData(...) is able to write the data, otherwise false
 	 */
-	public static boolean writeData(String file, String jLine) {
+	public static boolean writeData(String file, String jLine, boolean softInit, String id) {
 		try {
 			FileWriter w = new FileWriter(new File(file));
 
@@ -73,8 +73,8 @@ public class Data {
 			w.write(jLine);
 			w.close();
 
-			if(file.equals(InitData.locationJSON)) //Updates the cache
-				initCache();
+			if(file.equals(InitData.locationJSON) && softInit) //Updates the cache
+				softInitCache(id);
 			
 			rawJSON = new JSONObject(jLine);
 
@@ -96,10 +96,10 @@ public class Data {
 	public static File createBackup(boolean temp) {
 		long inst = Instant.now().getEpochSecond();
 		if(temp) {
-			writeData(InitData.locationBackup + "BACKUP-TMP-" + inst + ".json", readData(InitData.locationJSON));
+			writeData(InitData.locationBackup + "BACKUP-TMP-" + inst + ".json", readData(InitData.locationJSON), false, null);
 			return new File(InitData.locationBackup + "BACKUP-TMP-" + inst + ".json");
 		} else {
-			writeData(InitData.locationBackup + "BACKUP-" + inst + ".json", readData(InitData.locationJSON));
+			writeData(InitData.locationBackup + "BACKUP-" + inst + ".json", readData(InitData.locationJSON), false, null);
 			return new File(InitData.locationBackup + "BACKUP-" + inst + ".json");
 		}
 	}
@@ -117,7 +117,7 @@ public class Data {
 			if(id.equals(gld.getId())) {
 				obj.remove(id);
 
-				return writeData(InitData.locationJSON, obj.toString());
+				return writeData(InitData.locationJSON, obj.toString(), false, null);
 			}
 		}
 
@@ -135,7 +135,7 @@ public class Data {
 
 		obj.put(gld.getId(), obj.get("DEFAULT"));
 
-		return writeData(InitData.locationJSON, obj.toString());
+		return writeData(InitData.locationJSON, obj.toString(), true, gld.getId());
 
 	}
 	/**
@@ -166,10 +166,10 @@ public class Data {
 				
 				file.getJSONObject(gld.getId()).put("cmds_config", obj);
 				
-				endResult = writeData(InitData.locationJSON, file.toString());
+				endResult = writeData(InitData.locationJSON, file.toString(), true, gld.getId());
 				
 				if(!endResult)
-					writeData(InitData.locationJSON, temp_backup.toString());
+					writeData(InitData.locationJSON, temp_backup.toString(), true, gld.getId());
 				
 				break;
 			}
@@ -204,6 +204,20 @@ public class Data {
 			};
 		*/
 		
+		// Special cases for when the "DEFAULT" key has an empty value
+		if(dflt.getJSONObject(cfg).keySet().size() == 0) {
+			
+			JSONObject addMissingVal = rawJSON;
+			addMissingVal.getJSONObject(id).put(cfg, dflt.getJSONObject(cfg));
+			
+			// Attempt to write the updated line to the JSON
+			if(writeData(InitData.locationJSON, addMissingVal.toString(), true, id)) {
+				System.out.println("[Data.java] checkDefaults() missing value successfully written.");
+			} else {
+				return false;
+			}
+			
+		}
 		
 		//This for loop will iterate through the "DEFAULT" JSON key with either "cmds_config" or "srvr_config" as the "cfg" (configure) parameter 
 		for(String val: dflt.getJSONObject(cfg).keySet()) {
@@ -220,7 +234,7 @@ public class Data {
 				addMissingVal.getJSONObject(id).getJSONObject(cfg).put(val, dflt.getJSONObject(cfg).get(val));
 				
 				// Attempt to write the updated line to the JSON
-				if(writeData(InitData.locationJSON, addMissingVal.toString())) {
+				if(writeData(InitData.locationJSON, addMissingVal.toString(), true, id)) {
 					System.out.println("[Data.java] checkDefaults() missing value successfully written.");
 				} else {
 					return false;
@@ -246,7 +260,7 @@ public class Data {
 							addMissingVal.getJSONObject(id).getJSONObject(cfg).getJSONObject(val).put(inner_val, dflt.getJSONObject(cfg).getJSONObject(val).get(inner_val));
 							
 							// Attempt to write the updated line to the JSON
-							if(writeData(InitData.locationJSON, addMissingVal.toString())) {
+							if(writeData(InitData.locationJSON, addMissingVal.toString(), true, id)) {
 								System.out.println("[Data.java] checkDefaults() missing value successfully written.");
 							} else {
 								return false;
@@ -379,6 +393,7 @@ public class Data {
 			try {
 				checkDefaults(rawJSON.getJSONObject(key), "cmds_config", key);
 				checkDefaults(rawJSON.getJSONObject(key), "srvr_config", key);
+				checkDefaults(rawJSON.getJSONObject(key), "logs", key);
 			} catch(JSONException e) {
 				System.out.println("[Data.java] ERROR on checkDefaults(...), refer to the stack trace for more information.");
 				e.printStackTrace();
