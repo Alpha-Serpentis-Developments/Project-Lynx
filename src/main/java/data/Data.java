@@ -146,13 +146,14 @@ public class Data {
 	public static boolean hasGuild(Guild gld) {
 		return srvr_cache.containsKey(gld) && command_cache.containsKey(gld);
 	}
-	//TODO: Replace this with overloaded functions or use a template
+	
 	/**
 	 * Edits the guild with new parameters as provided
 	 * @param gld represents the guild to be modified
 	 * @param obj represents the JSONObject that will replace the current JSONObject
 	 * @return true if the Guild has successfully been modified.
 	 */
+	/* TODO: Fix this!
 	public static boolean replaceGuild(Guild gld, JSONObject obj) {
 		
 		JSONObject temp_backup = new JSONObject(srvr_cache.get(gld)); // Ensures that this backup can be obtained if needed.
@@ -164,7 +165,7 @@ public class Data {
 		for(String id: file.keySet()) {
 			if(id.equals(gld.getId())) {
 				
-				file.getJSONObject(gld.getId()).put("cmds_config", obj);
+				file.getJSONObject(gld.getId()).put("cmds_config", obj); //TODO: This is what breaks it!
 				
 				endResult = writeData(InitData.locationJSON, file.toString(), true, gld.getId());
 				
@@ -177,6 +178,7 @@ public class Data {
 		
 		return endResult;
 	}
+	*/
 
 	/** Checks the JSONObject against the "DEFAULT" key to see if it needs to create/modify the server's JSON values to the "DEFAULT" settings.
 	 *
@@ -264,7 +266,7 @@ public class Data {
 			
 			//TODO: Figure a way to optimize this section???
 			if(dflt.getJSONObject(cfg).get(val) instanceof JSONObject) { // Checks it is a JSONObject to ensure it can use keySet(), otherwise an Exception is thrown
-				if(dflt.getJSONObject(cfg).getJSONObject(val).keySet().size() > 1) {
+				if(dflt.getJSONObject(cfg).getJSONObject(val).keySet().size() > 0) {
 					
 					// Iterates through the keys of the JSONObjects with keys. It'll only iterate if said value contains more than 1 key.
 					for(String inner_val: dflt.getJSONObject(cfg).getJSONObject(val).keySet()) {
