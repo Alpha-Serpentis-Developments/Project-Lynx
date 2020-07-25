@@ -103,6 +103,11 @@ public class Launcher {
 			e.printStackTrace();
 			
 			System.exit(-1);
+		} catch (Error e) {
+			System.out.println("[Launcher.java] A possibly fatal error was thrown. Refer to the stack trace for information.");
+			e.printStackTrace();
+			
+			System.exit(-1);
 		}
 
 		if(CommandHandler.initCommands())
