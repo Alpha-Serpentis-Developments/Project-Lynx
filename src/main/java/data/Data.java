@@ -204,6 +204,7 @@ public class Data {
 			};
 		*/
 		
+		/*
 		// Special cases for when the "DEFAULT" key has an empty value
 		if(dflt.getJSONObject(cfg).keySet().size() == 0) {
 			
@@ -218,11 +219,28 @@ public class Data {
 			}
 			
 		}
+		*/
 		
 		//This for loop will iterate through the "DEFAULT" JSON key with either "cmds_config" or "srvr_config" as the "cfg" (configure) parameter 
 		for(String val: dflt.getJSONObject(cfg).keySet()) {
 			
-			System.out.println("DEBUG [Data.java] Comparing value " + val);
+			System.out.println("DEBUG [Data.java] Comparing value " + val + " in " + cfg);
+			
+			// Checks if it exists in server, otherwise it'll copy the DEFAULT values and return true if successfully written.
+			try {
+				obj.getJSONObject(cfg);
+			} catch (JSONException e) {
+				JSONObject addMissingVal = rawJSON;
+				addMissingVal.getJSONObject(id).put("logs", dflt.getJSONObject(cfg));
+				
+				if(writeData(InitData.locationJSON, addMissingVal.toString(), true, id)) {
+					System.out.println("[Data.java] checkDefaults() missing value successfully written.");
+					return true;
+				} else {
+					return false;
+				}
+				
+			}
 			
 			// Check if the value is in the JSON
 			if(!obj.getJSONObject(cfg).keySet().contains(val)) {
