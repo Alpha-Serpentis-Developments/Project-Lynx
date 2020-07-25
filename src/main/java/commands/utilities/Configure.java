@@ -65,7 +65,7 @@ public class Configure extends Command {
 		Guild gld = ((MessageReceivedEvent) misc).getGuild();
 		User usr = ((MessageReceivedEvent) misc).getAuthor();
 
-		JSONObject gld_obj = new JSONObject(Data.readData(InitData.locationJSON)).getJSONObject(gld.getId());
+		JSONObject gld_obj = Data.rawJSON.getJSONObject(gld.getId());
 
 		//MessageHandler.sendMessage(chn, "[DEBUG] " + usr.getAsMention() + " is attempting to configure in Guild " + gld.getName() + " and has " + gld.getMember(usr).getPermissions());
 
@@ -136,7 +136,7 @@ public class Configure extends Command {
 
 								// Determines if it is the last item provided
 								if(breakApart.contains(",")) {
-									brokenString = breakApart.substring(0, breakApart.lastIndexOf(","));
+									brokenString = breakApart.substring(0, breakApart.indexOf(","));
 								} else {
 									brokenString = breakApart;
 									breakApart = "";
@@ -201,11 +201,14 @@ public class Configure extends Command {
 												case "logging":
 													cmds_inner_obj.put("logging", true);
 													break;
+												case "tier_level":
+													cmds_inner_obj.put("tier_level", 2);
+													break;
 												}
 
 											}
-
-											gld_obj.getJSONObject("cmds_config").put(modifyCommand.getName(), cmds_inner_obj);
+											
+											gld_obj.put(modifyCommand.getName(), cmds_inner_obj);
 
 											break;
 										}
@@ -217,7 +220,7 @@ public class Configure extends Command {
 							}
 
 
-							if(Data.replaceGuild(gld, gld_obj)) {
+							if(Data.writeData(InitData.locationJSON, gld_obj.toString(), true, gld.getId())) {
 								MessageHandler.sendMessage(chn, "You've configured " + c.getAssignmentName());
 							} else {
 								MessageHandler.sendMessage(chn, "Something went wrong configuring! Data writing has been REVERTED to original state!");
@@ -225,16 +228,9 @@ public class Configure extends Command {
 
 							break;
 						}
-
-
-						if(Data.replaceGuild(gld, gld_obj)) {
-							MessageHandler.sendMessage(chn, "You've configured " + c.getAssignmentName());
-						} else {
-							MessageHandler.sendMessage(chn, "Something went wrong configuring! Data writing has been REVERTED to original state!");
-						}
-
-						break;
+						
 					}
+					
 				}
 
 				return true;
