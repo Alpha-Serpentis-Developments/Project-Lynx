@@ -5,6 +5,7 @@ import java.util.HashMap;
 
 import handlers.MessageHandler;
 import init.Launcher;
+import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.MessageChannel;
 import net.dv8tion.jda.api.entities.Role;
@@ -195,12 +196,22 @@ public abstract class Command implements Cloneable {
 	 */
 	public boolean verifyExecution(User executor, User interacted, Guild g, MessageChannel chn) {
 
-		boolean isMod = false, isOwner = false, canBot = false;
+		boolean isMod = false, isAdmin = false, isOwner = false, canBot = false;
+		
+		// Check if user is an administrator
+		for(Role r: g.getMember(executor).getRoles()) {
+			if(r.hasPermission(Permission.ADMINISTRATOR)) {
+				isAdmin = true;
+				break;
+			}
+		}
 		
 		//The server owner CAN execute moderator commands WITHOUT having to define the roles (but it would be in the best interest to define them)
 		if(g.getOwner().getUser().equals(executor)) {
 			isOwner = true;
-			System.out.println("Is server owner!");
+			System.out.println("[Command.java] Is server owner!");
+		} else if(isAdmin) { // It is assumed that the administrator role is given as if they're similar to the guild owner. Be careful.
+			System.out.println("[Command.java] Is admin!");
 		} else if(!isRoleIDsDefined() && requirePerms) {
 			MessageHandler.sendMessage(chn, "This command **requires to be configured** by the server owner! Use `!configure [command]` to use this and other commands.");
 			return false;
@@ -214,7 +225,7 @@ public abstract class Command implements Cloneable {
 			
 		}
 		
-		if(isMod || isOwner) {
+		if(isMod || isAdmin || isOwner) {
 			canBot = g.getMember(Launcher.api.getSelfUser()).canInteract(g.getMember(interacted));
 			
 			return canBot;
