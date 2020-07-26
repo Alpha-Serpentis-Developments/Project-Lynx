@@ -56,7 +56,7 @@ public class Kick extends Command {
 			//CHECK FOR LOGGING
 			System.out.println("CHECK FOR LOGGING: " + Data.srvr_cache.get(gld).get("logging_channel") + getLogging());
 
-			if(getLogging() && Data.srvr_cache.get(gld).has("logging_channel")) {
+			if(getLogging() && !(Data.srvr_cache.get(gld).get("logging_channel") == null)) {
 
 				MessageHandler.sendMessage(gld.getTextChannelById(Data.srvr_cache.get(gld).getLong("logging_channel")), "**Moderator " + mod.getAsTag() + "** has kicked user " + punished.getAsTag() + " for the following reason: \n\n> " + reason);
 
