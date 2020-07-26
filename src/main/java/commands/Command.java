@@ -219,7 +219,8 @@ public abstract class Command implements Cloneable {
 			
 			for(Role ex_rs: g.getMember(executor).getRoles()) {
 				if(cmdPerms.get("ROLE").contains(ex_rs.getIdLong())) {
-					
+					isMod = true;
+					break;
 				}
 			}
 			
