@@ -12,7 +12,6 @@ import init.InitData;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.MessageChannel;
-import net.dv8tion.jda.api.entities.Role;
 import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 
@@ -65,7 +64,7 @@ public class Configure extends Command {
 		Guild gld = ((MessageReceivedEvent) misc).getGuild();
 		User usr = ((MessageReceivedEvent) misc).getAuthor();
 
-		JSONObject gld_obj = Data.rawJSON.getJSONObject(gld.getId());
+		JSONObject gld_obj = Data.rawJSON;
 
 		//MessageHandler.sendMessage(chn, "[DEBUG] " + usr.getAsMention() + " is attempting to configure in Guild " + gld.getName() + " and has " + gld.getMember(usr).getPermissions());
 
@@ -134,6 +133,11 @@ public class Configure extends Command {
 								Long decipheredRole = null; // The deciphered Role if it can even be deciphered by the provided parameters.
 								String brokenString = null; // Piece of breakApart variable
 
+								// Cleans up the comma on the iterations if needed
+								if(breakApart.indexOf(",") == 0) {
+									breakApart = breakApart.substring(1);
+								}
+								
 								// Determines if it is the last item provided
 								if(breakApart.contains(",")) {
 									brokenString = breakApart.substring(0, breakApart.indexOf(","));
@@ -143,8 +147,9 @@ public class Configure extends Command {
 								}
 
 								// Check if they're tagged Roles or straight up long IDs
-								System.out.println("DEBUG - BREAK APART [Configure.java] " + brokenString);
-
+								System.out.println("DEBUG - BREAK APART [Configure.java] " + breakApart);
+								System.out.println("DEBUG - BROKEN STRING [Configure.java] " + brokenString);
+								
 								String[] illegal_chars = new String[] {"<", ">", "@", "&", "!"};
 
 								for(String ill_char: illegal_chars) {
@@ -176,15 +181,15 @@ public class Configure extends Command {
 
 							// Put the role IDs into the command cache
 
-							for(String gld_obj_key: gld_obj.keySet()) { // Searches through the guild's keys
+							for(String gld_obj_key: gld_obj.getJSONObject(gld.getId()).keySet()) { // Searches through the guild's keys
 								//System.out.println("DEBUG - GLD_OBJ_KEY [Configure.java] " + gld_obj_key);
 								if(gld_obj_key.equalsIgnoreCase("cmds_config")) {
-									for(String cmds_keys: gld_obj.getJSONObject("cmds_config").keySet()) { // Searches inside the guild's "cmds_config" key
+									for(String cmds_keys: gld_obj.getJSONObject(gld.getId()).getJSONObject("cmds_config").keySet()) { // Searches inside the guild's "cmds_config" key
 										//System.out.println("DEBUG - CMDS_KEYS [Configure.java] " + cmds_keys);
 
 										if(cmds_keys.equalsIgnoreCase(modifyCommand.getName())) {
 
-											JSONObject cmds_inner_obj = gld_obj.getJSONObject("cmds_config").getJSONObject(modifyCommand.getName());
+											JSONObject cmds_inner_obj = gld_obj.getJSONObject(gld.getId()).getJSONObject("cmds_config").getJSONObject(modifyCommand.getName());
 
 											for(String cmds_in_keys: cmds_inner_obj.keySet()) {
 
@@ -208,7 +213,7 @@ public class Configure extends Command {
 
 											}
 											
-											gld_obj.put(modifyCommand.getName(), cmds_inner_obj);
+											gld_obj.getJSONObject(gld.getId()).getJSONObject("cmds_config").put(modifyCommand.getName(), cmds_inner_obj);
 
 											break;
 										}
