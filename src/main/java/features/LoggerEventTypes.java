@@ -2,6 +2,9 @@ package features;
 
 public enum LoggerEventTypes {
 	
+	WARN("warn"),
+	KICK("kick"),
+	BAN("kick"),
 	MESSAGE_DELETED("message_del"),
 	MESSAGE_EDITED("message_edit"),
 	USER_JOINED("user_join"),

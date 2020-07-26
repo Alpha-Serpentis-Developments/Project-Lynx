@@ -62,6 +62,7 @@ public class CommandHandler {
 					switch(desc.substring(desc.indexOf(">>") + 2).toLowerCase()) {
 
 					case "mod": cmd.setCmdType(CommandType.MOD); break;
+					case "admin": cmd.setCmdType(CommandType.ADMIN); break;
 					case "guild_owner": cmd.setCmdType(CommandType.GUILD_OWNER); break;
 					case "bot_owner": cmd.setCmdType(CommandType.BOT_OWNER); break;
 					default: cmd.setCmdType(CommandType.GENERAL); break;
