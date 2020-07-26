@@ -1,7 +1,11 @@
 package commands.moderation;
 
+import org.json.JSONObject;
+
 import commands.Command;
+import data.Data;
 import handlers.MessageHandler;
+import init.InitData;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.MessageChannel;
 import net.dv8tion.jda.api.entities.User;
@@ -15,6 +19,8 @@ public class Ban extends Command {
 		Guild gld = ((MessageReceivedEvent) misc).getGuild();
 		User mod = ((MessageReceivedEvent) misc).getAuthor(), punished = (msg.length() == getName().length()) ? null : gld.getMemberById(msg.substring(msg.indexOf("@") + 1, msg.indexOf(">"))).getUser();
 		
+		String reason = "";
+		
 		if(punished == null) {
 			MessageHandler.sendMessage(chn, getDesc());
 			return true;
@@ -24,6 +30,40 @@ public class Ban extends Command {
 		
 		if(result) {
 			
+			if(msg.length() == 6 + punished.getAsTag().length()) { //6 is chosen for this because "!ban @" has 6 characters
+
+				System.out.println("No reason?");
+				reason = "A reason was not provided!";
+			} else {
+				reason = msg.substring(7 + punished.getAsTag().length());
+			}
+			
+			//TODO: Make an option for servers to choose whether these messages are sent.
+			MessageHandler.sendMessage(chn, "**" + punished.getName() + "** has been banned by **" + mod.getName() + "** for: \n\n> **" + reason + "**");
+			MessageHandler.sendMessage(punished.openPrivateChannel().complete(), "You have been banned by **" + mod.getName() + "** for: **" + reason + "**\n\n");
+			
+			// Writes the data to the JSON
+			JSONObject data = Data.rawJSON;
+			Integer ban_id = data.getJSONObject(gld.getId()).getJSONObject("logs").getJSONObject("ban").length() + 1;
+						
+			data.getJSONObject(gld.getId()).getJSONObject("logs").getJSONObject("ban").put(ban_id.toString(), new String[] {mod.getId(), punished.getId(), reason});
+			
+			Data.writeData(InitData.locationJSON, data.toString(), true, gld.getId());
+			
+			// Initiate the ban
+			gld.ban(punished, 1).queue();
+			
+			//CHECK FOR LOGGING
+			System.out.println("CHECK FOR LOGGING: " + Data.srvr_cache.get(gld).get("logging_channel") + getLogging());
+
+			if(getLogging() && Data.srvr_cache.get(gld).has("logging_channel")) {
+
+				MessageHandler.sendMessage(gld.getTextChannelById(Data.srvr_cache.get(gld).getLong("logging_channel")), "**Moderator " + mod.getAsTag() + "** has warned user " + punished.getAsTag() + " for the following reason: \n\n> " + reason);
+
+			}
+			
+			return true;
+		
 		}
 		
 		return false;
