@@ -47,7 +47,11 @@
 		"srvr_config": {
 			"logging_channel": null,
 			"prefix": "!",
-			"welcome": false
+			"welcome": false,
+			"user_raid_prot": {
+				"active": true,
+				"user_moving_avg": 0.00
+			}
 		}
 	}
 }
