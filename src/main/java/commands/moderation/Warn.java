@@ -5,6 +5,7 @@ import org.json.JSONObject;
 import commands.Command;
 import data.Data;
 import handlers.MessageHandler;
+import handlers.ModerationHandler;
 import init.InitData;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.MessageChannel;
@@ -17,7 +18,7 @@ public class Warn extends Command {
 	public boolean action(MessageChannel chn, String msg, Object misc) {
 
 		Guild gld = ((MessageReceivedEvent) misc).getGuild();
-		User mod = ((MessageReceivedEvent) misc).getAuthor(), punished = (msg.length() == getName().length()) ? null : gld.getMemberById(msg.substring(msg.indexOf("@") + 2, msg.indexOf(">"))).getUser();
+		User mod = ((MessageReceivedEvent) misc).getAuthor(), punished = ModerationHandler.grabPunished(gld, msg, 5);
 
 		String reason = "";
 
@@ -27,15 +28,13 @@ public class Warn extends Command {
 		}
 
 		boolean result = verifyExecution(mod, punished, gld, chn);
-
+		
 		if(result) {
-
-			if(msg.length() == 7 + punished.getAsTag().length()) { //7 is chosen for this because "!warn @" has 7 characters
-
-				System.out.println("No reason?");
-				reason = "A reason was not provided!";
-			} else {
-				reason = msg.substring(8 + punished.getAsTag().length());
+			
+			try {
+				reason = msg.substring(msg.indexOf("\"") + 1, msg.lastIndexOf("\""));
+			} catch(StringIndexOutOfBoundsException e) {
+				reason = "`A reason was not provided.`";
 			}
 
 			//TODO: Make an option for servers to choose whether these messages are sent.

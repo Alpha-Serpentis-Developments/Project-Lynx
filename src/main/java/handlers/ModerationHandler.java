@@ -42,14 +42,22 @@ public class ModerationHandler {
 	 * 
 	 * @param gld is the Guild in which the Message was sent.
 	 * @param msg is the message sent for analysis.
+	 * @param cmd_length is the length of the command's name; used for skipping some number of characters to parse the username
 	 * @return a User, presumed to be the "Punished," otherwise null.
 	 */
-	@SuppressWarnings("unused")
-	public static User grabPunished(Guild gld, Message msg) {
+	public static User grabPunished(Guild gld, String msg, int cmd_length) {
+		
+		String[] illegal_chars = new String[]{"@", "!", "\n"};
 		
 		User punished = null;
-		String decipher = msg.toString();
+		String decipher = msg.substring(cmd_length);
 		String breakDownDigits = "";
+		
+		for(String c: illegal_chars) {
+			decipher = decipher.replaceAll(c, "");
+		}
+		
+		System.out.println("DEBUG [ModerationHandler.java] decipher - " + decipher);
 		
 		// Check if "<" and ">" exist, particularly, with them in order.
 		if(decipher.contains("<") && decipher.contains(">")) {
@@ -63,9 +71,22 @@ public class ModerationHandler {
 		}
 		
 		// Check if there's a long ID that could turn up to be the user.
-		for(int i = 0; i < breakDownDigits.length(); i++) {
+		boolean previousWasDigit = false;
+		
+		for(int i = 0; i < decipher.length(); i++) {
 			if(Character.isDigit(decipher.charAt(i))) { 
-				breakDownDigits = breakDownDigits + decipher.charAt(i);
+				
+				if(Character.isDigit(decipher.charAt(i))) {
+					
+					previousWasDigit = true;
+				
+					breakDownDigits = breakDownDigits + decipher.charAt(i);
+					System.out.println("DEBUG [ModerationHandler.java] " + breakDownDigits);
+				
+				}
+			} else if(previousWasDigit && breakDownDigits.length() > 16){
+				punished = gld.getMemberById(breakDownDigits).getUser();
+				break;
 			} else {
 				break;
 			}
@@ -76,9 +97,30 @@ public class ModerationHandler {
 		}
 		
 		// Check if it matches the Username#Discriminator
-		punished = gld.getMemberByTag(decipher.substring(decipher.indexOf(" ") + 1, decipher.indexOf("#") + 4)).getUser();
+		punished = gld.getMemberByTag(decipher.substring(0, decipher.indexOf("#") + 5)).getUser();
 		
 		return punished;
+		
+	}
+	
+	/**
+	 * For moderation commands, used to obtain the reason field of the command.
+	 * 
+	 * @param msg
+	 * @param cmd_name
+	 * @return
+	 */
+	public static String grabReason(String msg, String cmd_name) {
+		
+		String result = msg;
+		
+		// Take out the command name at front
+		
+		
+		// Take out the user at front
+		
+		
+		return result;
 		
 	}
 	
