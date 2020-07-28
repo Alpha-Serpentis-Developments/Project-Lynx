@@ -50,7 +50,8 @@
 			"welcome": false,
 			"user_raid_prot": {
 				"active": true,
-				"user_moving_avg": 0.00
+				"user_moving_avg": 0.00,
+				"maximum_threshold": 25
 			}
 		}
 	}
