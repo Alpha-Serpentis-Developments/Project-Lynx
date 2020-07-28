@@ -4,6 +4,10 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 
+import net.dv8tion.jda.api.entities.Guild;
+import net.dv8tion.jda.api.entities.Message;
+import net.dv8tion.jda.api.entities.User;
+
 public class ModerationHandler {
 
 	/**
@@ -30,6 +34,51 @@ public class ModerationHandler {
 			returnThis.put("USER", tempArr);
 		
 		return returnThis;
+		
+	}
+	
+	/**
+	 * Used to obtain the "Punished" user from a message.
+	 * 
+	 * @param gld is the Guild in which the Message was sent.
+	 * @param msg is the message sent for analysis.
+	 * @return a User, presumed to be the "Punished," otherwise null.
+	 */
+	@SuppressWarnings("unused")
+	public static User grabPunished(Guild gld, Message msg) {
+		
+		User punished = null;
+		String decipher = msg.toString();
+		String breakDownDigits = "";
+		
+		// Check if "<" and ">" exist, particularly, with them in order.
+		if(decipher.contains("<") && decipher.contains(">")) {
+			
+			punished = gld.getMemberById(decipher.substring(decipher.indexOf("<") + 1, decipher.indexOf(">"))).getUser();
+			
+		}
+		
+		if(punished != null) {
+			return punished;
+		}
+		
+		// Check if there's a long ID that could turn up to be the user.
+		for(int i = 0; i < breakDownDigits.length(); i++) {
+			if(Character.isDigit(decipher.charAt(i))) { 
+				breakDownDigits = breakDownDigits + decipher.charAt(i);
+			} else {
+				break;
+			}
+		}
+		
+		if(punished != null) {
+			return punished;
+		}
+		
+		// Check if it matches the Username#Discriminator
+		punished = gld.getMemberByTag(decipher.substring(decipher.indexOf(" ") + 1, decipher.indexOf("#") + 4)).getUser();
+		
+		return punished;
 		
 	}
 	
