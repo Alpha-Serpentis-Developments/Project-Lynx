@@ -44,7 +44,6 @@ public class Warn extends Command {
 			// Writes the data to the JSON
 			JSONObject data = Data.rawJSON;
 			Integer warn_id = data.getJSONObject(gld.getId()).getJSONObject("logs").getJSONObject("warn").length() + 1;
-			//((JSONArray) ((JSONObject) data.getJSONObject(gld.getId()).get("logs")).get("warn")).put(new String[] {mod.getId(), punished.getId(), reason}); //The hell is this line?
 
 			data.getJSONObject(gld.getId()).getJSONObject("logs").getJSONObject("warn").put(warn_id.toString(), new String[] {mod.getId(), punished.getId(), reason});
 			
