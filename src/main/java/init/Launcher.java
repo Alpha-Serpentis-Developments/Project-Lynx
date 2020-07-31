@@ -9,6 +9,7 @@ import java.util.Scanner;
 import javax.security.auth.login.LoginException;
 
 import data.Data;
+import features.urp.UserRaidProtection;
 import handlers.CommandHandler;
 import handlers.MessageHandler;
 import handlers.ServerHandler;
@@ -94,6 +95,7 @@ public class Launcher {
 			api = new JDABuilder(key).build();
 			api.addEventListener(new MessageHandler());
 			api.addEventListener(new ServerHandler());
+			api.addEventListener(new UserRaidProtection());
 
 			api.awaitReady(); // Waits for JDA to complete loading to prevent issues
 
