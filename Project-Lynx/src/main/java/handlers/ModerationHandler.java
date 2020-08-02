@@ -47,6 +47,9 @@ public class ModerationHandler {
 	 */
 	public static User grabPunished(Guild gld, String msg, int cmd_length) {
 		
+		if(cmd_length <= msg.length())
+			return null;
+		
 		String[] illegal_chars = new String[]{"@", "!", "\n"};
 		
 		User punished = null;
