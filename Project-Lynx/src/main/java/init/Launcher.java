@@ -135,7 +135,7 @@ public class Launcher {
 			//OVERRIDE SCANNER
 			Scanner sc;
 
-			sc = new Scanner(new File("resources/initOverrides.txt")); // Checks for overrides to be applied
+			sc = new Scanner(new File("../resources/initOverrides.txt")); // Checks for overrides to be applied
 
 			if(sc.hasNext())
 				System.out.println("[Launcher.java] Override(s) detected, scanning...");

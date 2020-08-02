@@ -41,7 +41,7 @@ public class InitData {
 	 * YOU MUST SET THE FILE DIRECTORY TO A "key.txt" or "key.dat" FILE.
 	 * It doesn't have to be in the "resources" folder.
 	 */
-	public static String locationKey = "resources/key.txt", locationBackup = "resources/backup/", locationJSON = "resources/guildData.json", locationCommands = "resources/commands.txt";
+	public static String locationKey = "../resources/key.txt", locationBackup = "../resources/backup/", locationJSON = "../resources/guildData.json", locationCommands = "../resources/commands.txt";
 	
 	/*
 	 * This is an ignored variable. Useful for hard-coding stuff if you deem necessary.
