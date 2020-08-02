@@ -53,6 +53,11 @@
 				"user_moving_avg": 0.00,
 				"maximum_threshold": 25
 			}
+		},
+		"logs": {
+			"warn": {},
+			"kick": {},
+			"ban": {}
 		}
 	}
 }
