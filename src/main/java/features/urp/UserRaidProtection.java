@@ -8,8 +8,10 @@ import net.dv8tion.jda.api.hooks.EventListener;
 
 public class UserRaidProtection implements EventListener {
 	
-	public static volatile HashMap<Guild, Object[]> moving_avg = new HashMap<Guild, Object[]>();
+	public static volatile HashMap<Guild, URP_Telemetry> moving_avg = new HashMap<Guild, URP_Telemetry>();
 	public static final Double baseUserThreshold = 5.00; 
+	
+	public static final String detectedRoleName = "URP Triggered";
 	
 	public static Double updateMovingAverage(Guild gld) {
 		
