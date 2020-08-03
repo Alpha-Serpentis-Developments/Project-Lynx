@@ -350,7 +350,7 @@ public class Data {
 			
 			if(rawJSON.isEmpty()) {
 				System.out.println("[Data.java] Shutting down! Cache cannot be initialized... Make sure resources/guildData.json isn't empty, at least having the \"DEFAULT\" object");
-				System.exit(-1);
+				System.exit(1);
 			}
 			
 		}
@@ -394,7 +394,7 @@ public class Data {
 			
 			if(rawJSON.isEmpty()) { // Ensure it isn't completely empty.
 				System.out.println("[Data.java] Shutting down! Cache cannot be initialized... Make sure resources/guildData.json isn't empty, at least having the \"DEFAULT\" object");
-				System.exit(-1);
+				System.exit(1);
 			}
 			
 		} //TODO: Rewrite to call obtainBackup() to search for backups

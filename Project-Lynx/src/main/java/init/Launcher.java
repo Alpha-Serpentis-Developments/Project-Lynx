@@ -104,19 +104,19 @@ public class Launcher {
 			System.out.println("[Launcher.java] LoginException was thrown! Ensure the key is correct! Refer to the following for more information: ");
 			e.printStackTrace();
 			
-			System.exit(-1);
+			System.exit(1);
 		} catch (Error e) {
 			System.out.println("[Launcher.java] A possibly fatal error was thrown. Refer to the stack trace for information.");
 			e.printStackTrace();
 			
-			System.exit(-1);
+			System.exit(1);
 		}
 
 		if(CommandHandler.initCommands())
 			System.out.println("[Launcher.java] Initializing commands complete! [1/2]");
 		else {
 			System.out.println("[Launcher.java] Commands cannot be initialized! Shutting down!");
-			System.exit(-1);
+			System.exit(1);
 		}
 
 		System.out.println("[Launcher.java] Initializing cache...");
