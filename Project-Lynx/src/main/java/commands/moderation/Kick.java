@@ -18,7 +18,7 @@ public class Kick extends Command {
 	public boolean action(MessageChannel chn, String msg, Object misc) {
 		
 		Guild gld = ((MessageReceivedEvent) misc).getGuild();
-		User mod = ((MessageReceivedEvent) misc).getAuthor(), punished = ModerationHandler.grabPunished(gld, msg, 5);
+		User mod = ((MessageReceivedEvent) misc).getAuthor(), punished = ModerationHandler.grabPunished(gld, msg, 4);
 
 		String reason = "";
 
