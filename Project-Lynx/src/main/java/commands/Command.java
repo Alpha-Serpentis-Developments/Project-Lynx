@@ -159,6 +159,12 @@ public abstract class Command implements Cloneable {
 		}
 		
 	}
+	/**
+	 * Used to remove a permission rule for the command
+	 * @param key must either be "USER" or "ROLE"
+	 * @param id is the long ID associated with the key
+	 * @throws Exception
+	 */
 	public void removePerm(String key, long id) throws Exception {
 		if(!key.equalsIgnoreCase("USER") || !key.equalsIgnoreCase("ROLE")) {
 			if(hasPerm(key)) {
@@ -213,7 +219,7 @@ public abstract class Command implements Cloneable {
 		} else if(isAdmin) { // It is assumed that the administrator role is given as if they're similar to the guild owner. Be careful.
 			System.out.println("[Command.java] Is admin!");
 		} else if(!isRoleIDsDefined() && requirePerms) {
-			MessageHandler.sendMessage(chn, "This command **requires to be configured** by the server owner! Use `!configure [command]` to use this and other commands.");
+			MessageHandler.sendMessage(chn, "This command **requires to be configured** by the server owner or administrator! Use `!configure [command]` to use this and other commands.");
 			return false;
 		} else if(isRoleIDsDefined() && requirePerms) {
 			
