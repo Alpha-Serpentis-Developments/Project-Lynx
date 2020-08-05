@@ -1,6 +1,8 @@
 package handlers;
 
 import java.io.File;
+import java.time.Instant;
+import java.util.HashMap;
 import java.util.function.Consumer;
 
 import commands.Command;
@@ -11,6 +13,7 @@ import net.dv8tion.jda.api.entities.ChannelType;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.MessageChannel;
+import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.events.GenericEvent;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.events.message.priv.PrivateMessageReceivedEvent;
@@ -18,6 +21,8 @@ import net.dv8tion.jda.api.exceptions.InsufficientPermissionException;
 import net.dv8tion.jda.api.hooks.EventListener;
 
 public class MessageHandler implements EventListener {
+	
+	private volatile HashMap<User, Long> limitCheck = new HashMap<User, Long>();
 
 	@Override
 	public void onEvent(GenericEvent event) {
@@ -29,7 +34,9 @@ public class MessageHandler implements EventListener {
 		 */
 		if((event instanceof MessageReceivedEvent || (InitData.acceptPriv && event instanceof PrivateMessageReceivedEvent)) && !((MessageReceivedEvent) event).getAuthor().isBot() && Launcher.initialized) {
 
+			User author = ((MessageReceivedEvent) event).getAuthor();
 			Guild g = null;
+			int delayTimer = 1;
 			char prefix; //Server's prefix... if it's even a server.
 			
 			try {
@@ -65,6 +72,16 @@ public class MessageHandler implements EventListener {
 					System.out.println("WARNING: Command is null?????");
 					return;
 				}
+				
+				// Check if user is trying to spam the command.
+				if(!(limitCheck.get(((MessageReceivedEvent) event).getAuthor()) == null)) {
+					long currentInstant = Instant.now().getEpochSecond();
+					
+					if(currentInstant-delayTimer <= limitCheck.get(((MessageReceivedEvent) event).getAuthor())) {
+						System.out.println("WARNING [MessageHandler.java] " + author + " has breached the delay timer!");
+						return;
+					}
+				}
 
 				System.out.println("For server... " + g.getName() + " ... " + Data.command_cache.get(g));
 				System.out.println("Grabbed... " + cmd.getName());
@@ -78,6 +95,9 @@ public class MessageHandler implements EventListener {
 					cmd.action(((MessageReceivedEvent) event).getAuthor().openPrivateChannel().complete(), fullMsg, event); //Just pass the entire thing to prevent NullPointers, each command will handle them appropriately
 				else if(c.equals(ChannelType.TEXT))
 					cmd.action(((MessageReceivedEvent) event).getChannel(), fullMsg, event);
+				
+				limitCheck.put(((MessageReceivedEvent) event).getAuthor(), Instant.now().getEpochSecond());
+				
 			}
 
 		}
