@@ -1,5 +1,7 @@
 package features.urp;
 
+import java.util.ArrayList;
+
 import org.json.JSONObject;
 
 import features.Telemetry;
@@ -18,6 +20,10 @@ public class URP_Telemetry extends Telemetry {
 	 * A long value that contains the last UNIX timestamp.
 	 */
 	private long lastUNIX;
+	/**
+	 * An ArrayList containing an Object array (which should be sized to only 2). Object[0] contains UNIX timetamp and Object[1] contains user.
+	 */
+	private ArrayList<Object[]> unixUserPair = new ArrayList<Object[]>();
 
 	// Constructors
 	public URP_Telemetry(JSONObject parse) {
@@ -37,6 +43,9 @@ public class URP_Telemetry extends Telemetry {
 	public void setLastUNIX(long u) {
 		lastUNIX = u;
 	}
+	public void setUNIXUserPair(ArrayList<Object[]> pair) {
+		unixUserPair = pair;
+	}
 	
 	public double getMovingAvg() {
 		return movingAvg;
@@ -47,7 +56,14 @@ public class URP_Telemetry extends Telemetry {
 	public long getLastUNIX() {
 		return lastUNIX;
 	}
+	public ArrayList<Object[]> getUNIXUserPair() {
+		return unixUserPair;
+	}
 	
+	/**
+	 * Method that updates the telemetry data as necessary.
+	 * @return true if update is successful, otherwise false.
+	 */
 	@Override
 	public boolean updateTelemetry() {
 		// TODO Auto-generated method stub
