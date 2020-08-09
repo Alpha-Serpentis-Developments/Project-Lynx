@@ -5,7 +5,6 @@ import java.util.Collections;
 import java.util.HashMap;
 
 import net.dv8tion.jda.api.entities.Guild;
-import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.User;
 
 public class ModerationHandler {
