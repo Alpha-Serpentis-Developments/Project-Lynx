@@ -101,7 +101,7 @@ public class Configure extends Command {
 
 						try {
 							//System.out.println("DEBUG TRY [Configure.java] " + msg.substring(msg.indexOf(c.getAssignmentName()) + c.getAssignmentName().length() + 1, msg.indexOf(c.getAssignmentName()) + c.getAssignmentName().length() + 3));
-							tier_level = new Integer(msg.substring(msg.indexOf(c.getAssignmentName()) + c.getAssignmentName().length() + 1, msg.indexOf(c.getAssignmentName()) + c.getAssignmentName().length() + 2));
+							tier_level = Integer.parseInt(msg.substring(msg.indexOf(c.getAssignmentName()) + c.getAssignmentName().length() + 1, msg.indexOf(c.getAssignmentName()) + c.getAssignmentName().length() + 2));
 						} catch(StringIndexOutOfBoundsException e) {
 							//e.printStackTrace();
 						} catch(Exception e) {

@@ -17,6 +17,7 @@ import misc.Playing;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.requests.GatewayIntent;
+import net.dv8tion.jda.api.utils.cache.CacheFlag;
 
 public class Launcher {
 
@@ -93,7 +94,7 @@ public class Launcher {
 		System.out.println("[Launcher.java] Starting up JDA initialization...");
 		
 		try {
-			api = JDABuilder.create(key, GatewayIntent.DIRECT_MESSAGES, GatewayIntent.GUILD_MESSAGES).build();
+			api = JDABuilder.create(key, GatewayIntent.DIRECT_MESSAGES, GatewayIntent.GUILD_MESSAGES).disableCache(CacheFlag.ACTIVITY, CacheFlag.VOICE_STATE, CacheFlag.EMOTE, CacheFlag.CLIENT_STATUS).build();
 			api.addEventListener(new MessageHandler());
 			api.addEventListener(new ServerHandler());
 			api.addEventListener(new UserRaidProtection());
