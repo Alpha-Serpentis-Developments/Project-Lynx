@@ -16,6 +16,7 @@ import handlers.ServerHandler;
 import misc.Playing;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
+import net.dv8tion.jda.api.requests.GatewayIntent;
 
 public class Launcher {
 
@@ -92,7 +93,7 @@ public class Launcher {
 		System.out.println("[Launcher.java] Starting up JDA initialization...");
 		
 		try {
-			api = new JDABuilder(key).build();
+			api = JDABuilder.create(key, GatewayIntent.DIRECT_MESSAGES, GatewayIntent.GUILD_MESSAGES).build();
 			api.addEventListener(new MessageHandler());
 			api.addEventListener(new ServerHandler());
 			api.addEventListener(new UserRaidProtection());
