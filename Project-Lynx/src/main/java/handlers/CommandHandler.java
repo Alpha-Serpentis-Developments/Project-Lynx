@@ -28,7 +28,6 @@ public class CommandHandler {
 				add(new Warnings());
 				add(new Configure());
 				add(new Shutdown());
-				add(new Welcome());
 		}};
 
 	/**
@@ -123,8 +122,6 @@ public class CommandHandler {
 				return ALL_COMMANDS.get(6);
 			case "shutdown": //Bot Owners Only
 				return ALL_COMMANDS.get(7);
-			case "welcome":
-				return ALL_COMMANDS.get(8);
 			
 			//Additional
 			}
