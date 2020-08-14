@@ -2,7 +2,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>Project-Lynx</groupId>
   <artifactId>Project-Lynx</artifactId>
-  <version>0.1a</version>
+  <version>0.2a</version>
   <name>Project Lynx</name>
   <description>JDA-based moderation bot</description>
   <properties>
@@ -24,7 +24,7 @@
 	  <dependency>
 	    <groupId>net.dv8tion</groupId>
 	    <artifactId>JDA</artifactId>
-	    <version>4.1.1_101</version>
+	    <version>4.2.0_168</version>
 	    <type>jar</type>
 	    <scope>compile</scope>
 	  </dependency>
