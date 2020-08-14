@@ -37,6 +37,14 @@ public class URP_Telemetry extends Telemetry {
 	 * <b>Doesn't save to the JSON!</b>
 	 */
 	private ArrayList<Object[]> unixUserPair = new ArrayList<Object[]>();
+	/**
+	 * A sized Integer array containing 3 dimensions, containing the user counts. Each dimension representing the hour.
+	 * Integer[0] is the oldest of the three hours. Integer[2] is the current of the three hours.
+	 * This is used for calculating the moving average.
+	 * <br></br>
+	 * <b>Doesn't save to the JSON!</b>
+	 */
+	private Integer[] tripletUsrCountArr = new Integer[3];
 	
 	// Constructors
 	public URP_Telemetry(JSONObject parse) {
@@ -64,6 +72,9 @@ public class URP_Telemetry extends Telemetry {
 	public void setUNIXUserPair(ArrayList<Object[]> pair) {
 		unixUserPair = pair;
 	}
+	public void setTripletUsrCountArr(Integer[] triplet) {
+		tripletUsrCountArr = triplet;
+	}
 	
 	public double getMaximumThreshold() {
 		return maximumThreshold;
@@ -79,6 +90,9 @@ public class URP_Telemetry extends Telemetry {
 	}
 	public ArrayList<Object[]> getUNIXUserPair() {
 		return unixUserPair;
+	}
+	public Integer[] getTripletUsrCountArr() {
+		return tripletUsrCountArr;
 	}
 	
 	/**
