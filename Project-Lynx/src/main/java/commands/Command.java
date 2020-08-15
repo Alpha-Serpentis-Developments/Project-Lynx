@@ -255,10 +255,12 @@ public abstract class Command implements Cloneable {
 	 * Define action() as you wish in classes that extend this.
 	 * @param chn is used to allow sending messages to a certain text channel
 	 * @param msg is used to carry around messages
-	 * @param gld is the gld and IS required
+	 * @param gld is the guild and IS required
 	 *
 	 * @return true if successful, otherwise false
 	 */
 	public abstract boolean action(MessageChannel chn, String msg, Object misc);
+	//TODO: Implement this abstract method
+	//public abstract boolean configure(Guild gld);
 
 }
