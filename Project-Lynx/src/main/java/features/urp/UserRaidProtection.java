@@ -34,6 +34,7 @@ public class UserRaidProtection implements EventListener {
 		
 		ArrayList<Integer> indexMarked = new ArrayList<Integer>();
 		ArrayList<Object[]> modifyUnixUserPair = new ArrayList<Object[]>();
+		Integer[] modifyTriplet = g_urp.getTripletUsrCountArr();
 		
 		// Check if the UNIX is still valid
 		if(currentUNIX - g_urp.getLastAcceptableUNIX() > 60 * 60) { //60 sec * 60 minutes 
@@ -62,6 +63,13 @@ public class UserRaidProtection implements EventListener {
 		g_urp.setLastAcceptableUNIX(currentUNIX);
 		
 		newUserCount = modifyUnixUserPair.size();
+		
+		// Shift the triplet to the left one position.
+		for(int i = 0; i < 2; i++) {
+			modifyTriplet[i] = modifyTriplet[i+1];
+		}
+		
+		modifyTriplet[2] = newUserCount;
 		
 		// Reformulate as necessary
 		
