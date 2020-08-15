@@ -26,8 +26,7 @@ enum Commands {
 	WARN("warn", 4),
 	WARNINGS("warnings", 5),
 	//CONFIGURE("configure", 6), // TODO: Make it so you can actually configure the configure command.
-	SHUTDOWN("shutdown", 7),
-	WELCOME("welcome", 8);
+	SHUTDOWN("shutdown", 7);
 
 	private String assignmentName = "DEFAULT";
 	private int assignmentNum = -1;
