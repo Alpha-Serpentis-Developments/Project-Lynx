@@ -46,13 +46,13 @@ public class ModerationHandler {
 	 */
 	public static User grabPunished(Guild gld, String msg, int cmd_length) {
 		
-		if(cmd_length <= msg.length())
+		if(cmd_length >= msg.length())
 			return null;
 		
 		String[] illegal_chars = new String[]{"@", "!", "\n"};
 		
 		User punished = null;
-		String decipher = msg.substring(cmd_length);
+		String decipher = msg.substring(cmd_length + 1);
 		String breakDownDigits = "";
 		
 		for(String c: illegal_chars) {
@@ -60,6 +60,7 @@ public class ModerationHandler {
 		}
 		
 		System.out.println("DEBUG [ModerationHandler.java] decipher - " + decipher);
+		System.out.println("DEBUG - GUILD [ModerationHandler.java] guild - " + gld);
 		
 		// Check if "<" and ">" exist, particularly, with them in order.
 		if(decipher.contains("<") && decipher.contains(">")) {

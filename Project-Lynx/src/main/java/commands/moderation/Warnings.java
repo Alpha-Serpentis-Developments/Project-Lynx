@@ -1,7 +1,11 @@
 package commands.moderation;
 
+import org.json.JSONObject;
+
 import commands.Command;
+import data.Data;
 import handlers.MessageHandler;
+import handlers.ModerationHandler;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.MessageChannel;
 import net.dv8tion.jda.api.entities.User;
@@ -13,7 +17,7 @@ public class Warnings extends Command {
 	public boolean action(MessageChannel chn, String msg, Object misc) {
 		
 		Guild gld = ((MessageReceivedEvent) misc).getGuild();
-		User mod = ((MessageReceivedEvent) misc).getAuthor(), punished = (msg.length() == getName().length()) ? null : gld.getMemberById(msg.substring(msg.indexOf("@") + 1, msg.indexOf(">"))).getUser();
+		User mod = ((MessageReceivedEvent) misc).getAuthor(), punished = ModerationHandler.grabPunished(gld, msg, 8);
 		
 		if(punished == null) {
 			MessageHandler.sendMessage(chn, getDesc());
@@ -24,11 +28,39 @@ public class Warnings extends Command {
 		
 		if(result) {
 			
+			String generatedWarnings = generateWarningsList(gld, punished);
 			
+			if(generatedWarnings == null) {
+				MessageHandler.sendMessage(chn, punished.getName() + " has no logged warnings.");
+			} else {
+				MessageHandler.sendMessage(chn, "> **" + punished.getName() + "'s List of Warnings**\n\n" + generatedWarnings);
+			}
 			
 		}
 		
-		return false;
+		return true;
+		
+	}
+	
+	public String generateWarningsList(Guild gld, User usr) {
+		
+		System.out.println("DEBUG [Warnings.java] " + Data.srvr_cache.get(gld));
+		
+		JSONObject data = Data.srvr_cache.get(gld).getJSONObject("logs");
+		String construct = null;
+		
+		// Checks the list of warning IDs
+		for(String key: data.getJSONObject("warn").keySet()) {
+			
+			// Check if the key corresponds to the user ID
+			if(data.getJSONObject("warn").getJSONObject(key).getString("1").equals(usr.getId())) {
+				construct = "match";
+				break;
+			}
+			
+		}
+		
+		return construct;
 		
 	}
 
