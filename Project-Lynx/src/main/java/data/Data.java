@@ -71,11 +71,11 @@ public class Data {
 
 			w.write(jLine);
 			w.close();
-
-			if(file.equals(InitData.locationJSON) && softInit) //Updates the cache
-				softInitCache(id);
 			
 			rawJSON = new JSONObject(jLine);
+			
+			if(file.equals(InitData.locationJSON) && softInit) //Updates the cache
+				softInitCache(id);
 
 			return true;
 

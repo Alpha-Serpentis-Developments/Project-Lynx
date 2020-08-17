@@ -45,7 +45,7 @@ public class Warnings extends Command {
 	
 	public String generateWarningsList(Guild gld, User usr) {
 		
-		//System.out.println("DEBUG [Warnings.java] " + Data.srvr_cache.get(gld));
+		System.out.println("DEBUG [Warnings.java] " + Data.srvr_cache.get(gld));
 		
 		JSONObject data = Data.srvr_cache.get(gld).getJSONObject("logs");
 		String construct = "";
