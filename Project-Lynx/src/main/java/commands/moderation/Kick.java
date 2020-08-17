@@ -43,9 +43,9 @@ public class Kick extends Command {
 			
 			// Writes the data to the JSON
 			JSONObject data = Data.rawJSON;
-			Integer ban_id = data.getJSONObject(gld.getId()).getJSONObject("logs").getJSONObject("kick").length() + 1;
+			Integer ban_id = data.getJSONObject(gld.getId()).getJSONObject("srvr_config").getJSONObject("logs").getJSONObject("kick").length() + 1;
 						
-			data.getJSONObject(gld.getId()).getJSONObject("logs").getJSONObject("kick").put(ban_id.toString(), new String[] {mod.getId(), punished.getId(), reason});
+			data.getJSONObject(gld.getId()).getJSONObject("srvr_config").getJSONObject("logs").getJSONObject("kick").put(ban_id.toString(), new String[] {mod.getId(), punished.getId(), reason});
 			
 			Data.writeData(InitData.locationJSON, data.toString(), true, gld.getId());
 			

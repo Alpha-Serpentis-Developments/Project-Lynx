@@ -43,9 +43,9 @@ public class Warn extends Command {
 
 			// Writes the data to the JSON
 			JSONObject data = Data.rawJSON;
-			Integer warn_id = data.getJSONObject(gld.getId()).getJSONObject("logs").getJSONObject("warn").length() + 1;
+			Integer warn_id = data.getJSONObject(gld.getId()).getJSONObject("srvr_config").getJSONObject("logs").getJSONObject("warn").length() + 1;
 
-			data.getJSONObject(gld.getId()).getJSONObject("logs").getJSONObject("warn").put(warn_id.toString(), new String[] {mod.getId(), punished.getId(), reason});
+			data.getJSONObject(gld.getId()).getJSONObject("srvr_config").getJSONObject("logs").getJSONObject("warn").put(warn_id.toString(), new String[] {mod.getId(), punished.getId(), reason});
 			
 			Data.writeData(InitData.locationJSON, data.toString(), true, gld.getId());
 			

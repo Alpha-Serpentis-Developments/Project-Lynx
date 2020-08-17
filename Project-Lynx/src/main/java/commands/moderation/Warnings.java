@@ -1,5 +1,6 @@
 package commands.moderation;
 
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 import commands.Command;
@@ -30,7 +31,7 @@ public class Warnings extends Command {
 			
 			String generatedWarnings = generateWarningsList(gld, punished);
 			
-			if(generatedWarnings == null) {
+			if(generatedWarnings.equals("")) {
 				MessageHandler.sendMessage(chn, punished.getName() + " has no logged warnings.");
 			} else {
 				MessageHandler.sendMessage(chn, "> **" + punished.getName() + "'s List of Warnings**\n\n" + generatedWarnings);
@@ -44,18 +45,24 @@ public class Warnings extends Command {
 	
 	public String generateWarningsList(Guild gld, User usr) {
 		
-		System.out.println("DEBUG [Warnings.java] " + Data.srvr_cache.get(gld));
+		//System.out.println("DEBUG [Warnings.java] " + Data.srvr_cache.get(gld));
 		
 		JSONObject data = Data.srvr_cache.get(gld).getJSONObject("logs");
-		String construct = null;
+		String construct = "";
 		
 		// Checks the list of warning IDs
 		for(String key: data.getJSONObject("warn").keySet()) {
 			
+			System.out.println("DEBUG [Warnings.java] " + data);
+			
+			JSONArray arr = data.getJSONObject("warn").getJSONArray(key);
+			
 			// Check if the key corresponds to the user ID
-			if(data.getJSONObject("warn").getJSONObject(key).getString("1").equals(usr.getId())) {
-				construct = "match";
-				break;
+			if(arr.getString(1).equals(usr.getId())) {
+				construct += 
+						"**Warning ID**: " + key +
+						"\n**Moderator**: " + gld.getMemberById(arr.getLong(0)) +
+						"\n**Reason**: " + arr.getString(2) + "\n\n";
 			}
 			
 		}

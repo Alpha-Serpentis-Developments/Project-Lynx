@@ -412,7 +412,6 @@ public class Data {
 			try {
 				checkDefaults(rawJSON.getJSONObject(key), "cmds_config", key);
 				checkDefaults(rawJSON.getJSONObject(key), "srvr_config", key);
-				checkDefaults(rawJSON.getJSONObject(key), "logs", key);
 			} catch(JSONException e) {
 				System.out.println("[Data.java] ERROR on checkDefaults(...), refer to the stack trace for more information.");
 				e.printStackTrace();
@@ -427,7 +426,8 @@ public class Data {
 	
 	/**
 	 * Reads the guild's data and transcribes it into HashMaps
-	 * @param id
+	 * @param key
+	 * @param obj
 	 */
 	public static void loadCache(String key, JSONObject obj) {
 		
