@@ -1,63 +1,61 @@
-{
-  "DEFAULT": {
+"DEFAULT": {
 		"cmds_config": {
-			"ban": {
+			"warn": {
+				"roleIDs": [],
+				"tier_level": 0,
+				"userIDs": [],
 				"active": false,
-				"logging": false,
-				"roleIDs": [],
-				"tier_level": 0,
-				"userIDs": []
-			},
-			"configure": {
-				"active": true,
-				"logging": false,
-				"roleIDs": [],
-				"tier_level": 0,
-				"userIDs": []
+				"logging": false
 			},
 			"kick": {
-				"active": false,
-				"logging": false,
 				"roleIDs": [],
 				"tier_level": 0,
-				"userIDs": []
-			},
-			"warn": {
+				"userIDs": [],
 				"active": false,
-				"logging": false,
-				"roleIDs": [],
-				"tier_level": 0,
-				"userIDs": []
+				"logging": false
 			},
 			"warnings": {
-				"active": false,
-				"logging": false,
 				"roleIDs": [],
 				"tier_level": 0,
-				"userIDs": []
+				"userIDs": [],
+				"active": false,
+				"logging": false
+			},
+			"configure": {
+				"roleIDs": [],
+				"tier_level": 0,
+				"userIDs": [],
+				"active": true,
+				"logging": false
 			},
 			"welcome": {
-				"active": false,
-				"logging": false,
 				"roleIDs": [],
 				"tier_level": 0,
-				"userIDs": []
+				"userIDs": [],
+				"active": false,
+				"logging": false
+			},
+			"ban": {
+				"roleIDs": [],
+				"tier_level": 0,
+				"userIDs": [],
+				"active": false,
+				"logging": false
 			}
 		},
 		"srvr_config": {
-			"logging_channel": null,
 			"prefix": "!",
 			"welcome": false,
 			"user_raid_prot": {
 				"active": true,
-				"user_moving_avg": 0.00,
+				"user_moving_avg": 0,
 				"maximum_threshold": 25
-			}
-		},
-		"logs": {
-			"warn": {},
-			"kick": {},
-			"ban": {}
+			},
+			"logs": {
+				"warn": {},
+				"kick": {},
+				"ban": {}
+			},
+			"logging_channel": null
 		}
 	}
-}
