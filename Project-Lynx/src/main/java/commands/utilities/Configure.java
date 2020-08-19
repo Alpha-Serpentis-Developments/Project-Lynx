@@ -15,6 +15,35 @@ import net.dv8tion.jda.api.entities.MessageChannel;
 import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 
+enum SpecialConfigs {
+	
+	PREFIX("prefix", 0),
+	URP("urp", 1);
+	
+	private String assignmentName = "DEFAULT";
+	private int assignmentNum = -1;
+	
+	SpecialConfigs(String n, int i) {
+		setAssignmentName(n);
+		setAssignmentNum(i);
+	}
+	
+	public String getAssignmentName() {
+		return assignmentName;
+	}
+	public int getAssignmentNum() {
+		return assignmentNum;
+	}
+
+	public void setAssignmentName(String assignmentName) {
+		this.assignmentName = assignmentName;
+	}
+	public void setAssignmentNum(int assignmentNum) {
+		this.assignmentNum = assignmentNum;
+	}
+	
+}
+
 enum Commands {
 
 	// This will suffice for now lol
@@ -235,6 +264,42 @@ public class Configure extends Command {
 						
 					}
 					
+				}
+				
+				// Iterate through the special configs
+				for(SpecialConfigs sc: SpecialConfigs.values()) {
+					if(sc.getAssignmentName().equals("prefix")) {
+						
+						JSONObject rawData = Data.rawJSON;
+						String replaceText = msg;
+						String parsedPrefix = null;
+						
+						// Parse the prefix
+						try {
+							replaceText = replaceText.replace("configure prefix", "");
+							replaceText = replaceText.replace(" ", "");
+							parsedPrefix = replaceText;
+						} catch(Exception e) {
+							e.printStackTrace();
+						}
+						
+						// Verify it isn't null
+						if(parsedPrefix == null) {
+							MessageHandler.sendMessage(chn, "Prefix was unable to be parsed!");
+							return false;
+						}
+						
+						if(parsedPrefix.equals("")) {
+							MessageHandler.sendMessage(chn,  "Prefix cannot be null!");
+							return false;
+						}
+						
+						rawData.getJSONObject(gld.getId()).getJSONObject("srvr_config").put("prefix", parsedPrefix);
+						
+						// Write the new data
+						if(Data.writeData(InitData.locationJSON, rawData.toString(), true, gld.getId()))
+							MessageHandler.sendMessage(chn, "You've configured the bot to use the new prefix of " + parsedPrefix);
+					}
 				}
 
 				return true;

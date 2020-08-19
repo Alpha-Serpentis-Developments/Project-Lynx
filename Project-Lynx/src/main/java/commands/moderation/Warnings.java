@@ -34,7 +34,7 @@ public class Warnings extends Command {
 			if(generatedWarnings.equals("")) {
 				MessageHandler.sendMessage(chn, punished.getName() + " has no logged warnings.");
 			} else {
-				MessageHandler.sendMessage(chn, "> **" + punished.getName() + "'s List of Warnings**\n\n" + generatedWarnings);
+				MessageHandler.sendMessage(chn, "> **List of Warnings for:** `" + punished.getAsTag() + "`\n\n" + generatedWarnings);
 			}
 			
 		}
@@ -61,7 +61,7 @@ public class Warnings extends Command {
 			if(arr.getString(1).equals(usr.getId())) {
 				construct += 
 						"**Warning ID**: " + key +
-						"\n**Moderator**: " + gld.getMemberById(arr.getLong(0)) +
+						"\n**Moderator**: " + gld.getMemberById(arr.getLong(0)).getUser().getAsTag() + " (" + gld.getMemberById(arr.getLong(0)).getUser().getId() + ")" +
 						"\n**Reason**: " + arr.getString(2) + "\n\n";
 			}
 			
