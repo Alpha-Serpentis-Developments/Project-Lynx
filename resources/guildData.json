@@ -1,4 +1,5 @@
-"DEFAULT": {
+{
+	"DEFAULT": {
 		"cmds_config": {
 			"warn": {
 				"roleIDs": [],
@@ -28,13 +29,6 @@
 				"active": true,
 				"logging": false
 			},
-			"welcome": {
-				"roleIDs": [],
-				"tier_level": 0,
-				"userIDs": [],
-				"active": false,
-				"logging": false
-			},
 			"ban": {
 				"roleIDs": [],
 				"tier_level": 0,
@@ -45,7 +39,6 @@
 		},
 		"srvr_config": {
 			"prefix": "!",
-			"welcome": false,
 			"user_raid_prot": {
 				"active": true,
 				"user_moving_avg": 0,
@@ -59,3 +52,4 @@
 			"logging_channel": null
 		}
 	}
+}
