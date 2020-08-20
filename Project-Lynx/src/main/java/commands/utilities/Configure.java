@@ -285,7 +285,7 @@ public class Configure extends Command {
 						
 						// Verify it isn't null
 						if(parsedPrefix == null) {
-							MessageHandler.sendMessage(chn, "Prefix was unable to be parsed!");
+							MessageHandler.sendMessage(chn, "Set your server's prefix for Lucky Lynx by running `!configure prefix [prefix]");
 							return false;
 						}
 						
