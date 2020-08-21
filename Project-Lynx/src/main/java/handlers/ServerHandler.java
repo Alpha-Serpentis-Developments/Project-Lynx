@@ -124,7 +124,7 @@ public class ServerHandler implements EventListener {
 				((GuildJoinEvent) event).getGuild().getOwner().getUser().openPrivateChannel().queue((channel) ->
 				{
 
-					channel.sendMessage("Thank you for inviting Lucky Lynx to " + ((GuildJoinEvent) event).getGuild().getName() + "! Use `!help` to check out the commands. Please keep in mind that Lucky Lynx is in constant development and managed by a soon-to-be high school senior so expect some bugs here and there. If you ever do come across an issue or would like to discuss with other users, come join us at https://discord.gg/M8Hs5Dg\n\n**GitHub**: https://github.com/AlphaSerpentis/Discord-Lynx\n**Patreon**: https://www.patreon.com/project_lynx").queue();
+					channel.sendMessage("Thank you for inviting Lucky Lynx to __" + ((GuildJoinEvent) event).getGuild().getName() + "__! Use `!help` to check out the commands. Please keep in mind that Lucky Lynx is in constant development and managed by a college student so expect some bugs here and there. If you ever do come across an issue or would like to discuss with other users, come join us at https://discord.gg/M8Hs5Dg\n\n**GitHub**: https://github.com/Alpha-Serpentis-Developments/Project-Lynx\n**Patreon**: https://www.patreon.com/project_lynx").queue();
 
 				});
 				Data.addGuild(((GuildJoinEvent) event).getGuild());

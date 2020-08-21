@@ -37,7 +37,7 @@ public class MessageHandler implements EventListener {
 			User author = ((MessageReceivedEvent) event).getAuthor();
 			Guild g = null;
 			int delayTimer = 1;
-			char prefix; //Server's prefix... if it's even a server.
+			String prefix; //Server's prefix... if it's even a server.
 			
 			try {
 				g = ((MessageReceivedEvent) event).getGuild();
@@ -47,20 +47,25 @@ public class MessageHandler implements EventListener {
 			
 			if(Data.srvr_cache.get(g) == null && g != null) {
 				Data.addGuild(g);
-				prefix = InitData.prefix;
+				prefix = String.valueOf(InitData.prefix);
 			} else if(g != null) {
-				prefix = ((String) Data.srvr_cache.get(g).get("prefix")).charAt(0);
+				prefix = ((String) Data.srvr_cache.get(g).get("prefix"));
 			} else {
-				prefix = InitData.prefix;
+				prefix = String.valueOf(InitData.prefix);
 			}
+			
+			System.out.println(prefix);
+			
 			/*
 			 * Checks the message uses the defined prefix found in InitData.java (you can change the prefix if you need to)
 			 */
 			if(((MessageReceivedEvent) event).getMessage().getContentRaw().indexOf(prefix) == 0) {
 
-				String fullMsg = ((MessageReceivedEvent) event).getMessage().getContentRaw().substring(1);
+				String fullMsg = ((MessageReceivedEvent) event).getMessage().getContentRaw().substring(prefix.length());
 				ChannelType c = event instanceof PrivateMessageReceivedEvent ? ChannelType.PRIVATE : ChannelType.TEXT;
 
+				System.out.println(fullMsg);
+				
 				Command cmd;
 				if(!fullMsg.contains(" ")) {
 					cmd = CommandHandler.getCommand(fullMsg, g);
@@ -69,7 +74,7 @@ public class MessageHandler implements EventListener {
 				}
 				
 				if(cmd == null) {
-					System.out.println("WARNING: Command is null?????");
+					System.out.println("[MessageHandler.java] WARNING: Command is null?????");
 					return;
 				}
 				
@@ -83,8 +88,8 @@ public class MessageHandler implements EventListener {
 					}
 				}
 
-				System.out.println("For server... " + g.getName() + " ... " + Data.command_cache.get(g));
-				System.out.println("Grabbed... " + cmd.getName());
+				System.out.println("[MessageHandler.java] For server... " + g.getName() + " ... " + Data.command_cache.get(g));
+				System.out.println("[MessageHandler.java] Grabbed... " + cmd.getName());
 
 				if(cmd == null || (g == null && cmd.getRequirePerms() == true)) return;
 

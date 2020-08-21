@@ -21,7 +21,7 @@ public class InitData {
 	 * modIDs(ID, ID...)
 	 * adminIDs(ID, ID...)
 	 * permLvl(?) -- undecided... Removed... TODO: Rewrite this?
-	 * prefix(char) -- character
+	 * prefix(String) -- string
 	 * accptPrv(bool) -- boolean
 	 * accptMultSrvrs(bool) -- boolean
 	 * vers(VERSION) -- String
@@ -64,9 +64,9 @@ public class InitData {
 	 * You can override the default prefix at the server-level
 	 * 
 	 * Use this to modify the prefix, '!' is the default and can be overridden/changed if needed
-	 * Prefix only supports one character and CANNOT be empty.
+	 * Prefix CANNOT be empty.
 	 */
-	public static char prefix = '!';
+	public static String prefix = "!";
 	
 	/*
 	 * Use this if you want for the bot to react to private messages (eg., reacts to commands)
@@ -78,6 +78,6 @@ public class InitData {
 	/*
 	 * Use this to define the version
 	 */
-	public static String version = "Pre-Release v0.2.0a Build 0 - The Rewrite Update";
+	public static String version = "Pre-Release v0.2.0a Build 1 - The Rewrite Update";
 	
 }
