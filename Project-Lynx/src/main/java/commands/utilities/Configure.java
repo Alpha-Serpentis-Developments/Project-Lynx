@@ -55,7 +55,8 @@ enum Commands {
 	WARN("warn", 4),
 	WARNINGS("warnings", 5),
 	//CONFIGURE("configure", 6), // TODO: Make it so you can actually configure the configure command.
-	SHUTDOWN("shutdown", 7);
+	SHUTDOWN("shutdown", 7),
+	TEST("test", 8);
 
 	private String assignmentName = "DEFAULT";
 	private int assignmentNum = -1;
@@ -105,9 +106,9 @@ public class Configure extends Command {
 		} else {
 			if(hasAdmin) {
 				// Iterate through the values
-				//System.out.println("DEBUG [Configure.java] " + msg.substring(msg.indexOf(getName()) + getName().length() + 1));
+				System.out.println("DEBUG [Configure.java] " + msg.substring(msg.indexOf(getName()) + getName().length() + 1));
 				for(Commands c: Commands.values()) {
-					//System.out.println("DEBUG FOR LOOP [Configure.java] " + c.getAssignmentName());
+					System.out.println("DEBUG FOR LOOP [Configure.java] " + c.getAssignmentName());
 					if(msg.substring(msg.indexOf(getName()) + getName().length() + 1).contains(c.getAssignmentName())) {
 
 						// Grab the command to be modified for this guild
@@ -178,7 +179,7 @@ public class Configure extends Command {
 								System.out.println("DEBUG - BREAK APART [Configure.java] " + breakApart);
 								System.out.println("DEBUG - BROKEN STRING [Configure.java] " + brokenString);
 								
-								String[] illegal_chars = new String[] {"<", ">", "@", "&", "!"};
+								String[] illegal_chars = new String[] {"<", ">", "@", "&", "!", " "};
 
 								for(String ill_char: illegal_chars) {
 									brokenString = brokenString.replaceAll(ill_char, "");
@@ -192,7 +193,7 @@ public class Configure extends Command {
 
 								if(decipheredRole == null) {
 									MessageHandler.sendMessage(chn, "MALFORMED ROLE ID! Cannot configure!");
-									break;
+									return true;
 								} else {
 									roles.add(decipheredRole);
 								}
@@ -268,7 +269,7 @@ public class Configure extends Command {
 				
 				// Iterate through the special configs
 				for(SpecialConfigs sc: SpecialConfigs.values()) {
-					if(sc.getAssignmentName().equals("prefix")) {
+					if(sc.getAssignmentName().equals("prefix") && msg.contains("configure prefix")) {
 						
 						JSONObject rawData = Data.rawJSON;
 						String replaceText = msg;
@@ -277,20 +278,25 @@ public class Configure extends Command {
 						// Parse the prefix
 						try {
 							replaceText = replaceText.replace("configure prefix", "");
+							
+							System.out.println("DEBUG [Configure.java] " + replaceText);
+							
+							if(replaceText.equals("")) {
+								replaceText = null; // Force it to an exception since it is empty
+							}
+							
+							System.out.println("DEBUG [Configure.java] " + replaceText);
+							
 							replaceText = replaceText.replace(" ", "");
+							
+							System.out.println("DEBUG [Configure.java] " + replaceText);
 							parsedPrefix = replaceText;
 						} catch(Exception e) {
-							e.printStackTrace();
 						}
 						
 						// Verify it isn't null
 						if(parsedPrefix == null) {
 							MessageHandler.sendMessage(chn, "Set your server's prefix for Lucky Lynx by running `!configure prefix [prefix]");
-							return false;
-						}
-						
-						if(parsedPrefix.equals("")) {
-							MessageHandler.sendMessage(chn,  "Prefix cannot be null!");
 							return false;
 						}
 						

@@ -28,6 +28,7 @@ public class CommandHandler {
 				add(new Warnings());
 				add(new Configure());
 				add(new Shutdown());
+				add(new Test());
 		}};
 
 	/**
@@ -124,6 +125,8 @@ public class CommandHandler {
 				return ALL_COMMANDS.get(7);
 			
 			//Additional
+			case "test":
+				return ALL_COMMANDS.get(8);
 			}
 		} else {
 			

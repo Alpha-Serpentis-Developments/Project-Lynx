@@ -189,11 +189,7 @@ public class Launcher {
 							System.out.println("[Launcher.java] permLvl override is unused! Nothing changed");
 							break;
 						case "prefix":
-							if(stuff.isEmpty() || stuff.length() > 1) {
-								System.out.println("[Launcher.java] prefix override is malformed! Nothing changed");
-							} else {
-								InitData.prefix = stuff.charAt(0);
-							}
+							InitData.prefix = stuff;
 							break;
 						case "accptPrv":
 							InitData.acceptPriv = Boolean.parseBoolean(stuff);

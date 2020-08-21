@@ -6,3 +6,4 @@ warn:Warns the user that is tagged by a moderator.\n\n> !warn @Example#0000 "Ins
 warnings:Displays the user's warnings if any.\n\n> !warnings @Example#0000>>REQ_PERM>>MOD
 configure:Configures the server's commands to your liking which are divided into three "levels": \n\n> Level 0: NO ONE can use the command unless reconfigured\n> Level 1: **ANYONE** can use the command! \n> Level 2: **Certain Roles** can use the command, but you must attach what roles are allowed!\n\n`!configure kick 2 [ROLE1, ROLE2, ROLE3, ...]`\n`!configure about 0`\n\nThere are also "special configuration" options for "prefix" and "urp" (aka user raid protection).\n\n> `!configure prefix -`>>REQ_PERM>>ADMIN>>GUILD_OWNER
 shutdown:Shuts down the bot!>>BOT_OWNER
+test:No.
