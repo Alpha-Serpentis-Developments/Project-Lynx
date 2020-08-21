@@ -1,7 +1,13 @@
-{
-	"DEFAULT": {
+"DEFAULT": {
 		"cmds_config": {
 			"warn": {
+				"roleIDs": [],
+				"tier_level": 0,
+				"userIDs": [],
+				"active": false,
+				"logging": false
+			},
+			"help": {
 				"roleIDs": [],
 				"tier_level": 0,
 				"userIDs": [],
@@ -22,6 +28,13 @@
 				"active": false,
 				"logging": false
 			},
+			"about": {
+				"roleIDs": [],
+				"tier_level": 0,
+				"userIDs": [],
+				"active": false,
+				"logging": false
+			},
 			"configure": {
 				"roleIDs": [],
 				"tier_level": 0,
@@ -30,6 +43,13 @@
 				"logging": false
 			},
 			"ban": {
+				"roleIDs": [],
+				"tier_level": 0,
+				"userIDs": [],
+				"active": false,
+				"logging": false
+			},
+			"test": {
 				"roleIDs": [],
 				"tier_level": 0,
 				"userIDs": [],
@@ -52,4 +72,3 @@
 			"logging_channel": null
 		}
 	}
-}
