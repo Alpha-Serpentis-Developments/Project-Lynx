@@ -78,6 +78,6 @@ public class InitData {
 	/*
 	 * Use this to define the version
 	 */
-	public static String version = "Pre-Release v0.2.0a Build 3 - The Rewrite Update";
+	public static String version = "Pre-Release v0.2.0a Build 4 - The Rewrite Update";
 	
 }

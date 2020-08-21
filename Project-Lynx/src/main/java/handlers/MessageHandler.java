@@ -1,7 +1,6 @@
 package handlers;
 
 import java.io.File;
-import java.time.Instant;
 import java.util.HashMap;
 import java.util.function.Consumer;
 
@@ -36,7 +35,7 @@ public class MessageHandler implements EventListener {
 
 			User author = ((MessageReceivedEvent) event).getAuthor();
 			Guild g = null;
-			int delayTimer = 1;
+			long delayTimer = 150; // 50 ms
 			String prefix; //Server's prefix... if it's even a server.
 			
 			try {
@@ -80,9 +79,9 @@ public class MessageHandler implements EventListener {
 				
 				// Check if user is trying to spam the command.
 				if(!(limitCheck.get(((MessageReceivedEvent) event).getAuthor()) == null)) {
-					long currentInstant = Instant.now().getEpochSecond();
+					long currentMs = System.currentTimeMillis();
 					
-					if(currentInstant-delayTimer <= limitCheck.get(((MessageReceivedEvent) event).getAuthor())) {
+					if(currentMs-delayTimer <= limitCheck.get(((MessageReceivedEvent) event).getAuthor())) {
 						System.out.println("WARNING [MessageHandler.java] " + author + " has breached the delay timer!");
 						return;
 					}
@@ -95,13 +94,19 @@ public class MessageHandler implements EventListener {
 
 				//System.out.println("DEBUG [MessageHandler.java]: " + cmd.getName());
 				//System.out.println("DEBUG [MessageHandler.java]: (ChannelType) " + c);
-
-				if(c.equals(ChannelType.PRIVATE))
-					cmd.action(((MessageReceivedEvent) event).getAuthor().openPrivateChannel().complete(), fullMsg, event); //Just pass the entire thing to prevent NullPointers, each command will handle them appropriately
-				else if(c.equals(ChannelType.TEXT))
-					cmd.action(((MessageReceivedEvent) event).getChannel(), fullMsg, event);
 				
-				limitCheck.put(((MessageReceivedEvent) event).getAuthor(), Instant.now().getEpochSecond());
+				new Thread() {
+					public void run() {
+						
+						if(c.equals(ChannelType.PRIVATE))
+							cmd.action(((MessageReceivedEvent) event).getAuthor().openPrivateChannel().complete(), fullMsg, event); //Just pass the entire thing to prevent NullPointers, each command will handle them appropriately
+						else if(c.equals(ChannelType.TEXT))
+							cmd.action(((MessageReceivedEvent) event).getChannel(), fullMsg, event);
+						
+					}
+				}.run();
+				
+				limitCheck.put(((MessageReceivedEvent) event).getAuthor(), System.currentTimeMillis());
 				
 			}
 

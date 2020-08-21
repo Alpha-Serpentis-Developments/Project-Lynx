@@ -178,16 +178,18 @@ public class Configure extends Command {
 									brokenString = breakApart;
 									breakApart = "";
 								}
-
-								// Check if they're tagged Roles or straight up long IDs
-								System.out.println("DEBUG - BREAK APART [Configure.java] " + breakApart);
-								System.out.println("DEBUG - BROKEN STRING [Configure.java] " + brokenString);
 								
+								// Clean the strings
 								String[] illegal_chars = new String[] {"<", ">", "@", "&", "!", " "};
 
 								for(String ill_char: illegal_chars) {
 									brokenString = brokenString.replaceAll(ill_char, "");
+									breakApart = breakApart.replaceAll(ill_char, "");
 								}
+
+								// Check if they're tagged Roles or straight up long IDs
+								System.out.println("DEBUG - BREAK APART [Configure.java] " + breakApart);
+								System.out.println("DEBUG - BROKEN STRING [Configure.java] " + brokenString);
 
 								try {
 									decipheredRole = new Long(brokenString);

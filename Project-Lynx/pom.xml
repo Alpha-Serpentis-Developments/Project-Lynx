@@ -2,7 +2,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>Project-Lynx</groupId>
   <artifactId>Project-Lynx</artifactId>
-  <version>0.2a</version>
+  <version>Pre-Release 0.2.0a Build 4</version>
   <name>Project Lynx</name>
   <description>JDA-based moderation bot</description>
   <properties>
