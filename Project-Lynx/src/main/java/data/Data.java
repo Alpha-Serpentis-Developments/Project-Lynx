@@ -27,7 +27,7 @@ public class Data {
 	 */
 	public static volatile Map<Guild, List<Command>> command_cache;
 	public static volatile Map<Guild, JSONObject> srvr_cache;
-	public static volatile ArrayList<Command> cmds;
+	public static volatile ArrayList<Command> cmds = (ArrayList<Command>) CommandHandler.ALL_COMMANDS;
 	public static volatile JSONObject rawJSON;
 
 	//TODO: Clean this up
@@ -429,12 +429,13 @@ public class Data {
 	 * @param key
 	 * @param obj
 	 */
+	@SuppressWarnings("unchecked")
 	public static void loadCache(String key, JSONObject obj) {
 		
 		System.out.println("[Data.java] Loading cache for " + Launcher.api.getGuildById(key));
 		
 		JSONObject cmds_config = obj.getJSONObject(key).getJSONObject("cmds_config"), srvr_config = obj.getJSONObject(key).getJSONObject("srvr_config");
-		ArrayList<Command> modifyCmds = new ArrayList<Command>();
+		ArrayList<Command> modifyCmds = (ArrayList<Command>) cmds.clone();
 		
 		//System.out.println("DEBUG CRITICAL (TOP) [Data.java] " + cmds_config);
 		
