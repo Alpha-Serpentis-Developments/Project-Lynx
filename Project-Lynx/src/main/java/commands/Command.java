@@ -79,6 +79,8 @@ public abstract class Command implements Cloneable {
 
 	public String getDesc() {
 
+		System.out.println("DEBUG getDesc() [Command.java] " + cmdPerms);
+		
 		if(cmdPerms.size() != 0) {
 
 			String returnThis = cmdDesc + "\n\n**Roles Needed**: ";

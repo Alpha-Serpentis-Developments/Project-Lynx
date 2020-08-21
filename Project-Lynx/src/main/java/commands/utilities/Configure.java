@@ -109,7 +109,10 @@ public class Configure extends Command {
 				System.out.println("DEBUG [Configure.java] " + msg.substring(msg.indexOf(getName()) + getName().length() + 1));
 				for(Commands c: Commands.values()) {
 					System.out.println("DEBUG FOR LOOP [Configure.java] " + c.getAssignmentName());
-					if(msg.substring(msg.indexOf(getName()) + getName().length() + 1).contains(c.getAssignmentName())) {
+					
+					String configWhat = msg.substring(msg.indexOf(getName()) + getName().length() + 1);
+					
+					if(configWhat.substring(0, configWhat.indexOf(" ")).equals(c.getAssignmentName())) {
 
 						// Grab the command to be modified for this guild
 						for(Command md_c: Data.command_cache.get(gld)) {
@@ -130,7 +133,8 @@ public class Configure extends Command {
 
 						try {
 							//System.out.println("DEBUG TRY [Configure.java] " + msg.substring(msg.indexOf(c.getAssignmentName()) + c.getAssignmentName().length() + 1, msg.indexOf(c.getAssignmentName()) + c.getAssignmentName().length() + 3));
-							tier_level = Integer.parseInt(msg.substring(msg.indexOf(c.getAssignmentName()) + c.getAssignmentName().length() + 1, msg.indexOf(c.getAssignmentName()) + c.getAssignmentName().length() + 2));
+							tier_level = Integer.parseInt(msg.split(" ")[2]);
+							//tier_level = Integer.parseInt(msg.substring(msg.indexOf(c.getAssignmentName()) + c.getAssignmentName().length() + 1, msg.indexOf(c.getAssignmentName()) + c.getAssignmentName().length() + 2));
 						} catch(StringIndexOutOfBoundsException e) {
 							//e.printStackTrace();
 						} catch(Exception e) {

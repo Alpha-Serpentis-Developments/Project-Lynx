@@ -98,6 +98,9 @@ public class CommandHandler {
 	public static Command getCommand(String srch, Guild g) {
 
 		if(g == null)  {
+			
+			System.out.println("WARNING [CommandHandler.java] guild is empty");
+			
 			switch(srch.toLowerCase()) {
 
 			//General
@@ -142,6 +145,9 @@ public class CommandHandler {
 			}
 			
 			for(Command c: Data.command_cache.get(g)) {
+				
+				System.out.println("DEBUG [CommandHandler.java] " + Data.command_cache.get(g));
+				
 				if(c.getName().equalsIgnoreCase((srch))) {
 					return c;
 				}

@@ -9,8 +9,6 @@ import java.time.Instant;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -25,8 +23,8 @@ public class Data {
 	/**
 	 * This is initialized at startup, but can be reinitialized
 	 */
-	public static volatile Map<Guild, List<Command>> command_cache;
-	public static volatile Map<Guild, JSONObject> srvr_cache;
+	public static volatile HashMap<Guild, List<Command>> command_cache;
+	public static volatile HashMap<Guild, JSONObject> srvr_cache;
 	public static volatile ArrayList<Command> cmds = (ArrayList<Command>) CommandHandler.ALL_COMMANDS;
 	public static volatile JSONObject rawJSON;
 
@@ -429,20 +427,22 @@ public class Data {
 	 * @param key
 	 * @param obj
 	 */
-	@SuppressWarnings("unchecked")
 	public static void loadCache(String key, JSONObject obj) {
 		
 		System.out.println("[Data.java] Loading cache for " + Launcher.api.getGuildById(key));
 		
 		JSONObject cmds_config = obj.getJSONObject(key).getJSONObject("cmds_config"), srvr_config = obj.getJSONObject(key).getJSONObject("srvr_config");
-		ArrayList<Command> modifyCmds = (ArrayList<Command>) cmds.clone();
+		ArrayList<Command> modifyCmds = new ArrayList<Command>();
 		
 		//System.out.println("DEBUG CRITICAL (TOP) [Data.java] " + cmds_config);
+		
+		if(!command_cache.isEmpty())
+			command_cache.clear();
 		
 		//COMMANDS CONFIG
 		for(String con_key: cmds_config.keySet()) {
 			//System.out.println("DEBUG con_key [Data.java] " + con_key);
-			System.out.println("COMMANDS CONFIG: Setting up " + cmds_config.getJSONObject(con_key));
+			System.out.println("[Data.java] COMMANDS CONFIG: Setting up " + cmds_config.getJSONObject(con_key));
 
 			JSONObject in_config = cmds_config.getJSONObject(con_key);
 			Command cmd = null;
@@ -541,11 +541,11 @@ public class Data {
 				
 				//SERVER CONFIG
 				//System.out.println("[Data.java] PUTTING " + Launcher.api.getGuildById(key).getName() + " INTO THE CACHE!");
-				
-				srvr_cache.put(Launcher.api.getGuildById(key), srvr_config);
-				command_cache.put(Launcher.api.getGuildById(key), modifyCmds);
 
 			}
+			
+			srvr_cache.put(Launcher.api.getGuildById(key), srvr_config);
+			command_cache.put(Launcher.api.getGuildById(key), modifyCmds);
 			
 			System.out.println("[Data.java] cmd = " + cmd);
 			

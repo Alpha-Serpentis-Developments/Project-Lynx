@@ -54,7 +54,7 @@ public class MessageHandler implements EventListener {
 				prefix = String.valueOf(InitData.prefix);
 			}
 			
-			System.out.println(prefix);
+			//System.out.println(prefix);
 			
 			/*
 			 * Checks the message uses the defined prefix found in InitData.java (you can change the prefix if you need to)
