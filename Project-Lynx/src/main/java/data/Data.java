@@ -436,9 +436,6 @@ public class Data {
 		
 		//System.out.println("DEBUG CRITICAL (TOP) [Data.java] " + cmds_config);
 		
-		if(!command_cache.isEmpty())
-			command_cache.clear();
-		
 		//COMMANDS CONFIG
 		for(String con_key: cmds_config.keySet()) {
 			//System.out.println("DEBUG con_key [Data.java] " + con_key);
@@ -552,7 +549,7 @@ public class Data {
 		}
 		
 		//System.out.println("DEBUG srvr_cache - [Data.java] " + srvr_cache);
-		//System.out.println("DEBUG command_cache - [Data.java] " + command_cache + "\n\n\n");
+		System.out.println("DEBUG command_cache - [Data.java] " + command_cache + "\n\n\n");
 		
 	}
 

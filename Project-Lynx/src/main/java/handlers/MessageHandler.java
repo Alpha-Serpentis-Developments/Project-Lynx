@@ -35,7 +35,7 @@ public class MessageHandler implements EventListener {
 
 			User author = ((MessageReceivedEvent) event).getAuthor();
 			Guild g = null;
-			long delayTimer = 150; // 50 ms
+			long delayTimer = 150; // 150 ms
 			String prefix; //Server's prefix... if it's even a server.
 			
 			try {
