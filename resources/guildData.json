@@ -1,1 +1,55 @@
-{"602985820642738193":{"cmds_config":{"warn":{"roleIDs":[],"tier_level":0,"userIDs":[],"active":false,"logging":false},"kick":{"roleIDs":[],"tier_level":0,"userIDs":[],"active":false,"logging":false},"test":{"roleIDs":[],"tier_level":0,"userIDs":[],"active":false,"logging":false},"warnings":{"roleIDs":[],"tier_level":0,"userIDs":[],"active":false,"logging":false},"configure":{"roleIDs":[],"tier_level":0,"userIDs":[],"active":true,"logging":false},"ban":{"roleIDs":[],"tier_level":0,"userIDs":[],"active":false,"logging":false}},"srvr_config":{"prefix":"!","user_raid_prot":{"active":true,"user_moving_avg":0,"maximum_threshold":25},"logs":{"warn":{},"kick":{},"ban":{}},"logging_channel":null}},"590215639785013298":{"cmds_config":{"warn":{"roleIDs":[594550521252020226],"tier_level":2,"userIDs":[],"active":true,"logging":true},"kick":{"roleIDs":[],"tier_level":0,"userIDs":[],"active":false,"logging":false},"test":{"roleIDs":[],"tier_level":0,"userIDs":[],"active":false,"logging":false},"warnings":{"roleIDs":[],"tier_level":0,"userIDs":[],"active":false,"logging":false},"configure":{"roleIDs":[],"tier_level":0,"userIDs":[],"active":true,"logging":false},"ban":{"roleIDs":[720508570470449253],"tier_level":2,"userIDs":[],"active":true,"logging":true}},"srvr_config":{"prefix":"!","user_raid_prot":{"active":true,"user_moving_avg":0,"maximum_threshold":25},"logs":{"warn":{},"kick":{},"ban":{}},"logging_channel":null}},"DEFAULT":{"cmds_config":{"warn":{"roleIDs":[],"tier_level":0,"userIDs":[],"active":false,"logging":false},"kick":{"roleIDs":[],"tier_level":0,"userIDs":[],"active":false,"logging":false},"test":{"roleIDs":[],"tier_level":0,"userIDs":[],"active":false,"logging":false},"warnings":{"roleIDs":[],"tier_level":0,"userIDs":[],"active":false,"logging":false},"configure":{"roleIDs":[],"tier_level":0,"userIDs":[],"active":true,"logging":false},"ban":{"roleIDs":[],"tier_level":0,"userIDs":[],"active":false,"logging":false}},"srvr_config":{"prefix":"!","user_raid_prot":{"active":true,"user_moving_avg":0,"maximum_threshold":25},"logs":{"warn":{},"kick":{},"ban":{}},"logging_channel":null}}}
+{
+	"DEFAULT": {
+		"cmds_config": {
+			"warn": {
+				"roleIDs": [],
+				"tier_level": 0,
+				"userIDs": [],
+				"active": false,
+				"logging": false
+			},
+			"kick": {
+				"roleIDs": [],
+				"tier_level": 0,
+				"userIDs": [],
+				"active": false,
+				"logging": false
+			},
+			"warnings": {
+				"roleIDs": [],
+				"tier_level": 0,
+				"userIDs": [],
+				"active": false,
+				"logging": false
+			},
+			"configure": {
+				"roleIDs": [],
+				"tier_level": 0,
+				"userIDs": [],
+				"active": true,
+				"logging": false
+			},
+			"ban": {
+				"roleIDs": [],
+				"tier_level": 0,
+				"userIDs": [],
+				"active": false,
+				"logging": false
+			}
+		},
+		"srvr_config": {
+			"prefix": "!",
+			"user_raid_prot": {
+				"active": true,
+				"user_moving_avg": 0,
+				"maximum_threshold": 25
+			},
+			"logs": {
+				"warn": {},
+				"kick": {},
+				"ban": {}
+			},
+			"logging_channel": null
+		}
+	}
+}

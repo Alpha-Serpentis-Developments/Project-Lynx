@@ -292,11 +292,13 @@ public class Configure extends Command {
 							System.out.println("DEBUG [Configure.java] " + replaceText);
 							parsedPrefix = replaceText;
 						} catch(Exception e) {
+
 						}
 						
 						// Verify it isn't null
 						if(parsedPrefix == null) {
 							MessageHandler.sendMessage(chn, "Set your server's prefix for Lucky Lynx by running `!configure prefix [prefix]");
+
 							return false;
 						}
 						
