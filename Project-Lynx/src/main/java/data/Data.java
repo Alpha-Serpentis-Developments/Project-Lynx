@@ -242,7 +242,7 @@ public class Data {
 			}
 			
 			// Check if the value is in the JSON
-			if(!obj.getJSONObject(cfg).keySet().contains(val)) {
+			if(!obj.getJSONObject(cfg).has(val)) {
 				System.out.println("[Data.java] MISSING value " + val + ". Writing to server data.");
 				
 				//System.out.println("DEBUG [Data.java] " + rawJSON.keySet());
@@ -268,7 +268,7 @@ public class Data {
 					// Iterates through the keys of the JSONObjects with keys. It'll only iterate if said value contains more than 1 key.
 					for(String inner_val: dflt.getJSONObject(cfg).getJSONObject(val).keySet()) {
 						
-						if(!obj.getJSONObject(cfg).getJSONObject(val).keySet().contains(inner_val)) {
+						if(!obj.getJSONObject(cfg).getJSONObject(val).has(inner_val)) {
 							System.out.println("[Data.java] MISSING (inner) value " + inner_val + ". Writing to server data.");
 							
 							//System.out.println("DEBUG [Data.java] " + rawJSON.keySet());
