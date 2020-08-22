@@ -192,7 +192,7 @@ public class Configure extends Command {
 								System.out.println("DEBUG - BROKEN STRING [Configure.java] " + brokenString);
 
 								try {
-									decipheredRole = new Long(brokenString);
+									decipheredRole = Long.parseLong(brokenString);
 								} catch (NumberFormatException e) {
 									decipheredRole = null;
 								}
