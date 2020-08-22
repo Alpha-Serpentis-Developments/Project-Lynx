@@ -5,6 +5,10 @@ import handlers.MessageHandler;
 import net.dv8tion.jda.api.entities.MessageChannel;
 
 public class Help extends Command {
+	
+	public Help() {
+		setName("help");
+	}
 
 	@Override
 	public boolean action(MessageChannel chn, String msg, Object misc) {

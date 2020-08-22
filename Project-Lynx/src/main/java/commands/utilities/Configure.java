@@ -84,6 +84,10 @@ enum Commands {
 }
 
 public class Configure extends Command {
+	
+	public Configure() {
+		setName("configure");
+	}
 
 	Command modifyCommand = null;
 

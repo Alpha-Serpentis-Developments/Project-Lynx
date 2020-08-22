@@ -3,6 +3,7 @@ package handlers;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Scanner;
 import commands.Command;
@@ -99,38 +100,15 @@ public class CommandHandler {
 
 		if(g == null)  {
 			
-			System.out.println("WARNING [CommandHandler.java] guild is empty");
+			//System.out.println("WARNING [CommandHandler.java] guild is empty");
 			
-			switch(srch.toLowerCase()) {
-
-			//General
-			case "about":
-				return ALL_COMMANDS.get(0);
-			case "help":
-				return ALL_COMMANDS.get(1);
-
-			//Moderation
-			case "ban":
-				return ALL_COMMANDS.get(2);
-			case "kick":
-				return ALL_COMMANDS.get(3);
-			case "warn":
-				return ALL_COMMANDS.get(4);
-			case "warnings":
-				return ALL_COMMANDS.get(5);
-
-			//Utilities
-			case "configure":
-				return ALL_COMMANDS.get(6);
-			case "config":
-				return ALL_COMMANDS.get(6);
-			case "shutdown": //Bot Owners Only
-				return ALL_COMMANDS.get(7);
+			String[] cmdsArr = new String[ALL_COMMANDS.size()];
 			
-			//Additional
-			case "test":
-				return ALL_COMMANDS.get(8);
+			for(int i = 0; i < ALL_COMMANDS.size(); i++) {
+				cmdsArr[i] = ALL_COMMANDS.get(i).getName().toLowerCase();
 			}
+			
+			return ALL_COMMANDS.get(Arrays.asList(cmdsArr).indexOf(srch.toLowerCase()));
 		} else {
 			
 			// Checks if the server is in the cache.

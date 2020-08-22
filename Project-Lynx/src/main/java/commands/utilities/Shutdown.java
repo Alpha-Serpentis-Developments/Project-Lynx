@@ -8,6 +8,10 @@ import net.dv8tion.jda.api.entities.MessageChannel;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 
 public class Shutdown extends Command {
+	
+	public Shutdown() {
+		setName("shutdown");
+	}
 
 	@Override
 	public boolean action(MessageChannel chn, String msg, Object misc) {

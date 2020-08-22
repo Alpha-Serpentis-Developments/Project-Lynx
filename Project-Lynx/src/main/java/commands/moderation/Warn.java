@@ -13,6 +13,10 @@ import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 
 public class Warn extends Command {
+	
+	public Warn() {
+		setName("warn");
+	}
 
 	@Override
 	public boolean action(MessageChannel chn, String msg, Object misc) {
