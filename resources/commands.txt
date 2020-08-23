@@ -1,5 +1,5 @@
 about:**Meow!** Lucky Lynx is an experimental versatile moderation Discord bot built using the JDA Library and Java! If you have found an issue, willing to contribute to the code, or just want to meet people, check out the Project-Lynx Repository on GitHub and Support Server!\n\n**Version:** [[vers]]\n**Lead Developer**: AlphaSerpentis#3203\n**GitHub**: https://github.com/Alpha-Serpentis-Developments/Project-Lynx \n**Support Server**: https://discord.gg/M8Hs5Dg
-help:**Command List**: \n\n> about\n> help\n> ban\n> kick\n> warn\n> warnings\n> configure\n> shutdown\n> welcome
+help:**Command List**: \n\n> about: Info on Lucky Lynx\n> help: This list.\n> ban: Bans a user.\n> kick: Kicks a user.\n> warn: Warns a user.\n> warnings: List a user's warnings.\n> configure: Configure commands.\n> shutdown: Shutdown the bot
 ban:Bans the user that is tagged by a moderator.\n\n> !ban @Example#0000 "Insert Reason Here">>REQ_PERM>>MOD
 kick:Kicks the user that is tagged by a moderator.\n\n> !kick @Example#0000 "Insert Reason Here">>REQ_PERM>>MOD
 warn:Warns the user that is tagged by a moderator.\n\n> !warn @Example#0000 "Insert Reason Here">>REQ_PERM>>MOD

@@ -6,6 +6,7 @@ import init.Launcher;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.MessageChannel;
 import net.dv8tion.jda.api.events.GenericEvent;
+import net.dv8tion.jda.api.events.guild.GenericGuildEvent;
 import net.dv8tion.jda.api.hooks.EventListener;
 
 public class GuildLogger implements EventListener {
@@ -59,6 +60,10 @@ public class GuildLogger implements EventListener {
 
 	@Override
 	public void onEvent(GenericEvent event) {
+		
+		if(event instanceof GenericGuildEvent) {
+			
+		}
 		
 	}
 	
