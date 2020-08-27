@@ -18,7 +18,9 @@ import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 enum SpecialConfigs {
 	
 	PREFIX("prefix", 0),
-	URP("urp", 1);
+	URP("urp", 1),
+	LOGGING("logging", 2),
+	LOGCHANNEL("logchannel", 3);
 	
 	private String assignmentName = "DEFAULT";
 	private int assignmentNum = -1;
