@@ -9,6 +9,7 @@ import java.util.Scanner;
 import javax.security.auth.login.LoginException;
 
 import data.Data;
+import features.GuildLogger;
 import features.urp.UserRaidProtection;
 import handlers.CommandHandler;
 import handlers.MessageHandler;
@@ -97,6 +98,7 @@ public class Launcher {
 			api = JDABuilder.create(key, GatewayIntent.DIRECT_MESSAGES, GatewayIntent.GUILD_MESSAGES, GatewayIntent.GUILD_MEMBERS).disableCache(CacheFlag.ACTIVITY, CacheFlag.VOICE_STATE, CacheFlag.EMOTE, CacheFlag.CLIENT_STATUS).build();
 			api.addEventListener(new MessageHandler());
 			api.addEventListener(new ServerHandler());
+			api.addEventListener(new GuildLogger());
 			api.addEventListener(new UserRaidProtection());
 
 			api.awaitReady(); // Waits for JDA to complete loading to prevent issues
