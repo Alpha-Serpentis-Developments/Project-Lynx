@@ -43,7 +43,7 @@ public class CommandHandler {
 	public static boolean initCommands() {
 
 		boolean result = false;
-
+		
 		try {
 
 			Scanner sc = new Scanner(new FileReader(InitData.locationCommands));
@@ -101,8 +101,8 @@ public class CommandHandler {
 	}
 
 	public static Command getCommand(String srch, Guild g) {
-
-		if(g == null)  {
+		
+		if(g == null || srch.equalsIgnoreCase("shutdown"))  {
 			
 			//System.out.println("WARNING [CommandHandler.java] guild is empty");
 			

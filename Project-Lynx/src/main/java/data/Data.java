@@ -187,7 +187,6 @@ public class Data {
 	public static boolean checkDefaults(JSONObject obj, String cfg, String id) {
 
 		JSONObject dflt = rawJSON.getJSONObject("DEFAULT");
-		JSONObject mObj = new JSONObject(obj);
 		//ArrayList<String> s_keys = new ArrayList<String>(((JSONObject) obj.get(srvr)).keySet()), d_keys = new ArrayList<String>(dflt.keySet()); //s for server and d for defaults
 		/*
 		ArrayList<String> s_inner_keys = new ArrayList<String>() {
@@ -228,14 +227,14 @@ public class Data {
 			
 			// Checks if it exists in server, otherwise it'll copy the DEFAULT values and return true if successfully written.
 			try {
-				mObj.getJSONObject(cfg);
+				obj.getJSONObject(cfg);
 			} catch (JSONException e) {
 				JSONObject addMissingVal = rawJSON;
 				addMissingVal.getJSONObject(id).put("logs", dflt.getJSONObject(cfg));
 				
 				if(writeData(InitData.locationJSON, addMissingVal.toString(), true, id)) {
 					System.out.println("[Data.java] checkDefaults() missing value successfully written.");
-					mObj = rawJSON.getJSONObject(id);
+					obj = rawJSON.getJSONObject(id);
 					return true;
 				} else {
 					return false;
@@ -244,7 +243,7 @@ public class Data {
 			}
 			
 			// Check if the value is in the JSON
-			if(!mObj.getJSONObject(cfg).has(val)) {
+			if(!obj.getJSONObject(cfg).has(val)) {
 				System.out.println("[Data.java] MISSING value " + val + ". Writing to server data.");
 				
 				//System.out.println("DEBUG [Data.java] " + rawJSON.keySet());
@@ -255,7 +254,7 @@ public class Data {
 				// Attempt to write the updated line to the JSON
 				if(writeData(InitData.locationJSON, addMissingVal.toString(), true, id)) {
 					System.out.println("[Data.java] checkDefaults() missing value successfully written.");
-					mObj = rawJSON.getJSONObject(id);
+					obj = rawJSON.getJSONObject(id);
 				} else {
 					return false;
 				}
@@ -271,7 +270,7 @@ public class Data {
 					// Iterates through the keys of the JSONObjects with keys. It'll only iterate if said value contains more than 1 key.
 					for(String inner_val: dflt.getJSONObject(cfg).getJSONObject(val).keySet()) {
 						
-						if(!mObj.getJSONObject(cfg).getJSONObject(val).has(inner_val)) {
+						if(!obj.getJSONObject(cfg).getJSONObject(val).has(inner_val)) {
 							System.out.println("[Data.java] MISSING (inner) value " + inner_val + ". Writing to server data.");
 							
 							//System.out.println("DEBUG [Data.java] " + rawJSON.keySet());
@@ -282,7 +281,7 @@ public class Data {
 							// Attempt to write the updated line to the JSON
 							if(writeData(InitData.locationJSON, addMissingVal.toString(), true, id)) {
 								System.out.println("[Data.java] checkDefaults() missing value successfully written.");
-								mObj = rawJSON.getJSONObject(id);
+								obj = rawJSON.getJSONObject(id);
 							} else {
 								return false;
 							}
