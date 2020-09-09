@@ -30,6 +30,10 @@ public class CommandHandler {
 				add(new Configure());
 				add(new Shutdown());
 				add(new Test());
+				add(new Log());
+				add(new LogChannel());
+				add(new URP());
+				add(new Prefix());
 		}};
 
 	/**
