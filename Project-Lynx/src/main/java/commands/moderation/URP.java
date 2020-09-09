@@ -4,6 +4,10 @@ import commands.Command;
 import net.dv8tion.jda.api.entities.MessageChannel;
 
 public class URP extends Command {
+	
+	public URP() {
+		setName("URP");
+	}
 
 	@Override
 	public boolean action(MessageChannel chn, String msg, Object misc) {
