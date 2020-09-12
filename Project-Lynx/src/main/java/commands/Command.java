@@ -214,6 +214,13 @@ public abstract class Command implements Cloneable {
 			}
 		}
 		
+		// Check if the interacted is an adminstrator
+		for(Role r: g.getMember(interacted).getRoles()) {
+			if(r.hasPermission(Permission.ADMINISTRATOR)) {
+				return false; // Returns false since you're not allowed to do a moderative action against a staff
+			}
+		}
+		
 		//The server owner CAN execute moderator commands WITHOUT having to define the roles (but it would be in the best interest to define them)
 		if(g.getOwner().getUser().equals(executor)) {
 			isOwner = true;
@@ -229,6 +236,13 @@ public abstract class Command implements Cloneable {
 				if(cmdPerms.get("ROLE").contains(ex_rs.getIdLong())) {
 					isMod = true;
 					break;
+				}
+			}
+			
+			// Check if the interacted has the same role(s)
+			for(Role ex_rs: g.getMember(interacted).getRoles()) {
+				if(cmdPerms.get("ROLE").contains(ex_rs.getIdLong())) {
+					return false;
 				}
 			}
 			
