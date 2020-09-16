@@ -195,9 +195,38 @@ public abstract class Command implements Cloneable {
 	public boolean isRoleIDsDefined() {
 		return !cmdPerms.isEmpty();
 	}
+	
+	/**
+	 * Verifies if the command can be executed by the user
+	 * @param executor
+	 * @param g
+	 * @param chn
+	 * @return
+	 */
+	public boolean verifyUse(User executor, Guild g, MessageChannel chn) {
+		
+		// Check if user is an administrator
+		for(Role r: g.getMember(executor).getRoles()) {
+			if(r.hasPermission(Permission.ADMINISTRATOR)) {
+				return true;
+			}
+		}
+		
+		// Check if user has the roles to execute the command
+		if(!cmdPerms.isEmpty()) {
+			for(Role r: g.getMember(executor).getRoles()) {
+				if(cmdPerms.get("ROLE").contains(r.getIdLong())) {
+					return true;
+				}
+			}
+		}
+		
+		return false;
+		
+	}
 
 	/**
-	 * Verifies if the command can be executed by the bot and user
+	 * Verifies if the command can be executed by the bot and user with the determininig factor of the interacted user
 	 * <br></br>
 	 * Checks for the permissions, role hierarchy, etc.
 	 * @return true if execution can be done, otherwise false.
