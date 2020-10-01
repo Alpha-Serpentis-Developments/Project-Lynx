@@ -85,6 +85,7 @@ enum Commands {
 	}
 }
 
+@Deprecated
 public class Configure extends Command {
 	
 	public Configure() {
@@ -281,6 +282,7 @@ public class Configure extends Command {
 				
 				// Iterate through the special configs
 				for(SpecialConfigs sc: SpecialConfigs.values()) {
+					// ENUM PREFIX
 					if(sc.getAssignmentName().equals("prefix") && msg.contains("configure prefix")) {
 						
 						JSONObject rawData = Data.rawJSON;
@@ -319,6 +321,18 @@ public class Configure extends Command {
 						// Write the new data
 						if(Data.writeData(InitData.locationJSON, rawData.toString(), true, gld.getId()))
 							MessageHandler.sendMessage(chn, "You've configured the bot to use the new prefix of " + parsedPrefix);
+					}
+					// ENUM "URP" (USER RAID PROTECTION)
+					else if(sc.getAssignmentName().equals("urp") && msg.contains("configure urp")) {
+						
+					}
+					// ENUM LOGGING
+					else if(sc.getAssignmentName().equals("logging") && msg.contains("configure logging")) {
+						
+					}
+					// ENUM LOGCHANNEL
+					else if(sc.getAssignmentName().equals("logchannel") && msg.contains("configure logchannel")) {
+						
 					}
 				}
 
