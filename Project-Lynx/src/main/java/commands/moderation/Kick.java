@@ -35,10 +35,21 @@ public class Kick extends Command {
 		
 		if(result) {
 			
-			try {
-				reason = msg.substring(msg.indexOf("\"") + 1, msg.lastIndexOf("\""));
+			reason = msg.substring(5);
+			
+			check: try {
+				
+				if(reason.indexOf(" ") == -1) {
+					reason = "A reason was not provided by " + mod.getAsTag() + " (" + mod.getIdLong() + ")";
+					break check;
+				}
+				
+				reason = reason.substring(reason.indexOf(" ") + 1);
 			} catch(StringIndexOutOfBoundsException e) {
-				reason = "`A reason was not provided.`";
+				
+			} finally {
+				if(reason.isBlank())
+					reason = "A reason was not provided by " + mod.getAsTag() + " (" + mod.getIdLong() + ")";
 			}
 			
 			//TODO: Make an option for servers to choose whether these messages are sent.
