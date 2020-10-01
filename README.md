@@ -11,7 +11,7 @@ Please read the Terms of Service and Privacy Policy statements for use of the pu
 # Project Lynx
 A Discord Bot built using the [JDA Library](https://github.com/DV8FromTheWorld/JDA) and Java.
 
-Project Lynx (formeley known as Discord-Lynx) is an experimental moderation Discord bot that can be deployed with ease via self-hosting or using the public [Lucky Lynx](https://discordapp.com/oauth2/authorize?client_id=589284688376496138&scope=bot&permissions=8) bot!
+Project Lynx (formeley known as Discord-Lynx) is an experimental moderation Discord bot that can be deployed with ease via self-hosting or using the public [Lucky Lynx](https://discordapp.com/oauth2/authorize?client_id=743859295958859797&scope=bot&permissions=8) bot!
 
 Lucky Lynx has the following features:
 - Moderation
