@@ -4,9 +4,9 @@ import org.json.JSONObject;
 
 import commands.Command;
 import data.Data;
-import handlers.MessageHandler;
-import handlers.ModerationHandler;
 import init.InitData;
+import manager.MessageManager;
+import manager.ModerationManager;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.MessageChannel;
 import net.dv8tion.jda.api.entities.User;
@@ -22,12 +22,12 @@ public class Ban extends Command {
 	public boolean action(MessageChannel chn, String msg, Object misc) {
 
 		Guild gld = ((MessageReceivedEvent) misc).getGuild();
-		User mod = ((MessageReceivedEvent) misc).getAuthor(), punished = ModerationHandler.grabPunished(gld, msg, 3);
+		User mod = ((MessageReceivedEvent) misc).getAuthor(), punished = ModerationManager.grabPunished(gld, msg, 3);
 
 		String reason = "";
 
 		if(punished == null) {
-			MessageHandler.sendMessage(chn, getDesc());
+			MessageManager.sendMessage(chn, getDesc());
 			return true;
 		}
 
@@ -53,8 +53,8 @@ public class Ban extends Command {
 			}
 			
 			//TODO: Make an option for servers to choose whether these messages are sent.
-			MessageHandler.sendMessage(chn, "**" + punished.getName() + "** has been banned by **" + mod.getName() + "** for: \n\n> **" + reason + "**");
-			MessageHandler.sendMessage(punished.openPrivateChannel().complete(), "You have been banned by **" + mod.getName() + "** for: **" + reason + "**\n\n");
+			MessageManager.sendMessage(chn, "**" + punished.getName() + "** has been banned by **" + mod.getName() + "** for: \n\n> **" + reason + "**");
+			MessageManager.sendMessage(punished.openPrivateChannel().complete(), "You have been banned by **" + mod.getName() + "** for: **" + reason + "**\n\n");
 			
 			// Writes the data to the JSON
 			JSONObject data = Data.rawJSON;
@@ -72,7 +72,7 @@ public class Ban extends Command {
 
 			if(getLogging() && !(Data.srvr_cache.get(gld).get("logging_channel") == null)) {
 
-				MessageHandler.sendMessage(gld.getTextChannelById(Data.srvr_cache.get(gld).getLong("logging_channel")), "**Moderator " + mod.getAsTag() + "** has warned user " + punished.getAsTag() + " for the following reason: \n\n> " + reason);
+				MessageManager.sendMessage(gld.getTextChannelById(Data.srvr_cache.get(gld).getLong("logging_channel")), "**Moderator " + mod.getAsTag() + "** has warned user " + punished.getAsTag() + " for the following reason: \n\n> " + reason);
 
 			}
 			

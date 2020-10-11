@@ -11,9 +11,9 @@ import javax.security.auth.login.LoginException;
 import data.Data;
 import features.GuildLogger;
 import features.urp.UserRaidProtection;
-import handlers.CommandHandler;
-import handlers.MessageHandler;
-import handlers.ServerHandler;
+import manager.CommandManager;
+import manager.MessageManager;
+import manager.ServerManager;
 import misc.Playing;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
@@ -96,8 +96,8 @@ public class Launcher {
 		
 		try {
 			api = JDABuilder.create(key, GatewayIntent.DIRECT_MESSAGES, GatewayIntent.GUILD_MESSAGES, GatewayIntent.GUILD_MEMBERS).disableCache(CacheFlag.ACTIVITY, CacheFlag.VOICE_STATE, CacheFlag.EMOTE, CacheFlag.CLIENT_STATUS).build();
-			api.addEventListener(new MessageHandler());
-			api.addEventListener(new ServerHandler());
+			api.addEventListener(new MessageManager());
+			api.addEventListener(new ServerManager());
 			api.addEventListener(new GuildLogger());
 			api.addEventListener(new UserRaidProtection());
 
@@ -116,7 +116,7 @@ public class Launcher {
 			System.exit(1);
 		}
 
-		if(CommandHandler.initCommands())
+		if(CommandManager.initCommands())
 			System.out.println("[Launcher.java] Initializing commands complete! [1/2]");
 		else {
 			System.out.println("[Launcher.java] Commands cannot be initialized! Shutting down!");

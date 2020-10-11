@@ -1,4 +1,4 @@
-package handlers;
+package manager;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -7,7 +7,7 @@ import java.util.HashMap;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.User;
 
-public class ModerationHandler {
+public class ModerationManager {
 
 	/**
 	 * Used to create a HashMap to set permissions
@@ -59,8 +59,8 @@ public class ModerationHandler {
 			decipher = decipher.replaceAll(c, "");
 		}
 		
-		System.out.println("DEBUG [ModerationHandler.java] decipher - " + decipher);
-		System.out.println("DEBUG - GUILD [ModerationHandler.java] guild - " + gld);
+		System.out.println("DEBUG [ModerationManager.java] decipher - " + decipher);
+		System.out.println("DEBUG - GUILD [ModerationManager.java] guild - " + gld);
 		
 		// Check if "<" and ">" exist, particularly, with them in order.
 		if(decipher.contains("<") && decipher.contains(">")) {
@@ -84,7 +84,7 @@ public class ModerationHandler {
 					previousWasDigit = true;
 				
 					breakDownDigits = breakDownDigits + decipher.charAt(i);
-					System.out.println("DEBUG [ModerationHandler.java] " + breakDownDigits);
+					System.out.println("DEBUG [ModerationManager.java] " + breakDownDigits);
 				
 				}
 			} else if(previousWasDigit && breakDownDigits.length() > 16){
@@ -103,27 +103,6 @@ public class ModerationHandler {
 		punished = gld.getMemberByTag(decipher.substring(0, decipher.indexOf("#") + 5)).getUser();
 		
 		return punished;
-		
-	}
-	
-	/**
-	 * For moderation commands, used to obtain the reason field of the command.
-	 * 
-	 * @param msg
-	 * @param cmd_name
-	 * @return
-	 */
-	public static String grabReason(String msg, String cmd_name) {
-		
-		String result = msg;
-		
-		// Take out the command name at front
-		
-		
-		// Take out the user at front
-		
-		
-		return result;
 		
 	}
 	

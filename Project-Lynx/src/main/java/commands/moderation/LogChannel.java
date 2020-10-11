@@ -4,8 +4,8 @@ import org.json.JSONObject;
 
 import commands.Command;
 import data.Data;
-import handlers.MessageHandler;
 import init.InitData;
+import manager.MessageManager;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.MessageChannel;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
@@ -20,7 +20,7 @@ public class LogChannel extends Command {
 	public boolean action(MessageChannel chn, String msg, Object misc) {
 		
 		if(msg.equalsIgnoreCase("logchannel")) {
-			MessageHandler.sendMessage(chn, getDesc());
+			MessageManager.sendMessage(chn, getDesc());
 			return true;
 		} else if(!verifyUse(((MessageReceivedEvent) misc).getAuthor(), ((MessageReceivedEvent) misc).getGuild(), chn)) {
 			return false;
@@ -44,9 +44,9 @@ public class LogChannel extends Command {
 		
 		// Write the new data
 		if(Data.writeData(InitData.locationJSON, data.toString(), true, gld.getId())) {
-			MessageHandler.sendMessage(chn, "Logging channel is now set to " + gld.getTextChannelById(modifyThis).getAsMention());
+			MessageManager.sendMessage(chn, "Logging channel is now set to " + gld.getTextChannelById(modifyThis).getAsMention());
 		} else {
-			MessageHandler.sendMessage(chn, "Logging channel failed to be set. Debug parse: " + modifyThis);
+			MessageManager.sendMessage(chn, "Logging channel failed to be set. Debug parse: " + modifyThis);
 			return false;
 		}
 		

@@ -3,16 +3,22 @@ package features;
 import java.util.HashMap;
 import java.util.List;
 
+import events.CommandEvent;
+import listeners.CommandListener;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.events.GenericEvent;
 import net.dv8tion.jda.api.events.guild.GenericGuildEvent;
 import net.dv8tion.jda.api.events.guild.GuildBanEvent;
+import net.dv8tion.jda.api.events.message.guild.GuildMessageDeleteEvent;
+import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
+import net.dv8tion.jda.api.events.message.guild.GuildMessageUpdateEvent;
 import net.dv8tion.jda.api.hooks.EventListener;
 
-public class GuildLogger implements EventListener {
+public class GuildLogger implements EventListener, CommandListener {
 	
 	public static volatile HashMap<Guild, List<GenericGuildEvent>> gldLogJDAEvents = new HashMap<Guild, List<GenericGuildEvent>>();
 	public static volatile HashMap<Guild, List<String>> gldLogCustomEvents = new HashMap<Guild, List<String>>();
+	public static volatile HashMap<Long, String> tmpMessageCache = new HashMap<Long, String>();
 	
 	public void customEvent(String k) {
 		
@@ -30,6 +36,8 @@ public class GuildLogger implements EventListener {
 					
 					if(!gldLogJDAEvents.containsKey(genericEvt.getGuild())) // If the guild isn't in the HashMap, get out.
 						return;
+					
+					
 					
 					// Loop the list
 					for(GenericGuildEvent gEvnt: gldLogJDAEvents.get(genericEvt.getGuild())) {
@@ -49,7 +57,13 @@ public class GuildLogger implements EventListener {
 							break;
 						case "guildmessagedeleteevent":
 							
-							GMessageDelete();
+							GMessageDelete((GuildMessageDeleteEvent) gEvnt);
+							
+							break;
+						case "guildmessagereceivedevent":
+							
+							break;
+						case "guildmessageupdateevent":
 							
 							break;
 							
@@ -76,6 +90,12 @@ public class GuildLogger implements EventListener {
 		
 	}
 	
+	@Override
+	public void onEvent(CommandEvent event) {
+		// TODO Auto-generated method stub
+		
+	}
+	
 	public boolean GBan(GuildBanEvent evt) {
 		
 		
@@ -87,7 +107,23 @@ public class GuildLogger implements EventListener {
 		return false;
 	}
 	
-	public boolean GMessageDelete() {
+	public boolean GMessageDelete(GuildMessageDeleteEvent evt) {
+		
+		
+		
+		return false;
+	}
+	
+	public boolean GMessageReceive(GuildMessageReceivedEvent evt) {
+		
+		
+		
+		return false;
+	}
+	
+	public boolean GMessageUpdate(GuildMessageUpdateEvent evt) {
+		
+		
 		return false;
 	}
 	

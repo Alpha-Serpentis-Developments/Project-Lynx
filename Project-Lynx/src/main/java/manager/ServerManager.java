@@ -1,4 +1,4 @@
-package handlers;
+package manager;
 
 import data.Data;
 import init.Launcher;
@@ -10,7 +10,7 @@ import net.dv8tion.jda.api.events.guild.GuildJoinEvent;
 import net.dv8tion.jda.api.events.guild.GuildLeaveEvent;
 import net.dv8tion.jda.api.hooks.EventListener;
 
-public class ServerHandler implements EventListener {
+public class ServerManager implements EventListener {
 
 	/**Compares TWO roles in regards to the Guild's hierarchy
 	 *
@@ -144,7 +144,7 @@ public class ServerHandler implements EventListener {
 			TextChannel chn = gld.getSystemChannel();
 
 			if(gld.getSystemChannel().canTalk()) {
-				MessageHandler.sendMessage(chn, "Welcome to " + gld.getName() + "! Please read the server's rules/guidelines and have a great time!", new File("resources/lynx/lynx.jpg"));
+				MessageManager.sendMessage(chn, "Welcome to " + gld.getName() + "! Please read the server's rules/guidelines and have a great time!", new File("resources/lynx/lynx.jpg"));
 			} else {
 				((GuildMemberJoinEvent) event).getUser().openPrivateChannel().queue((channel) ->
 				{

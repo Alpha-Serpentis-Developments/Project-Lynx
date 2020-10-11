@@ -6,9 +6,9 @@ import org.json.JSONObject;
 
 import commands.Command;
 import data.Data;
-import handlers.MessageHandler;
-import handlers.ServerHandler;
 import init.InitData;
+import manager.MessageManager;
+import manager.ServerManager;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.MessageChannel;
@@ -102,13 +102,13 @@ public class Configure extends Command {
 
 		JSONObject gld_obj = Data.rawJSON;
 
-		//MessageHandler.sendMessage(chn, "[DEBUG] " + usr.getAsMention() + " is attempting to configure in Guild " + gld.getName() + " and has " + gld.getMember(usr).getPermissions());
+		//MessageManager.sendMessage(chn, "[DEBUG] " + usr.getAsMention() + " is attempting to configure in Guild " + gld.getName() + " and has " + gld.getMember(usr).getPermissions());
 
-		boolean hasAdmin = ServerHandler.getServerOwner(gld.getIdLong()).equals(usr) || gld.getMember(usr).hasPermission(Permission.ADMINISTRATOR);
+		boolean hasAdmin = ServerManager.getServerOwner(gld.getIdLong()).equals(usr) || gld.getMember(usr).hasPermission(Permission.ADMINISTRATOR);
 		int tier_level = -1;
 
 		if(msg.equalsIgnoreCase(getName())) {
-			MessageHandler.sendMessage(chn, getDesc());
+			MessageManager.sendMessage(chn, getDesc());
 			return true;
 		} else {
 			if(hasAdmin) {
@@ -129,7 +129,7 @@ public class Configure extends Command {
 						}
 
 						if(modifyCommand == null) {
-							MessageHandler.sendMessage(chn, "Something went wrong while obtaining the command!");
+							MessageManager.sendMessage(chn, "Something went wrong while obtaining the command!");
 							return false;
 						}
 
@@ -152,7 +152,7 @@ public class Configure extends Command {
 						//System.out.println("DEBUG [Configure.java] tier_level:" + tier_level);
 
 						if(tier_level == -1) {
-							MessageHandler.sendMessage(chn, "Configuration syntax is incorrect! Refer to the description.\n\n" + this.getDesc());
+							MessageManager.sendMessage(chn, "Configuration syntax is incorrect! Refer to the description.\n\n" + this.getDesc());
 							return false;
 						}
 
@@ -205,7 +205,7 @@ public class Configure extends Command {
 								}
 
 								if(decipheredRole == null) {
-									MessageHandler.sendMessage(chn, "MALFORMED ROLE ID! Cannot configure!");
+									MessageManager.sendMessage(chn, "MALFORMED ROLE ID! Cannot configure!");
 									return true;
 								} else {
 									roles.add(decipheredRole);
@@ -217,7 +217,7 @@ public class Configure extends Command {
 							}
 
 							if(roles.isEmpty()) {
-								MessageHandler.sendMessage(chn, "Missing Role IDs! Please refer to the description.\n\n" + this.getDesc());
+								MessageManager.sendMessage(chn, "Missing Role IDs! Please refer to the description.\n\n" + this.getDesc());
 								break;
 							}
 
@@ -268,9 +268,9 @@ public class Configure extends Command {
 
 
 							if(Data.writeData(InitData.locationJSON, gld_obj.toString(), true, gld.getId())) {
-								MessageHandler.sendMessage(chn, "You've configured " + c.getAssignmentName());
+								MessageManager.sendMessage(chn, "You've configured " + c.getAssignmentName());
 							} else {
-								MessageHandler.sendMessage(chn, "Something went wrong configuring! Data writing has been REVERTED to original state!");
+								MessageManager.sendMessage(chn, "Something went wrong configuring! Data writing has been REVERTED to original state!");
 							}
 
 							break;
@@ -311,7 +311,7 @@ public class Configure extends Command {
 						
 						// Verify it isn't null
 						if(parsedPrefix == null) {
-							MessageHandler.sendMessage(chn, "Set your server's prefix for Lucky Lynx by running `!configure prefix [prefix]");
+							MessageManager.sendMessage(chn, "Set your server's prefix for Lucky Lynx by running `!configure prefix [prefix]");
 
 							return false;
 						}
@@ -320,7 +320,7 @@ public class Configure extends Command {
 						
 						// Write the new data
 						if(Data.writeData(InitData.locationJSON, rawData.toString(), true, gld.getId()))
-							MessageHandler.sendMessage(chn, "You've configured the bot to use the new prefix of " + parsedPrefix);
+							MessageManager.sendMessage(chn, "You've configured the bot to use the new prefix of " + parsedPrefix);
 					}
 					// ENUM "URP" (USER RAID PROTECTION)
 					else if(sc.getAssignmentName().equals("urp") && msg.contains("configure urp")) {
@@ -338,7 +338,7 @@ public class Configure extends Command {
 
 				return true;
 			} else {
-				MessageHandler.sendMessage(chn, "Insufficient permissions! (Must be an Administrator or Server Owner)");
+				MessageManager.sendMessage(chn, "Insufficient permissions! (Must be an Administrator or Server Owner)");
 				return false;
 			}
 		}

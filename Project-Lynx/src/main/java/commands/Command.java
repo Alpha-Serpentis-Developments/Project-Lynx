@@ -3,8 +3,8 @@ package commands;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import handlers.MessageHandler;
 import init.Launcher;
+import manager.MessageManager;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.MessageChannel;
@@ -257,7 +257,7 @@ public abstract class Command implements Cloneable {
 		} else if(isAdmin) { // It is assumed that the administrator role is given as if they're similar to the guild owner. Be careful.
 			System.out.println("[Command.java] Is admin!");
 		} else if(!isRoleIDsDefined() && requirePerms) {
-			MessageHandler.sendMessage(chn, "This command **requires to be configured** by the server owner or administrator! Use `!configure [command]` to use this and other commands.");
+			MessageManager.sendMessage(chn, "This command **requires to be configured** by the server owner or administrator! Use `!configure [command]` to use this and other commands.");
 			return false;
 		} else if(isRoleIDsDefined() && requirePerms) {
 			

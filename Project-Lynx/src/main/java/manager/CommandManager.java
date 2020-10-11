@@ -1,4 +1,4 @@
-package handlers;
+package manager;
 
 import java.io.FileNotFoundException;
 import java.io.FileReader;
@@ -16,7 +16,7 @@ import init.InitData;
 import net.dv8tion.jda.api.entities.Guild;
 
 
-public class CommandHandler {
+public class CommandManager {
 
 	@SuppressWarnings("serial")
 	public static final List<Command> ALL_COMMANDS = new ArrayList<Command>() {
@@ -53,7 +53,7 @@ public class CommandHandler {
 				String raw = str, name = raw.substring(0, raw.indexOf(':')), desc = raw.substring(name.length() + 1);
 				desc = desc.replace("[[vers]]", InitData.version).replaceAll("\\\\n", "\n").replace("[[prefix]]", String.valueOf(InitData.prefix));
 
-				System.out.println("[CommandHandler.java]: " + name + " \"desc\" contains: " + desc);
+				System.out.println("[CommandManager.java]: " + name + " \"desc\" contains: " + desc);
 
 				Command cmd = getCommand(name, null);
 				if(desc.contains(">>REQ_PERM")) {
@@ -78,7 +78,7 @@ public class CommandHandler {
 
 				}
 
-				//System.out.println("DEBUG [CommandHandler.java]: (getCmdType()) " + cmd.getCmdType());
+				//System.out.println("DEBUG [CommandManager.java]: (getCmdType()) " + cmd.getCmdType());
 
 				cmd.setName(name);
 				cmd.setDesc(desc);
@@ -94,7 +94,7 @@ public class CommandHandler {
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 
-			System.out.println("[CommandHandler.java]: File cannot be accessed/found!");
+			System.out.println("[CommandManager.java]: File cannot be accessed/found!");
 		}
 
 		return result;
@@ -104,7 +104,7 @@ public class CommandHandler {
 		
 		if(g == null || srch.equalsIgnoreCase("shutdown"))  {
 			
-			//System.out.println("WARNING [CommandHandler.java] guild is empty");
+			//System.out.println("WARNING [CommandManager.java] guild is empty");
 			
 			String[] cmdsArr = new String[ALL_COMMANDS.size()];
 			
@@ -128,7 +128,7 @@ public class CommandHandler {
 			
 			for(Command c: Data.command_cache.get(g)) {
 				
-				System.out.println("DEBUG [CommandHandler.java] " + Data.command_cache.get(g));
+				System.out.println("DEBUG [CommandManager.java] " + Data.command_cache.get(g));
 				
 				if(c.getName().equalsIgnoreCase((srch))) {
 					return c;

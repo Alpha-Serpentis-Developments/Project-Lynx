@@ -1,9 +1,9 @@
 package commands.utilities;
 
 import commands.Command;
-import handlers.MessageHandler;
 import init.InitData;
 import init.Launcher;
+import manager.MessageManager;
 import net.dv8tion.jda.api.entities.MessageChannel;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 
@@ -20,7 +20,7 @@ public class Shutdown extends Command {
 		
 		for(long id: InitData.botOwnerIDs)
 			if(((MessageReceivedEvent) misc).getAuthor().getIdLong() == id) {
-				MessageHandler.sendMessage(chn, "Shutting down " + Launcher.api.getSelfUser().getName() + "!");
+				MessageManager.sendMessage(chn, "Shutting down " + Launcher.api.getSelfUser().getName() + "!");
 				
 				try {
 					Launcher.shutdown();

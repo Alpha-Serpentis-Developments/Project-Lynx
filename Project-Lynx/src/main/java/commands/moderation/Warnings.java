@@ -5,8 +5,8 @@ import org.json.JSONObject;
 
 import commands.Command;
 import data.Data;
-import handlers.MessageHandler;
-import handlers.ModerationHandler;
+import manager.MessageManager;
+import manager.ModerationManager;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.MessageChannel;
 import net.dv8tion.jda.api.entities.User;
@@ -22,10 +22,10 @@ public class Warnings extends Command {
 	public boolean action(MessageChannel chn, String msg, Object misc) {
 		
 		Guild gld = ((MessageReceivedEvent) misc).getGuild();
-		User mod = ((MessageReceivedEvent) misc).getAuthor(), punished = ModerationHandler.grabPunished(gld, msg, 8);
+		User mod = ((MessageReceivedEvent) misc).getAuthor(), punished = ModerationManager.grabPunished(gld, msg, 8);
 		
 		if(punished == null) {
-			MessageHandler.sendMessage(chn, getDesc());
+			MessageManager.sendMessage(chn, getDesc());
 			return true;
 		}
 		
@@ -36,9 +36,9 @@ public class Warnings extends Command {
 			String generatedWarnings = generateWarningsList(gld, punished);
 			
 			if(generatedWarnings.equals("")) {
-				MessageHandler.sendMessage(chn, punished.getName() + " has no logged warnings.");
+				MessageManager.sendMessage(chn, punished.getName() + " has no logged warnings.");
 			} else {
-				MessageHandler.sendMessage(chn, "> **List of Warnings for:** `" + punished.getAsTag() + "`\n\n" + generatedWarnings);
+				MessageManager.sendMessage(chn, "> **List of Warnings for:** `" + punished.getAsTag() + "`\n\n" + generatedWarnings);
 			}
 			
 		}

@@ -13,7 +13,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import commands.Command;
-import handlers.CommandHandler;
+import manager.CommandManager;
 import init.InitData;
 import init.Launcher;
 import net.dv8tion.jda.api.entities.Guild;
@@ -25,7 +25,7 @@ public class Data {
 	 */
 	public static volatile HashMap<Guild, List<Command>> command_cache;
 	public static volatile HashMap<Guild, JSONObject> srvr_cache;
-	public static volatile ArrayList<Command> cmds = (ArrayList<Command>) CommandHandler.ALL_COMMANDS;
+	public static volatile ArrayList<Command> cmds = (ArrayList<Command>) CommandManager.ALL_COMMANDS;
 	public static volatile JSONObject rawJSON;
 
 	//TODO: Clean this up
@@ -380,7 +380,7 @@ public class Data {
 		if(cmds == null) {
 			cmds = new ArrayList<Command>();
 
-			for(Command c: CommandHandler.ALL_COMMANDS) {
+			for(Command c: CommandManager.ALL_COMMANDS) {
 				try {
 					cmds.add((Command) c.clone());
 				} catch (CloneNotSupportedException e) {
