@@ -117,7 +117,7 @@ public class Launcher {
 		}
 
 		if(CommandManager.initCommands())
-			System.out.println("[Launcher.java] Initializing lynx.commands complete! [1/2]");
+			System.out.println("[Launcher.java] Initializing commands complete! [1/2]");
 		else {
 			System.out.println("[Launcher.java] Commands cannot be initialized! Shutting down!");
 			System.exit(1);

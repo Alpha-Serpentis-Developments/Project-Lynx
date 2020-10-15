@@ -250,14 +250,14 @@ public abstract class Command implements Cloneable {
 			}
 		}
 		
-		//The server owner CAN execute moderator lynx.commands WITHOUT having to define the roles (but it would be in the best interest to define them)
+		//The server owner CAN execute moderator commands WITHOUT having to define the roles (but it would be in the best interest to define them)
 		if(g.getOwner().getUser().equals(executor)) {
 			isOwner = true;
 			System.out.println("[Command.java] Is server owner!");
 		} else if(isAdmin) { // It is assumed that the administrator role is given as if they're similar to the guild owner. Be careful.
 			System.out.println("[Command.java] Is admin!");
 		} else if(!isRoleIDsDefined() && requirePerms) {
-			MessageManager.sendMessage(chn, "This command **requires to be configured** by the server owner or administrator! Use `!configure [command]` to use this and other lynx.commands.");
+			MessageManager.sendMessage(chn, "This command **requires to be configured** by the server owner or administrator! Use `!configure [command]` to use this and other commands.");
 			return false;
 		} else if(isRoleIDsDefined() && requirePerms) {
 			

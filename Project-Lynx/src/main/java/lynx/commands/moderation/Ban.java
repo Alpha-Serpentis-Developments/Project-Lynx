@@ -56,7 +56,7 @@ public class Ban extends Command {
 			MessageManager.sendMessage(chn, "**" + punished.getName() + "** has been banned by **" + mod.getName() + "** for: \n\n> **" + reason + "**");
 			MessageManager.sendMessage(punished.openPrivateChannel().complete(), "You have been banned by **" + mod.getName() + "** for: **" + reason + "**\n\n");
 			
-			// Writes the lynx.data to the JSON
+			// Writes the data to the JSON
 			JSONObject data = Data.rawJSON;
 			Integer ban_id = data.getJSONObject(gld.getId()).getJSONObject("srvr_config").getJSONObject("logs").getJSONObject("ban").length() + 1;
 						

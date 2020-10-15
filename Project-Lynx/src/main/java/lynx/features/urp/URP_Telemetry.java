@@ -107,7 +107,7 @@ public class URP_Telemetry extends Telemetry {
 	}
 	
 	/**
-	 * Method that updates the telemetry lynx.data as necessary.
+	 * Method that updates the telemetry data as necessary.
 	 * @return true if update is successful, otherwise false.
 	 */
 	@Override

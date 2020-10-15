@@ -59,7 +59,7 @@ public class Data {
 	 * Writes to the designated filepath in a JSON format
 	 * @param file the file-path
 	 * @param jLine the JSON line
-	 * @return true if writeData(...) is able to write the lynx.data, otherwise false
+	 * @return true if writeData(...) is able to write the data, otherwise false
 	 */
 	public static boolean writeData(String file, String jLine, boolean softInit, String id) {
 		try {
@@ -244,7 +244,7 @@ public class Data {
 			
 			// Check if the value is in the JSON
 			if(!obj.getJSONObject(cfg).has(val)) {
-				System.out.println("[Data.java] MISSING value " + val + ". Writing to server lynx.data.");
+				System.out.println("[Data.java] MISSING value " + val + ". Writing to server data.");
 				
 				//System.out.println("DEBUG [Data.java] " + rawJSON.keySet());
 				
@@ -271,7 +271,7 @@ public class Data {
 					for(String inner_val: dflt.getJSONObject(cfg).getJSONObject(val).keySet()) {
 						
 						if(!obj.getJSONObject(cfg).getJSONObject(val).has(inner_val)) {
-							System.out.println("[Data.java] MISSING (inner) value " + inner_val + ". Writing to server lynx.data.");
+							System.out.println("[Data.java] MISSING (inner) value " + inner_val + ". Writing to server data.");
 							
 							//System.out.println("DEBUG [Data.java] " + rawJSON.keySet());
 							
@@ -300,13 +300,13 @@ public class Data {
 			System.out.println("DEBUG [Data.java] Searching for " + key + " within " + dflt.getJSONObject(cfg));
 			// This checks if the server configuration is even written onto the guildData.json file
 			if(!((JSONObject) obj.get(cfg)).keySet().contains(key)) {
-				System.out.println("[Data.java] MISSING " + key + "! Adding it to the server's lynx.data!");
+				System.out.println("[Data.java] MISSING " + key + "! Adding it to the server's data!");
 
 				JSONObject newObj = new JSONObject(obj.toString());
 				((JSONObject) newObj.get(cfg)).put(key, dflt.get(key));
 
 				if(writeData(InitData.locationJSON, newObj.toString())) {
-					System.out.println("[Data.java] checkDefaults() successfully modified lynx.data!");
+					System.out.println("[Data.java] checkDefaults() successfully modified data!");
 				} else {
 					return false;
 				}
@@ -316,13 +316,13 @@ public class Data {
 				System.out.println("DEBUG [Data.java] Searching for inner key " + key_inner);
 				
 				if(!((JSONObject) obj.get(cfg)).keySet().contains(key_inner)) {
-					System.out.println("[Data.java] MISSING " + key + "! Adding it to the server's lynx.data!");
+					System.out.println("[Data.java] MISSING " + key + "! Adding it to the server's data!");
 
 					JSONObject newObj = new JSONObject(obj.toString());
 					((JSONObject) newObj.get(cfg)).put(key_inner, dflt.getJSONObject(key).get(key_inner));
 
 					if(writeData(InitData.locationJSON, newObj.toString())) {
-						System.out.println("[Data.java] checkDefaults() successfully modified lynx.data!");
+						System.out.println("[Data.java] checkDefaults() successfully modified data!");
 					} else {
 						return false;
 					}
@@ -332,7 +332,7 @@ public class Data {
 		}
 		*/
 		
-		// If it got this far, assume it actually wrote the lynx.data correctly?
+		// If it got this far, assume it actually wrote the data correctly?
 		return true;
 	}
 	
@@ -426,7 +426,7 @@ public class Data {
 	}
 	
 	/**
-	 * Reads the guild's lynx.data and transcribes it into HashMaps
+	 * Reads the guild's data and transcribes it into HashMaps
 	 * @param key
 	 * @param obj
 	 */

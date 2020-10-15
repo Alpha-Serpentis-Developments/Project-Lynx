@@ -6,7 +6,7 @@ public class InitData {
 	 * = = = = = = = = = = =
 	 * NOTICE:
 	 * 
-	 * Modifying lynx.data here from the source code is not recommended unless you're certain changing anything in here.
+	 * Modifying data here from the source code is not recommended unless you're certain changing anything in here.
 	 * = = = = = = = = = = =
 	 * YOU CAN OVERRIDE ALL OF THE BELOW BY MODIFYING initOverrides.txt
 	 * Leave initOverrides.txt EMPTY if you do not wish to override anything!
@@ -69,7 +69,7 @@ public class InitData {
 	public static String prefix = "!";
 	
 	/*
-	 * Use this if you want for the bot to react to private messages (eg., reacts to lynx.commands)
+	 * Use this if you want for the bot to react to private messages (eg., reacts to commands)
 	 * This does not apply to SENDING messages in a user's DMs
 	 * "acceptMultipleServers" will determine if "guildID" will be needed
 	 */

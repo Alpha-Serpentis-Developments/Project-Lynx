@@ -56,7 +56,7 @@ public class Warn extends Command {
 			MessageManager.sendMessage(chn, "**" + punished.getName() + "** (" + punished.getId() + ") has been warned by **" + mod.getName() + "** for: \n\n> **" + reason + "**");
 			MessageManager.sendMessage(punished.openPrivateChannel().complete(), "You have been warned by **" + mod.getName() + "** for: **" + reason + "**\n\nPlease make sure you abide by the server's rules!");
 
-			// Writes the lynx.data to the JSON
+			// Writes the data to the JSON
 			JSONObject data = Data.rawJSON;
 			Integer warn_id = data.getJSONObject(gld.getId()).getJSONObject("srvr_config").getJSONObject("logs").getJSONObject("warn").length() + 1;
 

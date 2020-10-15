@@ -318,7 +318,7 @@ public class Configure extends Command {
 						
 						rawData.getJSONObject(gld.getId()).getJSONObject("srvr_config").put("prefix", parsedPrefix);
 						
-						// Write the new lynx.data
+						// Write the new data
 						if(Data.writeData(InitData.locationJSON, rawData.toString(), true, gld.getId()))
 							MessageManager.sendMessage(chn, "You've configured the bot to use the new prefix of " + parsedPrefix);
 					}

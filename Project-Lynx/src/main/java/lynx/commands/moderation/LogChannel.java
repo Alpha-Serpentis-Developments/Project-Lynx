@@ -39,10 +39,10 @@ public class LogChannel extends Command {
 			modifyThis = modifyThis.replaceAll(Character.toString(c), "");
 		}
 		
-		// Modify the lynx.data
+		// Modify the data
 		data.getJSONObject(gld.getId()).getJSONObject("srvr_config").put("logging_channel", modifyThis);
 		
-		// Write the new lynx.data
+		// Write the new data
 		if(Data.writeData(InitData.locationJSON, data.toString(), true, gld.getId())) {
 			MessageManager.sendMessage(chn, "Logging channel is now set to " + gld.getTextChannelById(modifyThis).getAsMention());
 		} else {
