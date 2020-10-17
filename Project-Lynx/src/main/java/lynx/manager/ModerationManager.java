@@ -4,9 +4,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 
-import net.dv8tion.jda.api.entities.Guild;
-import net.dv8tion.jda.api.entities.User;
-
 public class ModerationManager {
 
 	/**
@@ -35,75 +32,4 @@ public class ModerationManager {
 		return returnThis;
 		
 	}
-	
-	/**
-	 * Used to obtain the "Punished" user from a message.
-	 * 
-	 * @param gld is the Guild in which the Message was sent.
-	 * @param msg is the message sent for analysis.
-	 * @param cmd_length is the length of the command's name; used for skipping some number of characters to parse the username
-	 * @return a User, presumed to be the "Punished," otherwise null.
-	 */
-	public static User grabPunished(Guild gld, String msg, int cmd_length) {
-		
-		if(cmd_length >= msg.length())
-			return null;
-		
-		String[] illegal_chars = new String[]{"@", "!", "\n"};
-		
-		User punished = null;
-		String decipher = msg.substring(cmd_length + 1);
-		String breakDownDigits = "";
-		
-		for(String c: illegal_chars) {
-			decipher = decipher.replaceAll(c, "");
-		}
-		
-		System.out.println("DEBUG [ModerationManager.java] decipher - " + decipher);
-		System.out.println("DEBUG - GUILD [ModerationManager.java] guild - " + gld);
-		
-		// Check if "<" and ">" exist, particularly, with them in order.
-		if(decipher.contains("<") && decipher.contains(">")) {
-			
-			punished = gld.getMemberById(decipher.substring(decipher.indexOf("<") + 1, decipher.indexOf(">"))).getUser();
-			
-		}
-		
-		if(punished != null) {
-			return punished;
-		}
-		
-		// Check if there's a long ID that could turn up to be the user.
-		boolean previousWasDigit = false;
-		
-		for(int i = 0; i < decipher.length(); i++) {
-			if(Character.isDigit(decipher.charAt(i))) { 
-				
-				if(Character.isDigit(decipher.charAt(i))) {
-					
-					previousWasDigit = true;
-				
-					breakDownDigits = breakDownDigits + decipher.charAt(i);
-					System.out.println("DEBUG [ModerationManager.java] " + breakDownDigits);
-				
-				}
-			} else if(previousWasDigit && breakDownDigits.length() > 16){
-				punished = gld.getMemberById(breakDownDigits).getUser();
-				break;
-			} else {
-				break;
-			}
-		}
-		
-		if(punished != null) {
-			return punished;
-		}
-		
-		// Check if it matches the Username#Discriminator
-		punished = gld.getMemberByTag(decipher.substring(0, decipher.indexOf("#") + 5)).getUser();
-		
-		return punished;
-		
-	}
-	
 }
