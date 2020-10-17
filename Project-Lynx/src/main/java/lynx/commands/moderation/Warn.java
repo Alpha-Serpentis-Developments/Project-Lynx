@@ -12,7 +12,7 @@ public class Warn extends ModerationCommand {
 	}
 
 	@Override
-	protected void punishEm(Member punished, Member mod, String reason) {
+	protected void punish(Member punished, Member mod, String reason) {
 		Guild g = punished.getGuild();
 		// Writes the data to the JSON
 		JSONObject data = Data.rawJSON;

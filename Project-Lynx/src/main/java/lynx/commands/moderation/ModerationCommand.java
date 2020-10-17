@@ -158,10 +158,10 @@ public abstract class ModerationCommand extends Command {
 						//Make sure the punishment is run after they receive the DM.
 						receiver.getUser().openPrivateChannel().queue(privateChannel -> {
 							MessageManager.sendMessage(privateChannel, addReason(String.format(DM_MSG, pastTenseAction, giver.getUser().getName()), reason));
-							punishEm(receiver, giver, reason);
+							punish(receiver, giver, reason);
 						}, error -> {
 							//I'm not sure why it would fail here, but, just in case.
-							punishEm(receiver, giver, reason);
+							punish(receiver, giver, reason);
 						});
 
 						//Send message to log channel
@@ -274,5 +274,5 @@ public abstract class ModerationCommand extends Command {
 		}
 	}
 
-	protected abstract void punishEm(Member member, Member mod, String reason);
+	protected abstract void punish(Member member, Member mod, String reason);
 }

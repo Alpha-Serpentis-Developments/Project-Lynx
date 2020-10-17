@@ -12,7 +12,7 @@ public class Ban extends ModerationCommand {
 	}
 
 	@Override
-	protected void punishEm(Member member, Member mod, String reason) {
+	protected void punish(Member member, Member mod, String reason) {
 		member.getGuild().ban(member, 1, Truncate.truncate(reason, 500)).queue();
 	}
 }
