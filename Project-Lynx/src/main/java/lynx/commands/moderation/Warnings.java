@@ -1,9 +1,9 @@
 package lynx.commands.moderation;
 
 import lynx.commands.Command;
-import lynx.commands.utilities.Truncate;
 import lynx.data.Data;
 import lynx.manager.MessageManager;
+import lynx.misc.Truncate;
 import lynx.misc.UserResolver;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Member;

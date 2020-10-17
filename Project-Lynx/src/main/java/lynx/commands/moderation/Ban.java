@@ -1,6 +1,6 @@
 package lynx.commands.moderation;
 
-import lynx.commands.utilities.Truncate;
+import lynx.misc.Truncate;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.Member;
 

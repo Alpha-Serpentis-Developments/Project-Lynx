@@ -1,4 +1,4 @@
-package lynx.commands.utilities;
+package lynx.misc;
 
 public class Truncate {
 	public static String truncate(String string, int length) {
