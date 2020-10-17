@@ -1,15 +1,14 @@
 package lynx.commands.moderation;
 
-import java.util.Arrays;
-
-import org.json.JSONObject;
-
 import lynx.commands.Command;
 import lynx.data.Data;
 import lynx.init.InitData;
 import lynx.manager.MessageManager;
 import net.dv8tion.jda.api.entities.MessageChannel;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
+import org.json.JSONObject;
+
+import java.util.Arrays;
 
 public class Log extends Command {
 	
@@ -24,7 +23,7 @@ public class Log extends Command {
 			MessageManager.sendMessage(chn, getDesc());
 			return true;
 		} else {
-			if(!verifyUse(((MessageReceivedEvent) misc).getAuthor(), ((MessageReceivedEvent) misc).getGuild(), chn)) {
+			if(!hasRolesToUse(((MessageReceivedEvent) misc).getMember())) {
 				return false;
 			}
 		}
@@ -61,7 +60,7 @@ public class Log extends Command {
 		// Check for logging type keywords
 		if(Arrays.asList(logKeywords).contains(check)) {
 			
-			String breakApart = new String(check);
+			String breakApart = check;
 			
 			while(!check.isEmpty()) {
 				

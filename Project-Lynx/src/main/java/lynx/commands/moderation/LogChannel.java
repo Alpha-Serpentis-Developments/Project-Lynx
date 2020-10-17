@@ -1,7 +1,5 @@
 package lynx.commands.moderation;
 
-import org.json.JSONObject;
-
 import lynx.commands.Command;
 import lynx.data.Data;
 import lynx.init.InitData;
@@ -9,6 +7,7 @@ import lynx.manager.MessageManager;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.MessageChannel;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
+import org.json.JSONObject;
 
 public class LogChannel extends Command {
 	
@@ -22,7 +21,7 @@ public class LogChannel extends Command {
 		if(msg.equalsIgnoreCase("logchannel")) {
 			MessageManager.sendMessage(chn, getDesc());
 			return true;
-		} else if(!verifyUse(((MessageReceivedEvent) misc).getAuthor(), ((MessageReceivedEvent) misc).getGuild(), chn)) {
+		} else if(!hasRolesToUse(((MessageReceivedEvent) misc).getMember())) {
 			return false;
 		}
 		

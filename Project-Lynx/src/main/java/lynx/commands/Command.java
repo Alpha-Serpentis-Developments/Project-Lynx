@@ -1,18 +1,22 @@
 package lynx.commands;
 
+import lynx.init.Launcher;
+import net.dv8tion.jda.api.Permission;
+import net.dv8tion.jda.api.entities.Member;
+import net.dv8tion.jda.api.entities.MessageChannel;
+import net.dv8tion.jda.api.entities.Role;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import lynx.init.Launcher;
-import lynx.manager.MessageManager;
-import net.dv8tion.jda.api.Permission;
-import net.dv8tion.jda.api.entities.Guild;
-import net.dv8tion.jda.api.entities.MessageChannel;
-import net.dv8tion.jda.api.entities.Role;
-import net.dv8tion.jda.api.entities.User;
-
 
 public abstract class Command implements Cloneable {
+	protected final static String CONFIGURATION_PLS = "This command **requires to be configured** by the server owner or administrator! Use `!configure [command]` to use this and other commands.";
+	protected final static String BOT_PERMISSION_PLS = "Looks like I wasn't given permission to do this. Ask an admin to give me the required permission (or just the Administrator permission).";
+
+
+	protected static final String NO_ONE = "I couldn't find anyone with that name! Try using a mention instead.";
+	protected static final String TOO_MANY = "Multiple people share that name! Try using a mention instead.";
 
 	/*
 	 * cmdName is REQUIRED
@@ -41,7 +45,7 @@ public abstract class Command implements Cloneable {
 	 * The Command's permissions with the String representing as a "USER" or "ROLE" and the ArrayList<Long> represents the ID(s) to the corresponding key
 	 */
 	private HashMap<String, ArrayList<Long>> cmdPerms = new HashMap<String, ArrayList<Long>>();
-	private boolean requirePerms = false, allowPrivate = true, active = false, logging = false;
+	protected boolean requirePerms = false, allowPrivate = true, active = false, logging = false;
 
 	//Setter Methods
 	public void setName(String n) {
@@ -198,91 +202,27 @@ public abstract class Command implements Cloneable {
 	
 	/**
 	 * Verifies if the command can be executed by the user
-	 * @param executor
-	 * @param g
-	 * @param chn
-	 * @return
+	 *
+	 * @param executor The member to verify can use this command.
+	 * @return True only if either they are an administrator, or have a role configured to use this command.
 	 */
-	public boolean verifyUse(User executor, Guild g, MessageChannel chn) {
-		
+	public boolean hasRolesToUse(Member executor) {
+		if(executor == null)
+			return false;
+
 		// Check if user is an administrator
-		for(Role r: g.getMember(executor).getRoles()) {
-			if(r.hasPermission(Permission.ADMINISTRATOR)) {
-				return true;
-			}
-		}
-		
+		if(executor.hasPermission(Permission.ADMINISTRATOR))
+			return true;
+
 		// Check if user has the roles to execute the command
 		if(!cmdPerms.isEmpty()) {
-			for(Role r: g.getMember(executor).getRoles()) {
+			for(Role r : executor.getRoles()) {
 				if(cmdPerms.get("ROLE").contains(r.getIdLong())) {
 					return true;
 				}
 			}
 		}
-		
-		return false;
-		
-	}
 
-	/**
-	 * Verifies if the command can be executed by the bot and user with the determininig factor of the interacted user
-	 * <br></br>
-	 * Checks for the permissions, role hierarchy, etc.
-	 * @return true if execution can be done, otherwise false.
-	 */
-	public boolean verifyExecution(User executor, User interacted, Guild g, MessageChannel chn) {
-
-		boolean isMod = false, isAdmin = false, isOwner = false, canBot = false;
-		
-		// Check if user is an administrator
-		for(Role r: g.getMember(executor).getRoles()) {
-			if(r.hasPermission(Permission.ADMINISTRATOR)) {
-				isAdmin = true;
-				break;
-			}
-		}
-		
-		// Check if the interacted is an adminstrator
-		for(Role r: g.getMember(interacted).getRoles()) {
-			if(r.hasPermission(Permission.ADMINISTRATOR)) {
-				return false; // Returns false since you're not allowed to do a moderative action against a staff
-			}
-		}
-		
-		//The server owner CAN execute moderator commands WITHOUT having to define the roles (but it would be in the best interest to define them)
-		if(g.getOwner().getUser().equals(executor)) {
-			isOwner = true;
-			System.out.println("[Command.java] Is server owner!");
-		} else if(isAdmin) { // It is assumed that the administrator role is given as if they're similar to the guild owner. Be careful.
-			System.out.println("[Command.java] Is admin!");
-		} else if(!isRoleIDsDefined() && requirePerms) {
-			MessageManager.sendMessage(chn, "This command **requires to be configured** by the server owner or administrator! Use `!configure [command]` to use this and other commands.");
-			return false;
-		} else if(isRoleIDsDefined() && requirePerms) {
-			
-			for(Role ex_rs: g.getMember(executor).getRoles()) {
-				if(cmdPerms.get("ROLE").contains(ex_rs.getIdLong())) {
-					isMod = true;
-					break;
-				}
-			}
-			
-			// Check if the interacted has the same role(s)
-			for(Role ex_rs: g.getMember(interacted).getRoles()) {
-				if(cmdPerms.get("ROLE").contains(ex_rs.getIdLong())) {
-					return false;
-				}
-			}
-			
-		}
-		
-		if(isMod || isAdmin || isOwner) {
-			canBot = g.getMember(Launcher.api.getSelfUser()).canInteract(g.getMember(interacted));
-			
-			return canBot;
-		}
-		
 		return false;
 		
 	}
@@ -300,8 +240,6 @@ public abstract class Command implements Cloneable {
 	 * Define action() as you wish in classes that extend this.
 	 * @param chn is used to allow sending messages to a certain text channel
 	 * @param msg is used to carry around messages
-	 * @param gld is the guild and IS required
-	 *
 	 * @return true if successful, otherwise false
 	 */
 	public abstract boolean action(MessageChannel chn, String msg, Object misc);
