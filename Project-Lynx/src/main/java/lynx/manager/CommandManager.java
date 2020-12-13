@@ -34,6 +34,7 @@ public class CommandManager {
 				add(new LogChannel());
 				add(new URP());
 				add(new Prefix());
+				add(new RemoveLog());
 		}};
 
 	/**

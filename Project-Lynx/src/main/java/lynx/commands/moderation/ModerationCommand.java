@@ -224,6 +224,15 @@ public abstract class ModerationCommand extends Command {
 	 */
 	public VerificationResult canUseOnMember(Member executor, Member interacted) {
 		Guild g = executor.getGuild();
+		
+		//Check whether the bot can actually do the action...
+		if(!g.getSelfMember().canInteract(interacted))
+			return VerificationResult.BOT_REQUIRES_PERMISSIONS;
+		
+		//Checks if executor is owner, otherwise rest are redundant
+		if(g.getOwner().equals(executor))
+			return VerificationResult.SUCCESS;
+		
 		if(!g.getId().equals(interacted.getGuild().getId()))
 			throw new IllegalArgumentException("The members provided do not belong to the same Guild!");
 
@@ -244,10 +253,6 @@ public abstract class ModerationCommand extends Command {
 		//Checks role hierarchy and whether the person being punished is an admin
 		if(!memberAboveOther(executor, interacted) || interacted.hasPermission(Permission.ADMINISTRATOR))
 			return VerificationResult.USER_TOO_POWERFUL;
-
-		//Finally, check whether the bot can actually do the action...
-		if(!g.getSelfMember().canInteract(interacted))
-			return VerificationResult.BOT_REQUIRES_PERMISSIONS;
 
 		return VerificationResult.SUCCESS;
 	}

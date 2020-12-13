@@ -11,3 +11,4 @@ log:Enable or disable logging on the server. By default logs warns, kicks, bans,
 logchannel:Where the server will log events, otherwise logging events are not sent.\n\n> !logchannel #somechannel>>REQ_PERM>>ADMIN
 urp:Enables or disables the experimental User Raid Protection.\n\n> !URP on>>REQ_PERM>>ADMIN
 prefix:Changes the prefix of the server.\n\n> !prefix .>>REQ_PERM>>ADMIN
+removelog:Removes a warning/kick/ban record from !warnings. \n\n> !removelog [USER] [warn/kick/ban]:[ID Number]>>REQ_PERM>>ADMIN
