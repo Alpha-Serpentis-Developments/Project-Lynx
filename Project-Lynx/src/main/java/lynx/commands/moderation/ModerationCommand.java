@@ -38,6 +38,17 @@ public abstract class ModerationCommand extends Command {
 		 */
 		SOMETHING_BAD_HAPPENED
 	}
+	
+	protected enum ModerationFlags {
+		/**
+		 * Anonymous flag does not show which moderator executed the command to the punished user
+		 */
+		ANONYMOUS,
+		/**
+		 * "DO NOT SEND" flag does not send the moderative action reasoning to the punished user
+		 */
+		DO_NOT_SEND
+	}
 
 	/**
 	 * String format:
@@ -50,9 +61,17 @@ public abstract class ModerationCommand extends Command {
 	/**
 	 * String format:
 	 * Past tense action,
-	 * Moderator name
+	 * Moderator name,
+	 * Server name and ID
 	 */
-	private static final String DM_MSG = "You have been %s by **%s**.";
+	private static final String DM_PUBLIC_MSG = "You have been %s by **%s** from %s.";
+	
+	/**
+	 * String format:
+	 * Paste tense action,
+	 * Server name and ID
+	 */
+	private static final String DM_ANON_MSG = "You have been %s from %s.";
 
 	/**
 	 * String format:
@@ -157,7 +176,7 @@ public abstract class ModerationCommand extends Command {
 
 						//Make sure the punishment is run after they receive the DM.
 						receiver.getUser().openPrivateChannel().queue(privateChannel -> {
-							MessageManager.sendMessage(privateChannel, addReason(String.format(DM_MSG, pastTenseAction, giver.getUser().getName()), reason));
+							MessageManager.sendMessage(privateChannel, addReason(String.format(DM_PUBLIC_MSG, pastTenseAction, giver.getUser().getName()), reason));
 							punish(receiver, giver, reason);
 						}, error -> {
 							//I'm not sure why it would fail here, but, just in case.
