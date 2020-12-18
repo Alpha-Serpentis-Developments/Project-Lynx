@@ -60,18 +60,18 @@ public abstract class ModerationCommand extends Command {
 
 	/**
 	 * String format:
-	 * Past tense action,
 	 * Moderator name,
-	 * Server name and ID
+	 * Server name and ID,
+	 * Past tense action
 	 */
-	private static final String DM_PUBLIC_MSG = "You have been %s by **%s** from %s.";
+	private static final String DM_PUBLIC_MSG = "**%s** in server %s has %s you.";
 	
 	/**
 	 * String format:
-	 * Paste tense action,
-	 * Server name and ID
+	 * Server name and ID,
+	 * Paste tense action
 	 */
-	private static final String DM_ANON_MSG = "You have been %s from %s.";
+	private static final String DM_ANON_MSG = "A staff member in server %s has %s you.";
 
 	/**
 	 * String format:
@@ -92,7 +92,7 @@ public abstract class ModerationCommand extends Command {
 	 * Punished username,
 	 * Past tense action
 	 */
-	private static final String PUNISHING_US = "**%s** has been %s b- Hey... wait a minute...";
+	private static final String PUNISHING_US = "**%s** has been %s b- Hey... wait a minute... that's not cool :(";
 
 	/**
 	 * String format:
@@ -176,7 +176,7 @@ public abstract class ModerationCommand extends Command {
 
 						//Make sure the punishment is run after they receive the DM.
 						receiver.getUser().openPrivateChannel().queue(privateChannel -> {
-							MessageManager.sendMessage(privateChannel, addReason(String.format(DM_PUBLIC_MSG, pastTenseAction, giver.getUser().getName()), reason));
+							MessageManager.sendMessage(privateChannel, addReason(String.format(DM_PUBLIC_MSG, giver.getUser().getName(), guild.getName() + " (" + guild.getId() + ")", pastTenseAction), reason));
 							punish(receiver, giver, reason);
 						}, error -> {
 							//I'm not sure why it would fail here, but, just in case.
